@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { 
-  Music, Users, Settings, BarChart3, History, Heart,
-  Plus, Edit2, Shield, LogOut, AlertCircle, Clock, Calendar
+  Music, Users, Settings, BarChart3, History,
+  Plus, Edit2, Shield, LogOut, AlertCircle
 } from 'lucide-react'
 import { getParentSession, clearParentSession } from '../utils/auth'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
@@ -10,21 +10,8 @@ import { supabase } from '../lib/supabase'
 import type { Child } from '../types/child'
 import styles from './ParentDashboard.module.css'
 
-interface KPIData {
-  spotify_connected: boolean
-  children_count: number
-  listens_7d: number
-  favorites_7d: number
-}
-
 export default function ParentDashboard() {
   const [children, setChildren] = useState<Child[]>([])
-  const [kpis, setKpis] = useState<KPIData>({
-    spotify_connected: false,
-    children_count: 0,
-    listens_7d: 0,
-    favorites_7d: 0
-  })
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('overview')
   const [spotifyConnected, setSpotifyConnected] = useState(false)
@@ -39,7 +26,6 @@ export default function ParentDashboard() {
 
     checkSpotifyConnection()
     loadChildren()
-    loadKPIs()
   }, [navigate])
 
   const checkSpotifyConnection = () => {
@@ -64,67 +50,6 @@ export default function ParentDashboard() {
       console.error('Failed to load children:', error)
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  const loadKPIs = async () => {
-    try {
-      const session = getParentSession()
-      if (!session) return
-
-      // Spotify connected
-      const tokens = getSpotifyTokens()
-      const spotify_connected = !!tokens
-
-      // Children count
-      const { data: childrenData, error: childrenError } = await supabase
-        .from('children')
-        .select('id')
-        .eq('parent_id', session.parent.id)
-
-      if (childrenError) throw childrenError
-      const children_count = childrenData?.length || 0
-      const childrenIds = childrenData?.map(c => c.id) || []
-
-      // Listens last 7 days
-      const sevenDaysAgo = new Date()
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-      
-      const { data: listensData, error: listensError } = await supabase
-        .from('play_history')
-        .select('id')
-        .in('child_id', childrenIds)
-        .gte('started_at', sevenDaysAgo.toISOString())
-
-      if (listensError) throw listensError
-      const listens_7d = listensData?.length || 0
-
-      // Favorites last 7 days
-      const { data: favoritesData, error: favoritesError } = await supabase
-        .from('favorites')
-        .select('id')
-        .in('child_id', childrenIds)
-        .gte('created_at', sevenDaysAgo.toISOString())
-
-      if (favoritesError) throw favoritesError
-      const favorites_7d = favoritesData?.length || 0
-
-      setKpis({
-        spotify_connected,
-        children_count,
-        listens_7d,
-        favorites_7d
-      })
-    } catch (error) {
-      console.error('Failed to load KPIs:', error)
-      // Set default values on error
-      const tokens = getSpotifyTokens()
-      setKpis({
-        spotify_connected: !!tokens,
-        children_count: children.length,
-        listens_7d: 0,
-        favorites_7d: 0
-      })
     }
   }
 
@@ -199,102 +124,6 @@ export default function ParentDashboard() {
               <div className={styles.tabHeader}>
                 <h2>Vue d'ensemble</h2>
                 <div className={styles.headerActions}>
-                  <button 
-              {/* KPIs Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div className="bg-white rounded-lg shadow-md p-6 text-center">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 ${
-                    kpis.spotify_connected ? 'bg-green-100' : 'bg-red-100'
-                  }`}>
-                    <Music className={`w-6 h-6 ${
-                      kpis.spotify_connected ? 'text-green-600' : 'text-red-600'
-                    }`} />
-                  </div>
-                  <div className="text-2xl font-bold text-gray-900 mb-1">
-                    {kpis.spotify_connected ? 'Connecté' : 'Déconnecté'}
-                  </div>
-                  <div className="text-sm text-gray-600">Spotify</div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-md p-6 text-center">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Users className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div className="text-2xl font-bold text-gray-900 mb-1">
-                    {kpis.children_count}
-                  </div>
-                  <div className="text-sm text-gray-600">Enfants</div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-md p-6 text-center">
-                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <BarChart3 className="w-6 h-6 text-purple-600" />
-                  </div>
-                  <div className="text-2xl font-bold text-gray-900 mb-1">
-                    {kpis.listens_7d}
-                  </div>
-                  <div className="text-sm text-gray-600">Écoutes 7j</div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-md p-6 text-center">
-                  <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Heart className="w-6 h-6 text-pink-600" />
-                  </div>
-                  <div className="text-2xl font-bold text-gray-900 mb-1">
-                    {kpis.favorites_7d}
-                  </div>
-                  <div className="text-sm text-gray-600">Favoris 7j</div>
-                </div>
-              </div>
-
-              {/* Actions Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <button
-                  onClick={() => navigate('/parent/children')}
-                  className="bg-white rounded-lg shadow-md p-6 text-left hover:shadow-lg transition-shadow"
-                >
-                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
-                    <Plus className="w-6 h-6 text-emerald-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Créer un enfant
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    Ajouter un nouveau profil enfant avec ses règles
-                  </p>
-                </button>
-
-                <button
-                  onClick={() => navigate('/parent/rules/choose')}
-                  className="bg-white rounded-lg shadow-md p-6 text-left hover:shadow-lg transition-shadow"
-                >
-                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-                    <Clock className="w-6 h-6 text-orange-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Régler les horaires
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    Configurer les créneaux d'écoute autorisés
-                  </p>
-                </button>
-
-                <button
-                  onClick={() => navigate('/parent/curation')}
-                  className="bg-white rounded-lg shadow-md p-6 text-left hover:shadow-lg transition-shadow"
-                >
-                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
-                    <Calendar className="w-6 h-6 text-indigo-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Publier la playlist semaine
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    Activer les nouvelles playlists pour vos enfants
-                  </p>
-                </button>
-              </div>
-
                     onClick={() => navigate('/player')}
                     className={styles.secondaryButton}
                   >
