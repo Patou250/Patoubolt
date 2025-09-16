@@ -26,7 +26,7 @@ function App() {
       <Routes>
         <Route element={<AppShell />}>
           <Route path="/" element={<Home />} />
-          {/* PAGES PARENT */}
+          {/* Pages Parent */}
           <Route path="/parent/login" element={<ParentLogin />} />
           <Route path="/parent/callback" element={<ParentCallback />} />
           <Route path="/parent/dashboard" element={<ParentDashboard />} />
@@ -35,10 +35,10 @@ function App() {
           <Route path="/parent/curation" element={<ParentCuration />} />
           <Route path="/parent/insights" element={<ParentInsights />} />
           <Route path="/parent/history" element={<ParentHistory />} />
-          {/* PAGES ENFANT (plein écran, mais on garde le shell pour header idem) */}
+          {/* Pages Enfant */}
           <Route path="/child/login" element={<ChildLogin />} />
           <Route path="/child" element={<Child />} />
-          {/* Player si page dédiée */}
+          {/* Player */}
           <Route path="/player" element={<Player />} />
         </Route>
       </Routes>
