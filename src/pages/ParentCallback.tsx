@@ -29,7 +29,7 @@ export default function ParentCallback() {
   if (err) {
     const hint = err.includes('404')
       ? 'Fonction Netlify non déployée: /.netlify/functions/spotify-exchange'
-      : 'Erreur serveur lors de l'échange du code Spotify'
+      : 'Erreur serveur lors de l\'échange du code Spotify'
     return (
       <div className="max-w-md mx-auto text-center">
         <h2 className="text-xl font-semibold mb-2">Connexion Spotify impossible</h2>
