@@ -1,21 +1,20 @@
-import React from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
 import { Header } from './Header'
+import Footer from './Footer'
 
-console.log('🚀 APPSHELL - Module AppShell.tsx chargé')
+export default function AppShell() {
+  const { pathname } = useLocation()
+  const isChildArea = pathname.startsWith('/child')
 
-interface AppShellProps {
-  children: React.ReactNode
-}
-
-export function AppShell({ children }: AppShellProps) {
-  console.log('🚀 APPSHELL - Rendu du shell de l\'application')
-  
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen bg-app-gradient text-app-foreground flex flex-col">
       <Header />
-      <main className="container mx-auto px-4 py-8">
-        {children}
+      <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-6">
+        <Outlet />
       </main>
+
+      {/* Footer/nav: pas en mode enfant */}
+      {!isChildArea && <Footer />}
     </div>
   )
 }
