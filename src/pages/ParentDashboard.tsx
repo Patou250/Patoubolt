@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { 
   Music, Users, Settings, BarChart3, History, 
-  Plus, Edit2, Shield, LogOut, User, Clock,
-  Play, Pause, SkipBack, SkipForward, Volume2
+  Plus, Edit2, Shield, LogOut, AlertCircle
 } from 'lucide-react'
 import { getParentSession, clearParentSession } from '../utils/auth'
 import { getSpotifyTokens } from '../utils/spotify-tokens'

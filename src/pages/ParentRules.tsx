@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Clock, Shield, List, Save } from 'lucide-react'
 import { getParentSession } from '../utils/auth'
-import { supabase } from '../lib/supabase'
 import type { Child } from '../types/child'
 import type { ChildRules, TimeWindow } from '../types/rules'
-import { RulesEngine } from '../utils/rules-engine'
 import styles from './ParentRules.module.css'
 
 const DAYS_OF_WEEK = [

@@ -16,6 +16,7 @@ import ChildLogin from './pages/ChildLogin'
 import Child from './pages/Child'
 import Player from './pages/Player'
 import AppInfo from './pages/AppInfo'
+import Debug from './pages/Debug'
 
 function App() {
   const { mustGate } = usePreviewGate()

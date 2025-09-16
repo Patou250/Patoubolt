@@ -44,32 +44,9 @@ export default function ParentCallback() {
 
         setStatus('Vérification du profil parent...')
 
-        // Vérifier si le parent a des enfants
-        const { data: user } = await supabase.auth.getUser()
-        if (!user.user) {
-          throw new Error('Utilisateur non authentifié')
-        }
-
-        const { data: children, error: childrenError } = await supabase
-          .from('children')
-          .select('id')
-          .eq('parent_id', user.user.id)
-
-        if (childrenError) {
-          console.warn('Erreur lors de la vérification des enfants:', childrenError)
-          // En cas d'erreur, rediriger vers dashboard par défaut
-          navigate('/parent/dashboard', { replace: true })
-          return
-        }
-
-        // Redirection conditionnelle
-        if (!children || children.length === 0) {
-          setStatus('Redirection vers la configuration...')
-          navigate('/parent/children', { replace: true })
-        } else {
-          setStatus('Redirection vers le tableau de bord...')
-          navigate('/parent/dashboard', { replace: true })
-        }
+        // Redirection simple vers le dashboard
+        setStatus('Redirection vers le tableau de bord...')
+        navigate('/parent/dashboard', { replace: true })
 
       } catch (error) {
         console.error('Erreur callback Spotify:', error)

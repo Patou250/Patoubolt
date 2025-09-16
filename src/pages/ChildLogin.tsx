@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Music, User, CheckCircle, AlertCircle, Baby } from 'lucide-react'
-import { supabase } from '../lib/supabase'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
 import type { Child } from '../types/child'
-import bcrypt from 'bcryptjs'
 
 export default function ChildLogin() {
   const navigate = useNavigate()

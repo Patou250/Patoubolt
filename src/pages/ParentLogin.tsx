@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useNavigate } from 'react-router-dom'
+import { Music } from 'lucide-react'
 
 export default function ParentLogin() {
   const [mode, setMode] = useState<'login'|'signup'>('signup')
