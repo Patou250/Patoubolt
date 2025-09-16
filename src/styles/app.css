@@ -1,0 +1,32 @@
+:root {
+  --app-bg-start: #f2fbf8;
+  --app-bg-end:   #e8f4f1;
+  --app-foreground: #0d1b1e;
+  --brand: #0ea56f;     /* Emeraude Patou */
+  --brand-strong: #078a5c;
+  --text-muted: rgba(255,255,255,.7);
+  --radius-xl: 1rem;
+}
+
+.bg-app-gradient { background: linear-gradient(180deg, var(--app-bg-start), var(--app-bg-end)); }
+.text-app-foreground { color: var(--app-foreground); }
+.bg-background { background: #0f1417; } /* si dark mode spécifique */
+
+.btn-primary {
+  background: var(--brand);
+  color: white;
+  padding: .65rem 1rem;
+  border-radius: var(--radius-xl);
+  font-weight: 600;
+  display: inline-block;
+}
+.btn-primary:hover { background: var(--brand-strong); }
+
+.btn-secondary {
+  background: rgba(255,255,255,.1);
+  color: white;
+  padding: .65rem 1rem;
+  border-radius: var(--radius-xl);
+  display: inline-block;
+}
+.btn-secondary:hover { background: rgba(255,255,255,.18); }
