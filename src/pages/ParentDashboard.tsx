@@ -124,6 +124,7 @@ export default function ParentDashboard() {
               <div className={styles.tabHeader}>
                 <h2>Vue d'ensemble</h2>
                 <div className={styles.headerActions}>
+                  <button
                     onClick={() => navigate('/player')}
                     className={styles.secondaryButton}
                   >
@@ -136,93 +137,6 @@ export default function ParentDashboard() {
                   >
                     <Users size={16} />
                     Gérer les enfants
-                  </button>
-                </div>
-              </div>
-
-              {!spotifyConnected && (
-                <div className="bg-orange-50 border border-orange-200 rounded-lg p-6 mb-6">
-                  <div className="flex items-start space-x-3">
-                    <AlertCircle className="w-5 h-5 text-orange-600 mt-0.5" />
-                    <div>
-                      <h3 className="font-medium text-orange-800 mb-1">
-                        Spotify non connecté
-                      </h3>
-                      <p className="text-sm text-orange-700 mb-3">
-                        Connectez votre compte Spotify Premium pour utiliser toutes les fonctionnalités.
-                      </p>
-                      <button
-                        onClick={() => navigate('/parent/login')}
-                        className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors text-sm"
-                      >
-                        Connecter Spotify
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className={styles.childrenGrid}>
-                {children.length === 0 ? (
-                  <div className="col-span-full text-center py-12">
-                    <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      Aucun enfant configuré
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                      Ajoutez le premier profil de votre enfant pour commencer
-                    </p>
-                    <button
-                      onClick={() => navigate('/parent/children')}
-                      className={styles.primaryButton}
-                    >
-                      <Plus size={16} />
-                      Ajouter un enfant
-                    </button>
-                  </div>
-                ) : (
-                  children.map(child => (
-                    <div key={child.id} className={styles.childCard}>
-                      <div className={styles.childInfo}>
-                        <h3>{child.emoji} {child.name}</h3>
-                        <p className={styles.childStats}>
-                          Créé le {new Date(child.created_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <div className={styles.childActions}>
-                        <button
-                          onClick={() => navigate(`/parent/rules/${child.id}`)}
-                          className={styles.iconButton}
-                          title="Configurer les règles"
-                        >
-                          <Shield size={16} />
-                        </button>
-                        <button
-                          onClick={() => navigate('/parent/children')}
-                          className={styles.iconButton}
-                          title="Modifier"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'children' && (
-            <div>
-              <div className={styles.tabHeader}>
-                <h2>Gestion des enfants</h2>
-                <div className={styles.headerActions}>
-                  <button 
-                    onClick={() => navigate('/parent/children')}
-                    className={styles.primaryButton}
-                  >
-                    <Plus size={16} />
-                    Ajouter un enfant
                   </button>
                 </div>
               </div>
