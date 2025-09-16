@@ -26,7 +26,7 @@ function App() {
       <Routes>
         <Route element={<AppShell />}>
           <Route path="/" element={<Home />} />
-          {/* Pages Parent */}
+          {/* PAGES PARENT */}
           <Route path="/parent/login" element={<ParentLogin />} />
           <Route path="/parent/callback" element={<ParentCallback />} />
           <Route path="/parent/dashboard" element={<ParentDashboard />} />
@@ -35,10 +35,10 @@ function App() {
           <Route path="/parent/curation" element={<ParentCuration />} />
           <Route path="/parent/insights" element={<ParentInsights />} />
           <Route path="/parent/history" element={<ParentHistory />} />
-          {/* Pages Enfant */}
+          {/* PAGES ENFANT */}
           <Route path="/child/login" element={<ChildLogin />} />
           <Route path="/child" element={<Child />} />
-          {/* Player */}
+          {/* PLAYER */}
           <Route path="/player" element={<Player />} />
         </Route>
       </Routes>

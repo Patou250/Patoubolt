@@ -13,7 +13,7 @@ export default function AppShell() {
       <main className={styles['app-shell__main']}>
         <Outlet />
       </main>
-      {/* Footer/nav: pas en mode enfant */}
+      {/* Footer masqué en mode enfant */}
       {!isChildArea && <Footer />}
     </div>
   )
