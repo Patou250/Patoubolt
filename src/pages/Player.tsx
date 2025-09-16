@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import PlayerSdk from '../components/PlayerSdk'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
 
 export default function Player() {
+  const [params] = useSearchParams()
   const navigate = useNavigate()
   const [token, setToken] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const trackId = params.get('trackId') || undefined
 
   useEffect(() => {
     // Check for tokens in localStorage first
@@ -84,7 +86,7 @@ export default function Player() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <PlayerSdk accessToken={token} />
+      <PlayerSdk accessToken={token} trackId={trackId} />
       <div className="mt-4 text-sm text-gray-600">Astuce : ouvrez l'app Spotify et transférez la lecture vers "Patou Player".</div>
     </div>
   )
