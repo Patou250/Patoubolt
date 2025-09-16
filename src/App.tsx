@@ -43,6 +43,8 @@ function App() {
           <Route path="/player" element={<Player />} />
           {/* APP INFO */}
           <Route path="/app-info" element={<AppInfo />} />
+          {/* DEBUG */}
+          <Route path="/debug" element={<Debug />} />
         </Route>
       </Routes>
     </Router>
