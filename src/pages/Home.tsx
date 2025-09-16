@@ -6,10 +6,7 @@ export default function Home() {
       <p className="text-gray-600 mb-8">Bêta minimale — authentification Spotify requise pour le lecteur.</p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <button
-          onClick={() => {
-            const FN = import.meta.env.PROD ? '/.netlify/functions' : '/.netlify/functions'
-            window.location.assign(`${FN}/spotify-auth-start`)
-          }}
+          onClick={() => window.location.assign('https://patou.app/.netlify/functions/spotify-auth-start')}
           className="inline-block px-5 py-3 rounded-lg bg-black text-white font-medium"
         >
           Se connecter avec Spotify (Parent)
