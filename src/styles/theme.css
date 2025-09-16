@@ -1,0 +1,409 @@
+:root {
+  /* Palette Patou */
+  --color-patou-main: #287233;
+  --color-patou-main-light: #34a853;
+  --color-patou-main-dark: #1e5e29;
+  --color-patou-main-50: #f0f9f1;
+  --color-patou-main-100: #dcf2df;
+  --color-patou-main-200: #bce5c2;
+  --color-patou-main-300: #8fd199;
+  --color-patou-main-400: #5cb96a;
+  --color-patou-main-500: #287233;
+  --color-patou-main-600: #225f2b;
+  --color-patou-main-700: #1e5e29;
+  --color-patou-main-800: #1a4d23;
+  --color-patou-main-900: #16401e;
+
+  /* Protéger - Bleu sécurité */
+  --color-protect: #017ba6;
+  --color-protect-light: #0ea5e9;
+  --color-protect-dark: #0c4a6e;
+  --color-protect-50: #f0f9ff;
+  --color-protect-100: #e0f2fe;
+  --color-protect-200: #bae6fd;
+  --color-protect-300: #7dd3fc;
+  --color-protect-400: #38bdf8;
+  --color-protect-500: #017ba6;
+  --color-protect-600: #0284c7;
+  --color-protect-700: #0369a1;
+  --color-protect-800: #075985;
+  --color-protect-900: #0c4a6e;
+
+  /* Partager - Orange chaleur */
+  --color-share: #e2725b;
+  --color-share-light: #fb7185;
+  --color-share-dark: #be123c;
+  --color-share-50: #fef2f2;
+  --color-share-100: #fee2e2;
+  --color-share-200: #fecaca;
+  --color-share-300: #fca5a5;
+  --color-share-400: #f87171;
+  --color-share-500: #e2725b;
+  --color-share-600: #dc2626;
+  --color-share-700: #b91c1c;
+  --color-share-800: #991b1b;
+  --color-share-900: #7f1d1d;
+
+  /* Éveiller - Jaune éveil */
+  --color-awaken: #ffd447;
+  --color-awaken-light: #fef08a;
+  --color-awaken-dark: #ca8a04;
+  --color-awaken-50: #fefce8;
+  --color-awaken-100: #fef9c3;
+  --color-awaken-200: #fef08a;
+  --color-awaken-300: #fde047;
+  --color-awaken-400: #ffd447;
+  --color-awaken-500: #eab308;
+  --color-awaken-600: #ca8a04;
+  --color-awaken-700: #a16207;
+  --color-awaken-800: #854d0e;
+  --color-awaken-900: #713f12;
+
+  /* Couleurs neutres */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Système de couleurs sémantiques */
+  --color-primary: var(--color-patou-main);
+  --color-primary-light: var(--color-patou-main-100);
+  --color-primary-dark: var(--color-patou-main-700);
+  --color-secondary: var(--color-protect);
+  --color-secondary-light: var(--color-protect-100);
+  --color-accent: var(--color-share);
+  --color-accent-light: var(--color-share-100);
+  --color-warning: var(--color-awaken);
+  --color-warning-light: var(--color-awaken-100);
+  --color-success: var(--color-patou-main);
+  --color-error: #ef4444;
+
+  /* Bento Box Design System */
+  --bento-radius: 24px;
+  --bento-radius-sm: 16px;
+  --bento-radius-lg: 32px;
+  --bento-gap: 24px;
+  --bento-gap-sm: 16px;
+  --bento-gap-lg: 32px;
+  --bento-shadow: 0 4px 24px rgba(40, 114, 51, 0.08);
+  --bento-shadow-hover: 0 8px 32px rgba(40, 114, 51, 0.12);
+  --bento-shadow-active: 0 2px 16px rgba(40, 114, 51, 0.16);
+
+  /* Espacement harmonieux */
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+  --spacing-xl: 48px;
+  --spacing-2xl: 64px;
+  --spacing-3xl: 96px;
+
+  /* Typographie */
+  --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 32px;
+  --font-size-4xl: 40px;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset et base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-gray-800);
+  background: linear-gradient(135deg, var(--color-patou-main-50) 0%, var(--color-protect-50) 50%, var(--color-awaken-50) 100%);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Bento Box Components */
+.bento-container {
+  display: grid;
+  gap: var(--bento-gap);
+  padding: var(--bento-gap);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.bento-card {
+  background: var(--color-white);
+  border-radius: var(--bento-radius);
+  padding: var(--spacing-lg);
+  box-shadow: var(--bento-shadow);
+  transition: all var(--transition-normal);
+  border: 1px solid rgba(40, 114, 51, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-patou-main), var(--color-protect), var(--color-share), var(--color-awaken));
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.bento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--bento-shadow-hover);
+}
+
+.bento-card:hover::before {
+  opacity: 1;
+}
+
+.bento-card--primary {
+  background: linear-gradient(135deg, var(--color-patou-main-50), var(--color-patou-main-100));
+  border-color: var(--color-patou-main-200);
+}
+
+.bento-card--protect {
+  background: linear-gradient(135deg, var(--color-protect-50), var(--color-protect-100));
+  border-color: var(--color-protect-200);
+}
+
+.bento-card--share {
+  background: linear-gradient(135deg, var(--color-share-50), var(--color-share-100));
+  border-color: var(--color-share-200);
+}
+
+.bento-card--awaken {
+  background: linear-gradient(135deg, var(--color-awaken-50), var(--color-awaken-100));
+  border-color: var(--color-awaken-200);
+}
+
+/* Grilles Bento responsives */
+.bento-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.bento-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.bento-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.bento-grid-auto {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Éléments spéciaux */
+.bento-hero {
+  grid-column: 1 / -1;
+  padding: var(--spacing-2xl);
+  text-align: center;
+  background: linear-gradient(135deg, var(--color-patou-main), var(--color-protect));
+  color: var(--color-white);
+}
+
+.bento-feature {
+  grid-column: span 2;
+}
+
+.bento-highlight {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-awaken-400), var(--color-share-400));
+  color: var(--color-white);
+}
+
+/* Boutons Bento */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: none;
+  border-radius: var(--bento-radius-sm);
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left var(--transition-slow);
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, var(--color-patou-main), var(--color-patou-main-600));
+  color: var(--color-white);
+  box-shadow: 0 4px 16px rgba(40, 114, 51, 0.3);
+}
+
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(40, 114, 51, 0.4);
+}
+
+.btn--protect {
+  background: linear-gradient(135deg, var(--color-protect), var(--color-protect-600));
+  color: var(--color-white);
+  box-shadow: 0 4px 16px rgba(1, 123, 166, 0.3);
+}
+
+.btn--share {
+  background: linear-gradient(135deg, var(--color-share), var(--color-share-600));
+  color: var(--color-white);
+  box-shadow: 0 4px 16px rgba(226, 114, 91, 0.3);
+}
+
+.btn--awaken {
+  background: linear-gradient(135deg, var(--color-awaken), var(--color-awaken-600));
+  color: var(--color-gray-900);
+  box-shadow: 0 4px 16px rgba(255, 212, 71, 0.3);
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--color-patou-main);
+  border: 2px solid var(--color-patou-main);
+}
+
+.btn--outline:hover {
+  background: var(--color-patou-main);
+  color: var(--color-white);
+}
+
+.btn--large {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  font-size: var(--font-size-lg);
+  border-radius: var(--bento-radius);
+}
+
+/* Container principal */
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .bento-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .bento-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .bento-feature {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .bento-container {
+    gap: var(--bento-gap-sm);
+    padding: var(--bento-gap-sm);
+  }
+  
+  .bento-card {
+    padding: var(--spacing-md);
+    border-radius: var(--bento-radius-sm);
+  }
+  
+  .bento-grid-2,
+  .bento-grid-3,
+  .bento-grid-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .bento-hero {
+    padding: var(--spacing-xl);
+  }
+  
+  .container {
+    padding: 0 var(--spacing-sm);
+  }
+}
+
+/* Animations */
+@keyframes bento-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bento-animate {
+  animation: bento-fade-in 0.6s ease-out forwards;
+}
+
+.bento-animate:nth-child(2) { animation-delay: 0.1s; }
+.bento-animate:nth-child(3) { animation-delay: 0.2s; }
+.bento-animate:nth-child(4) { animation-delay: 0.3s; }
+.bento-animate:nth-child(5) { animation-delay: 0.4s; }
+.bento-animate:nth-child(6) { animation-delay: 0.5s; }
+
+/* Focus states */
+.btn:focus-visible,
+.bento-card:focus-visible {
+  outline: 3px solid var(--color-awaken-400);
+  outline-offset: 2px;
+}
+
+/* Utilitaires */
+.text-patou { color: var(--color-patou-main); }
+.text-protect { color: var(--color-protect); }
+.text-share { color: var(--color-share); }
+.text-awaken { color: var(--color-awaken-700); }
+
+.bg-patou { background-color: var(--color-patou-main); }
+.bg-protect { background-color: var(--color-protect); }
+.bg-share { background-color: var(--color-share); }
+.bg-awaken { background-color: var(--color-awaken); }

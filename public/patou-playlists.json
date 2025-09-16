@@ -1,0 +1,60 @@
+{
+  "playlists": [
+    {
+      "id": "patou-kids-classics",
+      "title": "Patou - Classiques pour Enfants",
+      "cover": "https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=300",
+      "description": "Les plus beaux classiques adaptés aux enfants",
+      "tracks": [
+        {
+          "spotify_id": "11dFghVXANMlKmJXsNCbNl",
+          "title": "Here Comes the Sun",
+          "artist": "The Beatles",
+          "explicit": false,
+          "duration_ms": 185000,
+          "cover": "https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=300"
+        },
+        {
+          "spotify_id": "4VqPOruhp5EdPBeR92t6lQ",
+          "title": "Uptown Funk",
+          "artist": "Mark Ronson ft. Bruno Mars",
+          "explicit": false,
+          "duration_ms": 270000,
+          "cover": "https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=300"
+        }
+      ]
+    },
+    {
+      "id": "patou-disney-hits",
+      "title": "Patou - Hits Disney",
+      "cover": "https://images.pexels.com/photos/1540406/pexels-photo-1540406.jpeg?auto=compress&cs=tinysrgb&w=300",
+      "description": "Les plus belles chansons Disney",
+      "tracks": [
+        {
+          "spotify_id": "3VNWq8rTnQG6fM1eldSpZ0",
+          "title": "Let It Go",
+          "artist": "Idina Menzel",
+          "explicit": false,
+          "duration_ms": 225000,
+          "cover": "https://images.pexels.com/photos/1540406/pexels-photo-1540406.jpeg?auto=compress&cs=tinysrgb&w=300"
+        }
+      ]
+    },
+    {
+      "id": "patou-french-kids",
+      "title": "Patou - Chansons Françaises",
+      "cover": "https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=300",
+      "description": "Chansons françaises pour enfants",
+      "tracks": [
+        {
+          "spotify_id": "2takcwOaAZWiXQijPHIx7B",
+          "title": "Frère Jacques",
+          "artist": "Comptines Traditionnelles",
+          "explicit": false,
+          "duration_ms": 120000,
+          "cover": "https://images.pexels.com/photos/1407322/pexels-photo-1407322.jpeg?auto=compress&cs=tinysrgb&w=300"
+        }
+      ]
+    }
+  ]
+}

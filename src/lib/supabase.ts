@@ -1,0 +1,16 @@
+export { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+export interface Parent {
+  id: string
+  email: string
+  spotify_id: string
+  refresh_token: string
+  created_at: string
+  updated_at: string
+}

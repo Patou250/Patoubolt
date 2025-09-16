@@ -1,0 +1,25 @@
+.footer {
+  background-color: var(--color-gray-50);
+  border-top: 1px solid var(--color-gray-200);
+  margin-top: auto;
+}
+
+.footer__content {
+  padding: var(--spacing-lg) 0;
+  text-align: center;
+}
+
+.footer__text {
+  color: var(--color-gray-500);
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 768px) {
+  .footer__content {
+    padding: var(--spacing-md) 0;
+  }
+  
+  .footer__text {
+    font-size: var(--font-size-xs);
+  }
+}
