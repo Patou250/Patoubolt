@@ -37,18 +37,18 @@ export default function AppInfo() {
             <div className="bg-protect-50 rounded-lg p-4">
               <h3 className="font-semibold text-protect-700 mb-2">Build</h3>
               <p className="text-protect-600 text-sm">
-                {new Date(appInfo.buildTime).toLocaleString()}
+                {appInfo.buildTime}
               </p>
             </div>
             
             <div className="bg-share-50 rounded-lg p-4">
               <h3 className="font-semibold text-share-700 mb-2">Routes</h3>
-              <p className="text-share-600">{appInfo.routerPaths.length} routes</p>
+              <p className="text-share-600">{appInfo.routes.length} routes</p>
             </div>
             
             <div className="bg-awaken-50 rounded-lg p-4">
               <h3 className="font-semibold text-awaken-700 mb-2">Host</h3>
-              <p className="text-awaken-700 text-sm">{appInfo.env.host}</p>
+              <p className="text-awaken-700 text-sm">{appInfo.host}</p>
             </div>
           </div>
 
@@ -81,7 +81,7 @@ export default function AppInfo() {
             <h3 className="font-semibold text-gray-900 mb-3">Routes disponibles</h3>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {appInfo.routerPaths.map((route) => (
+                {appInfo.routes.map((route) => (
                   <div key={route} className="flex items-center space-x-2">
                     <span className="w-2 h-2 bg-patou-main rounded-full"></span>
                     <code className="text-sm text-gray-700">{route}</code>

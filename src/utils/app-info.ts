@@ -2,15 +2,13 @@
 export interface AppInfo {
   appVersion: string
   buildTime: string
-  routerPaths: string[]
+  routes: string[]
   features: {
-    spotifySdk: boolean
+    spotify: boolean
     childArea: boolean
     parentArea: boolean
   }
-  env: {
-    host: string
-  }
+  host: string
 }
 
 // Liste des routes déclarées dans l'application
@@ -22,8 +20,8 @@ export const APP_ROUTES = [
   '/parent/children',
   '/parent/rules/:childId',
   '/parent/curation',
-  '/parent/insights',
   '/parent/history',
+  '/parent/insights',
   '/child/login',
   '/child',
   '/player'
@@ -32,16 +30,14 @@ export const APP_ROUTES = [
 // Génération des informations de l'application
 export function getAppInfo(): AppInfo {
   return {
-    appVersion: import.meta.env.VITE_COMMIT || 'dev',
-    buildTime: new Date().toISOString(),
-    routerPaths: APP_ROUTES,
+    appVersion: '__BUILD__',
+    buildTime: '__TIME__',
+    routes: APP_ROUTES,
     features: {
-      spotifySdk: true,
+      spotify: true,
       childArea: true,
       parentArea: true
     },
-    env: {
-      host: typeof window !== 'undefined' ? window.location.host : 'unknown'
-    }
+    host: typeof window !== 'undefined' ? window.location.host : ''
   }
 }
