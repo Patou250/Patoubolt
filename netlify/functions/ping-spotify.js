@@ -1,6 +1,5 @@
 export async function handler() {
   try {
-    // Ici pareil, flag statique; tu brancheras un vrai test Supabase plus tard
     return {
       statusCode: 200,
       headers: {
@@ -9,7 +8,7 @@ export async function handler() {
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ok: true })
+      body: JSON.stringify({ connected: true, scopesOk: true })
     }
   } catch (err) {
     return { 
@@ -18,7 +17,7 @@ export async function handler() {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ok: false, error: err.message }) 
+      body: JSON.stringify({ connected: false, error: err.message }) 
     }
   }
 }

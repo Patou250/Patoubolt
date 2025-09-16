@@ -1,6 +1,5 @@
 export async function handler() {
   try {
-    // Ici tu peux juste retourner un flag statique au début
     return {
       statusCode: 200,
       headers: {
@@ -9,7 +8,7 @@ export async function handler() {
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ connected: true, scopesOk: true })
+      body: JSON.stringify({ ok: true })
     }
   } catch (err) {
     return { 
@@ -18,7 +17,7 @@ export async function handler() {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ connected: false, error: err.message }) 
+      body: JSON.stringify({ ok: false, error: err.message }) 
     }
   }
 }
