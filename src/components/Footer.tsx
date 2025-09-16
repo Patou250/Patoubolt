@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 const tabs = [
   { to: '/parent/dashboard', label: 'Dashboard' },
   { to: '/parent/curation',  label: 'Playlists' },
-  { to: '/parent/rules/choose', label: 'Règles' },
+  { to: '/parent/children', label: 'Règles' },
   { to: '/parent/history',   label: 'Historique' },
   { to: '/parent/insights',  label: 'Insights' },
 ]
@@ -15,17 +15,21 @@ export default function Footer() {
   if (!isParent) return null
 
   return (
-    <nav className="border-t border-white/10 bg-background/80 backdrop-blur">
+    <nav className="border-t border-gray-200 bg-white">
       <div className="max-w-6xl mx-auto px-2 py-2 grid grid-cols-5 gap-1">
-        {tabs.map(t => {
-          const active = pathname.startsWith(t.to)
+        {tabs.map(tab => {
+          const isActive = pathname.startsWith(tab.to)
           return (
             <Link
-              key={t.to}
-              to={t.to}
-              className={`text-center rounded-lg py-2 text-sm ${active ? 'bg-white/10 font-medium' : 'hover:bg-white/5'}`}
+              key={tab.to}
+              to={tab.to}
+              className={`text-center rounded-lg py-3 px-2 text-sm font-medium transition-colors min-h-[44px] flex items-center justify-center ${
+                isActive 
+                  ? 'bg-emerald-100 text-emerald-700' 
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
             >
-              {t.label}
+              {tab.label}
             </Link>
           )
         })}
