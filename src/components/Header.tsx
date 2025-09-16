@@ -1,18 +1,16 @@
-import { Link, useLocation } from 'react-router-dom'
-import styles from './Header.module.css'
+import { Link } from 'react-router-dom'
 
 export function Header() {
-  const { pathname } = useLocation()
-  const isHome = pathname === '/'
-  
   return (
-    <header className="sticky top-0 z-20 backdrop-blur bg-background/60 border-b border-white/10">
-      <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3">
-          <img src="/patou-logo.svg" alt="Patou" className="h-8" />
-          <span className="text-xl font-semibold hidden sm:inline">Patou</span>
+    <header className="w-full border-b border-gray-200 bg-white">
+      <div className="mx-auto max-w-6xl h-14 px-4 flex items-center">
+        <Link to="/" className="flex items-center gap-2">
+          <img src="/patou-logo.svg" alt="Patou" className="h-8 w-8" />
+          <span className="text-lg font-semibold text-gray-900">Patou</span>
         </Link>
       </div>
     </header>
   )
 }
+
+export default Header
