@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PlayerSdk from '../components/PlayerSdk'
+import { getSpotifyTokens } from '../utils/spotify-tokens'
 
 export default function Player() {
   const navigate = useNavigate()
@@ -9,36 +10,44 @@ export default function Player() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    (async () => {
-      try {
-        setIsLoading(true)
-        const res = await fetch('/.netlify/functions/spotify-refresh', { credentials: 'include' })
-        
-        if (res.status === 401) {
-          // No valid tokens, redirect to auth
-          setErr('Authentification Spotify requise')
-          return
-        }
-        
-        if (!res.ok) {
-          throw new Error(`Refresh failed: ${res.status}`)
-        }
-        
-        const data = await res.json()
-        if (!data?.access_token) {
-          throw new Error('Pas de access_token')
-        }
-        setToken(data.access_token)
-      } catch (e:any) {
-        setErr(e.message || 'Erreur inconnue')
-      } finally {
-        setIsLoading(false)
-      }
-    })()
+    // Check for tokens in localStorage first
+    const tokens = getSpotifyTokens()
+    if (tokens) {
+      setToken(tokens.access_token)
+      setIsLoading(false)
+    } else {
+      setErr('Authentification Spotify requise')
+      setIsLoading(false)
+    }
   }, [])
 
   const handleAuth = () => {
-    window.location.href = '/.netlify/functions/spotify-auth/start'
+    // Direct Spotify OAuth flow
+    const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID
+    const redirectUri = `${window.location.origin}/parent/callback`
+    
+    const scopes = [
+      'user-read-private',
+      'user-read-email',
+      'playlist-read-private',
+      'playlist-read-collaborative',
+      'streaming',
+      'user-read-playback-state',
+      'user-modify-playback-state'
+    ].join(' ')
+
+    const state = Math.random().toString(36).substring(7)
+    localStorage.setItem('spotify_auth_state', state)
+
+    const authUrl = `https://accounts.spotify.com/authorize?` +
+      `client_id=${clientId}&` +
+      `response_type=code&` +
+      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+      `scope=${encodeURIComponent(scopes)}&` +
+      `show_dialog=true&` +
+      `state=${state}`
+
+    window.location.href = authUrl
   }
 
   if (isLoading) {
