@@ -11,8 +11,10 @@ const tabs = [
 export default function Footer() {
   const { pathname } = useLocation()
   const isParent = pathname.startsWith('/parent')
+  const isChild = pathname.startsWith('/child')
 
-  if (!isParent) return null
+  // Masquer le footer sur les routes /child* et si pas parent
+  if (!isParent || isChild) return null
 
   return (
     <nav className="border-t border-gray-200 bg-white">
