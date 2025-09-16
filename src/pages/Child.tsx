@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Music, Heart, Clock, LogOut, Play } from 'lucide-react'
+import { Music, Heart, Clock, LogOut, Play, Info } from 'lucide-react'
 
 interface ChildSession {
   child: {
@@ -170,14 +170,15 @@ export default function Child() {
               </p>
               <button
                 onClick={() => navigate('/player')}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 transform hover:scale-105 shadow-lg"
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-xl p-6 max-w-md w-full border border-white/20">
               >
-                <div className="flex items-center space-x-2">
-                  <Play className="w-5 h-5" />
-                  <span>Ouvrir le lecteur</span>
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <Info className="w-8 h-8 text-white" />
+              </div>
                 </div>
-              </button>
-            </div>
+            <h1 className="text-2xl font-bold text-white mb-2">Connexion parent requise</h1>
+            <p className="text-white/80">Un parent doit d'abord se connecter</p>
           </div>
 
           {/* Favoris récents */}
@@ -199,27 +200,22 @@ export default function Child() {
               </div>
             ) : (
               <div className="space-y-3">
-                {favorites.map((favorite) => (
-                  <div key={favorite.id} className="flex items-center space-x-3 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg hover:from-purple-100 hover:to-pink-100 transition-all duration-200">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Music className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-900 truncate">
-                        {favorite.track_name}
-                      </h3>
-                      <p className="text-purple-600 truncate text-sm">
-                        {favorite.artist_name}
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-2 text-xs text-gray-500">
                       <Clock className="w-3 h-3" />
-                      <span>{formatTimeAgo(favorite.added_at)}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+              <h3 className="font-semibold text-white mb-3 text-lg">Étapes à suivre :</h3>
+              <ol className="text-white/90 space-y-2 text-base leading-relaxed">
+                <li className="flex items-start">
+                  <span className="bg-white/20 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">1</span>
+                  <span>Demandez à un parent d'aller sur l'espace parent</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="bg-white/20 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">2</span>
+                  <span>Le parent doit se connecter avec son compte Spotify Premium</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="bg-white/20 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">3</span>
+                  <span>Revenez ici, vous serez automatiquement redirigé</span>
+                </li>
           </div>
         </div>
 
@@ -239,7 +235,7 @@ export default function Child() {
               <div className="text-2xl font-bold">{favorites.length}</div>
               <div className="text-sm opacity-90">Favoris</div>
             </div>
-            <div className="text-center">
+              className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold text-lg min-h-[44px] flex items-center justify-center"
               <div className="text-2xl font-bold">🎉</div>
               <div className="text-sm opacity-90">Bonne humeur</div>
             </div>
