@@ -170,15 +170,12 @@ export default function Child() {
               </p>
               <button
                 onClick={() => navigate('/player')}
-        <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-xl p-6 max-w-md w-full border border-white/20">
+                className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold text-lg min-h-[44px] flex items-center justify-center"
               >
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                <Info className="w-8 h-8 text-white" />
-              </div>
-                </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Connexion parent requise</h1>
-            <p className="text-white/80">Un parent doit d'abord se connecter</p>
+                <Play className="w-5 h-5 mr-2" />
+                Ouvrir le lecteur
+              </button>
+            </div>
           </div>
 
           {/* Favoris récents */}
@@ -200,22 +197,20 @@ export default function Child() {
               </div>
             ) : (
               <div className="space-y-3">
+                {favorites.map((favorite) => (
+                  <div key={favorite.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-gray-900">{favorite.track_name}</h4>
+                      <p className="text-sm text-gray-600">{favorite.artist_name}</p>
+                    </div>
+                    <div className="flex items-center text-xs text-gray-500">
                       <Clock className="w-3 h-3" />
-            <div className="bg-white/10 rounded-lg p-4 border border-white/20">
-              <h3 className="font-semibold text-white mb-3 text-lg">Étapes à suivre :</h3>
-              <ol className="text-white/90 space-y-2 text-base leading-relaxed">
-                <li className="flex items-start">
-                  <span className="bg-white/20 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">1</span>
-                  <span>Demandez à un parent d'aller sur l'espace parent</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="bg-white/20 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">2</span>
-                  <span>Le parent doit se connecter avec son compte Spotify Premium</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="bg-white/20 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">3</span>
-                  <span>Revenez ici, vous serez automatiquement redirigé</span>
-                </li>
+                      <span className="ml-1">{formatTimeAgo(favorite.added_at)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -235,7 +230,7 @@ export default function Child() {
               <div className="text-2xl font-bold">{favorites.length}</div>
               <div className="text-sm opacity-90">Favoris</div>
             </div>
-              className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold text-lg min-h-[44px] flex items-center justify-center"
+            <div className="text-center">
               <div className="text-2xl font-bold">🎉</div>
               <div className="text-sm opacity-90">Bonne humeur</div>
             </div>
