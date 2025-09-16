@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams, Navigate } from 'react-router-dom'
-import { Bug, Database, Music, Users, Playlist, Shield, Clock } from 'lucide-react'
+import { Bug, Database, Music, Users, Play as Playlist, Shield, Clock } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
 
