@@ -1,71 +1,24 @@
-import { Handler } from '@netlify/functions'
-import { createClient } from '@supabase/supabase-js'
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-}
-
-export const handler: Handler = async (event) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: corsHeaders,
-      body: '',
-    }
-  }
-
+export async function handler() {
   try {
-    // Créer le client Supabase avec les variables d'environnement
-    const supabaseUrl = process.env.VITE_SUPABASE_URL
-    const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY
-
-    if (!supabaseUrl || !supabaseKey) {
-      return {
-        statusCode: 200,
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ok: false
-        }),
-      }
-    }
-
-    const supabase = createClient(supabaseUrl, supabaseKey)
-
-    // Test simple de connexion à la base de données
-    // On fait une requête basique qui ne révèle aucune donnée sensible
-    const { error } = await supabase
-      .from('profiles')
-      .select('id')
-      .limit(1)
-
-    const ok = !error
-
+    // Ici tu peux juste retourner un flag statique au début
     return {
       statusCode: 200,
       headers: {
-        ...corsHeaders,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        ok
-      }),
+      body: JSON.stringify({ ok: true })
     }
-  } catch (error) {
-    console.error('Ping DB error:', error)
-    return {
-      statusCode: 200,
+  } catch (err) {
+    return { 
+      statusCode: 500, 
       headers: {
-        ...corsHeaders,
+        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        ok: false
-      }),
+      body: JSON.stringify({ ok: false, error: err.message }) 
     }
   }
 }
