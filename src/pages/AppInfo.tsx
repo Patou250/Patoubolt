@@ -42,13 +42,13 @@ export default function AppInfo() {
             </div>
             
             <div className="bg-share-50 rounded-lg p-4">
-              <h3 className="font-semibold text-share-700 mb-2">Routes</h3>
-              <p className="text-share-600">{appInfo.routes.length} routes</p>
+              <h3 className="font-semibold text-share-700 mb-2">Host</h3>
+              <p className="text-share-600 text-sm">{window.location.host}</p>
             </div>
             
             <div className="bg-awaken-50 rounded-lg p-4">
-              <h3 className="font-semibold text-awaken-700 mb-2">Host</h3>
-              <p className="text-awaken-700 text-sm">{appInfo.host}</p>
+              <h3 className="font-semibold text-awaken-700 mb-2">Routes</h3>
+              <p className="text-awaken-700">{appInfo.routes.length} routes</p>
             </div>
           </div>
 

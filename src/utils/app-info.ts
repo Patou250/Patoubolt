@@ -8,7 +8,6 @@ export interface AppInfo {
     childArea: boolean
     parentArea: boolean
   }
-  host: string
 }
 
 // Liste des routes déclarées dans l'application
@@ -30,14 +29,13 @@ export const APP_ROUTES = [
 // Génération des informations de l'application
 export function getAppInfo(): AppInfo {
   return {
-    appVersion: '__BUILD__',
-    buildTime: '__TIME__',
+    appVersion: '0.1.0',
+    buildTime: new Date().toISOString(),
     routes: APP_ROUTES,
     features: {
       spotify: true,
       childArea: true,
       parentArea: true
-    },
-    host: typeof window !== 'undefined' ? window.location.host : ''
+    }
   }
 }
