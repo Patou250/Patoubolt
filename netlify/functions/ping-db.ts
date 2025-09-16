@@ -1,6 +1,6 @@
 export async function handler() {
   try {
-    // Ici tu peux juste retourner un flag statique au début
+    // Ici pareil, flag statique; tu brancheras un vrai test Supabase plus tard
     return {
       statusCode: 200,
       headers: {
