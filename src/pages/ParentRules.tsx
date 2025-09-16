@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Clock, Shield, List, Save } from 'lucide-react'
 import { getParentSession } from '../utils/auth'
 import { supabase } from '../lib/supabase'
@@ -43,7 +43,7 @@ export default function ParentRules() {
       return
     }
 
-    if (!childId) {
+    if (!childId || childId === 'choose') {
       navigate('/parent/children')
       return
     }
@@ -145,6 +145,28 @@ export default function ParentRules() {
     } finally {
       setIsSaving(false)
     }
+  }
+  // Si on arrive sur /parent/rules/choose, rediriger vers la sélection d'enfant
+  if (childId === 'choose') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center p-4">
+        <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
+          <Shield className="w-12 h-12 text-purple-600 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Choisir un enfant
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Sélectionnez l'enfant pour lequel vous souhaitez configurer les règles
+          </p>
+          <Link
+            to="/parent/children"
+            className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors"
+          >
+            Voir mes enfants
+          </Link>
+        </div>
+      </div>
+    )
   }
 
   if (isLoading) {
