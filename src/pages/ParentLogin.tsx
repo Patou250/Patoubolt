@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useNavigate } from 'react-router-dom'
-import { Music } from 'lucide-react'
 
 export default function ParentLogin() {
   const [mode, setMode] = useState<'login'|'signup'>('signup')
@@ -121,21 +120,17 @@ export default function ParentLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-patou-main-50 to-protect-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm">
         <div className="text-center mb-8">
-          <img 
-            src="/Patou emeraude sans fond.png" 
-            alt="Patou Logo" 
-            className="h-12 w-auto mx-auto mb-4"
-          />
+          <img src="/patou-logo.svg" alt="Patou" className="h-16 w-auto mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Compte parent</h1>
           <p className="text-gray-600">Gérez l'écoute musicale de vos enfants</p>
         </div>
 
         <form onSubmit={submit} className="space-y-4 mb-6">
           <input 
-            className="w-full rounded-lg px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-patou-main focus:border-transparent"
+            className="w-full rounded-lg border border-gray-300 p-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             placeholder="Email" 
             type="email"
             value={email} 
@@ -143,7 +138,7 @@ export default function ParentLogin() {
             required
           />
           <input 
-            className="w-full rounded-lg px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-patou-main focus:border-transparent"
+            className="w-full rounded-lg border border-gray-300 p-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             placeholder="Mot de passe" 
             type="password" 
             value={password} 
@@ -152,32 +147,55 @@ export default function ParentLogin() {
           />
           {error && <p className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">{error}</p>}
           {success && <p className="text-green-600 text-sm bg-green-50 p-3 rounded-lg">{success}</p>}
-          <button 
-            disabled={loading}
-            className="w-full rounded-xl px-5 py-3 bg-patou-main text-white font-medium hover:bg-patou-main-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {loading ? 'Chargement...' : (mode==='signup' ? 'Créer mon compte' : 'Se connecter')}
-          </button>
+          
+          <div className="flex gap-3">
+            {mode === 'signup' ? (
+              <>
+                <button 
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 rounded-lg px-4 py-2 bg-emerald-600 text-white font-medium hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[44px] flex items-center justify-center"
+                >
+                  {loading ? 'Chargement...' : 'Créer mon compte'}
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setMode('login')}
+                  className="flex-1 rounded-lg px-4 py-2 bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition-colors min-h-[44px] flex items-center justify-center"
+                >
+                  Se connecter
+                </button>
+              </>
+            ) : (
+              <>
+                <button 
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 rounded-lg px-4 py-2 bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[44px] flex items-center justify-center"
+                >
+                  {loading ? 'Chargement...' : 'Se connecter'}
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setMode('signup')}
+                  className="flex-1 rounded-lg px-4 py-2 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors min-h-[44px] flex items-center justify-center"
+                >
+                  Créer mon compte
+                </button>
+              </>
+            )}
+          </div>
         </form>
-
-        <div className="text-center mb-6">
-          <button 
-            onClick={()=>setMode(mode==='signup'?'login':'signup')}
-            className="text-patou-main hover:text-patou-main-600 underline text-sm"
-          >
-            {mode==='signup' ? 'Déjà un compte ? Se connecter' : 'Nouveau ? Créer un compte'}
-          </button>
-        </div>
 
         <div className="border-t border-gray-200 pt-6">
           <button
             onClick={handleSpotifyLogin}
-            className="w-full inline-flex items-center justify-center gap-3 rounded-xl px-5 py-3 bg-[#1DB954] text-white font-semibold hover:bg-[#1ed760] transition-colors"
+            className="w-full inline-flex items-center justify-center gap-3 rounded-lg px-4 py-2 bg-[#1DB954] text-white font-medium hover:bg-[#1ed760] transition-colors min-h-[44px]"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/>
             </svg>
-            Se connecter avec Spotify
+            Connecter mon compte Spotify Premium
           </button>
           <p className="text-xs text-gray-500 mt-2 text-center">
             Requiert un compte Spotify Premium pour la lecture intégrée.

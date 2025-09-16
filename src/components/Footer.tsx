@@ -12,9 +12,10 @@ export default function Footer() {
   const { pathname } = useLocation()
   const isParent = pathname.startsWith('/parent')
   const isChild = pathname.startsWith('/child')
+  const isParentLogin = pathname.startsWith('/parent/login')
 
-  // Masquer le footer sur les routes /child* et si pas parent
-  if (!isParent || isChild) return null
+  // Masquer le footer sur les routes /child*, si pas parent, ou sur /parent/login
+  if (!isParent || isChild || isParentLogin) return null
 
   return (
     <nav className="border-t border-gray-200 bg-white">
