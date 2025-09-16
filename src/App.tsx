@@ -8,6 +8,9 @@ import ParentDashboard from './pages/ParentDashboard'
 import Player from './pages/Player'
 import ChildLogin from './pages/ChildLogin'
 import Child from './pages/Child'
+import ChildSearch from './pages/ChildSearch'
+import ChildPlaylists from './pages/ChildPlaylists'
+import ChildHistory from './pages/ChildHistory'
 
 export default function App() {
   return (
@@ -21,6 +24,9 @@ export default function App() {
           <Route path="/player" element={<Player />} />
           <Route path="/child/login" element={<ChildLogin />} />
           <Route path="/child" element={<Child />} />
+          <Route path="/child/search" element={<ChildSearch />} />
+          <Route path="/child/playlists" element={<ChildPlaylists />} />
+          <Route path="/child/history" element={<ChildHistory />} />
         </Route>
       </Routes>
     </Router>
