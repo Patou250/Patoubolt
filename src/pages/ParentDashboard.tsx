@@ -126,6 +126,13 @@ export default function ParentDashboard() {
                 <h2>Vue d'ensemble</h2>
                 <div className={styles.headerActions}>
                   <button 
+                    onClick={() => navigate('/player')}
+                    className={styles.secondaryButton}
+                  >
+                    <Music size={16} />
+                    Lecteur
+                  </button>
+                  <button 
                     onClick={() => navigate('/parent/children')}
                     className={styles.primaryButton}
                   >

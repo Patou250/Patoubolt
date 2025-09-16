@@ -27,6 +27,7 @@ interface PlayerSdkProps {
   accessToken: string
   onTrackChange?: (trackId: string) => void
   trackId?: string
+  onDeviceReady?: (deviceId: string) => void
 }
 
 declare global {
@@ -42,7 +43,7 @@ declare global {
   }
 }
 
-export default function PlayerSdk({ accessToken, onTrackChange, trackId }: PlayerSdkProps) {
+export default function PlayerSdk({ accessToken, onTrackChange, trackId, onDeviceReady }: PlayerSdkProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null)
   const [position, setPosition] = useState(0)
@@ -85,6 +86,11 @@ export default function PlayerSdk({ accessToken, onTrackChange, trackId }: Playe
         console.log('🚀 PLAYER-SDK - Device prêt:', device_id)
         setDeviceId(device_id)
         setIsReady(true)
+        
+        // Notify parent component that device is ready
+        if (onDeviceReady) {
+          onDeviceReady(device_id)
+        }
       })
 
       player.addListener('not_ready', ({ device_id }: { device_id: string }) => {
