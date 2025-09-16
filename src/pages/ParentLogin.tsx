@@ -8,21 +8,26 @@ export default function ParentLogin() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
   const nav = useNavigate()
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null); setLoading(true)
+    setError(null)
+    setSuccess(null)
+    setLoading(true)
+    
     try {
       if (mode === 'signup') {
         const { error } = await supabase.auth.signUp({ email, password })
         if (error) throw error
+        setSuccess('Compte créé avec succès ! Vous pouvez maintenant connecter Spotify.')
       }
       if (mode === 'login') {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
+        setSuccess('Connexion réussie ! Vous pouvez maintenant connecter Spotify.')
       }
-      nav('/parent/callback?next=connect-spotify')
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -145,6 +150,7 @@ export default function ParentLogin() {
             required
           />
           {error && <p className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">{error}</p>}
+          {success && <p className="text-green-600 text-sm bg-green-50 p-3 rounded-lg">{success}</p>}
           <button 
             disabled={loading}
             className="w-full rounded-xl px-5 py-3 bg-patou-main text-white font-medium hover:bg-patou-main-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
