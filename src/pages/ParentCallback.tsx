@@ -38,8 +38,14 @@ export default function ParentCallback() {
           body: JSON.stringify({ code, state })
         })
 
+        if (response.status === 404) {
+          setError('Impossible de se connecter à Spotify. Vérifiez vos identifiants ou réessayez plus tard.')
+          return
+        }
+        
         if (!response.ok) {
-          throw new Error(`Erreur d'échange: ${response.status}`)
+          setError('Erreur lors de la connexion Spotify. Veuillez réessayer.')
+          return
         }
 
         setStatus('Vérification du profil parent...')
@@ -50,7 +56,7 @@ export default function ParentCallback() {
 
       } catch (error) {
         console.error('Erreur callback Spotify:', error)
-        setError(error instanceof Error ? error.message : 'Erreur inconnue')
+        setError('Impossible de se connecter à Spotify. Vérifiez vos identifiants ou réessayez plus tard.')
       }
     }
 
@@ -58,7 +64,7 @@ export default function ParentCallback() {
   }, [searchParams, navigate])
 
   const handleRetry = () => {
-    navigate('/parent/login', { replace: true })
+    navigate('/parent/login')
   }
 
   if (error) {
@@ -79,13 +85,13 @@ export default function ParentCallback() {
           
           <button
             onClick={handleRetry}
-            className="w-full bg-patou-main text-white py-3 px-6 rounded-xl font-semibold hover:bg-patou-main-600 transition-colors"
+            className="w-full bg-emerald-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-emerald-700 transition-colors min-h-[44px] flex items-center justify-center"
           >
-            Réessayer
+            Retour à la connexion
           </button>
           
           <p className="text-sm text-gray-500 mt-4">
-            Vous serez redirigé vers la page de connexion
+            Retournez à la page de connexion pour réessayer
           </p>
         </div>
       </div>
@@ -108,6 +114,10 @@ export default function ParentCallback() {
         </p>
         
         <div className="animate-spin w-8 h-8 border-2 border-patou-main border-t-transparent rounded-full mx-auto"></div>
+        
+        <p className="text-sm text-gray-500 mt-4">
+          Connexion en cours...
+        </p>
       </div>
     </div>
   )
