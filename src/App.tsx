@@ -15,6 +15,7 @@ import ParentHistory from './pages/ParentHistory'
 import ChildLogin from './pages/ChildLogin'
 import Child from './pages/Child'
 import Player from './pages/Player'
+import AppInfo from './pages/AppInfo'
 
 function App() {
   const { mustGate } = usePreviewGate()
@@ -40,6 +41,8 @@ function App() {
           <Route path="/child" element={<Child />} />
           {/* PLAYER */}
           <Route path="/player" element={<Player />} />
+          {/* APP INFO */}
+          <Route path="/app-info" element={<AppInfo />} />
         </Route>
       </Routes>
     </Router>
