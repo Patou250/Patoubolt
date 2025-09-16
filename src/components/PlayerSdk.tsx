@@ -112,7 +112,23 @@ export default function PlayerSdk({ accessToken, onTrackChange, trackId, initial
             album: t.album,
             duration_ms: t.duration_ms
           }
-          if (newTrack.id !== currentTrack?.id) onTrackChange?.(newTrack.id)
+          if (newTrack.id !== currentTrack?.id) {
+            onTrackChange?.(newTrack.id)
+            
+            // Track history tracking
+            const payload = {
+              trackId: newTrack.id,
+              name: newTrack.name,
+              artist: newTrack.artists.map(a=>a.name).join(', '),
+              cover: newTrack.album.images?.[0]?.url || '',
+              ts: Date.now()
+            }
+            localStorage.setItem('patou_last_track', JSON.stringify(payload))
+            const rawHist = localStorage.getItem('patou_play_history')
+            const hist = rawHist ? JSON.parse(rawHist) : []
+            hist.unshift(payload); if (hist.length > 500) hist.pop()
+            localStorage.setItem('patou_play_history', JSON.stringify(hist))
+          }
           setCurrentTrack(newTrack)
           // clear recoverable error when a track finally loads
           if (recoverable(error)) setError(null)
