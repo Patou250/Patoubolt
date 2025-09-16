@@ -58,11 +58,14 @@ export default function PlayerSdk({ accessToken, onTrackChange, trackId }: Playe
   useEffect(() => {
     console.log('🚀 PLAYER-SDK - Initialisation du SDK Spotify')
     
-    // Charger le SDK Spotify Web Playback
-    const script = document.createElement('script')
-    script.src = 'https://sdk.scdn.co/spotify-player.js'
-    script.async = true
-    document.body.appendChild(script)
+    // Charger le SDK Spotify Web Playback (avec protection contre les doublons)
+    if (!window.Spotify && !document.getElementById('spotify-sdk')) {
+      const script = document.createElement('script')
+      script.id = 'spotify-sdk'
+      script.src = 'https://sdk.scdn.co/spotify-player.js'
+      script.async = true
+      document.body.appendChild(script)
+    }
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       console.log('🚀 PLAYER-SDK - SDK Spotify prêt')
