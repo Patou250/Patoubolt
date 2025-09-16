@@ -1,20 +1,13 @@
-import { Outlet, useLocation } from 'react-router-dom'
-import { Header } from './Header'
-import Footer from './Footer'
-import styles from './AppShell.module.css'
+import { Outlet } from 'react-router-dom'
+import Header from './Header'
 
 export default function AppShell() {
-  const { pathname } = useLocation()
-  const isChildArea = pathname.startsWith('/child')
-
   return (
-    <div className={styles['app-shell']}>
+    <div className="min-h-screen bg-white text-gray-900 flex flex-col">
       <Header />
-      <main className={styles['app-shell__main']}>
+      <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-8">
         <Outlet />
       </main>
-      {/* Footer masqué en mode enfant */}
-      {!isChildArea && <Footer />}
     </div>
   )
 }
