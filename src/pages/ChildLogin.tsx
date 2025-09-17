@@ -71,13 +71,13 @@ export default function ChildLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md lg:max-w-lg">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex items-center justify-center gap-4 mb-8">
           <Link 
             to="/" 
-            className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow"
+            className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow absolute left-4 top-4 lg:relative lg:left-0 lg:top-0"
           >
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </Link>
@@ -85,7 +85,7 @@ export default function ChildLogin() {
         </div>
 
         {/* Login Form */}
-        <div className="bg-white rounded-lg shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-6">
             <div className="text-4xl mb-3">🎵</div>
             <h2 className="text-xl font-semibold text-gray-800">Connexion</h2>
@@ -106,7 +106,7 @@ export default function ChildLogin() {
                 Ton prénom
               </label>
               <input 
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all" 
+                className="w-full border border-gray-300 rounded-md px-3 py-3 text-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
                 placeholder="Emma, Lucas..." 
                 value={name} 
                 onChange={e => setName(e.target.value)}
@@ -120,7 +120,7 @@ export default function ChildLogin() {
                 Ton code secret
               </label>
               <input 
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg text-center tracking-widest focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all" 
+                className="w-full border border-gray-300 rounded-md px-3 py-3 text-lg text-center tracking-widest focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
                 placeholder="••••" 
                 type="password"
                 value={pin} 
@@ -136,11 +136,11 @@ export default function ChildLogin() {
             <button 
               type="submit"
               disabled={loading || !name.trim() || !pin.trim()}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 disabled:from-gray-400 disabled:to-gray-400 text-white rounded-lg font-semibold transition-all text-lg"
+              className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-400 text-white font-semibold rounded-lg py-2 transition-colors flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
-                  <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                  <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
                   Connexion...
                 </>
               ) : (
@@ -154,7 +154,7 @@ export default function ChildLogin() {
 
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500">
-              Demande à tes parents s'il y a un problème
+              Pas de compte ? Demande à tes parents de t'en créer un
             </p>
           </div>
         </div>

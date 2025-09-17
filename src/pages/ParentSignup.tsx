@@ -82,13 +82,9 @@ export default function ParentSignup() {
   }
 
   return (
-    <div className="patou-layout">
-      <Header />
-      
-      <main className="patou-main">
-        <div className="container">
-          <div className="max-w-md mx-auto">
-            <div className="patou-card">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md lg:max-w-lg">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
               <div className="text-center mb-8">
                 <div className="text-4xl mb-4">✨</div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Créer un compte</h1>
@@ -114,7 +110,7 @@ export default function ParentSignup() {
                       Prénom
                     </label>
                     <input 
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                      className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
                       placeholder="Jean" 
                       value={firstName} 
                       onChange={e => setFirstName(e.target.value)}
@@ -126,7 +122,7 @@ export default function ParentSignup() {
                       Nom
                     </label>
                     <input 
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                      className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
                       placeholder="Dupont" 
                       value={lastName} 
                       onChange={e => setLastName(e.target.value)}
@@ -140,7 +136,7 @@ export default function ParentSignup() {
                     Adresse email
                   </label>
                   <input 
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
                     type="email" 
                     placeholder="jean.dupont@email.com" 
                     value={email} 
@@ -154,7 +150,7 @@ export default function ParentSignup() {
                     Mot de passe
                   </label>
                   <input 
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
                     type="password" 
                     placeholder="••••••••" 
                     value={password} 
@@ -170,7 +166,7 @@ export default function ParentSignup() {
                     Date de naissance
                   </label>
                   <input 
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
                     type="date" 
                     value={birthdate} 
                     onChange={e => setBirthdate(e.target.value)}
@@ -189,11 +185,11 @@ export default function ParentSignup() {
                   />
                   <label htmlFor="accept-terms" className="text-sm text-gray-600">
                     J'accepte les{' '}
-                    <Link to="/cgu" className="text-patou-green hover:text-patou-green-600 transition-colors">
+                    <Link to="/cgu" className="text-emerald-600 hover:text-emerald-700 transition-colors">
                       Conditions Générales d'Utilisation
                     </Link>
                     {' '}et la{' '}
-                    <Link to="/privacy" className="text-patou-green hover:text-patou-green-600 transition-colors">
+                    <Link to="/privacy" className="text-emerald-600 hover:text-emerald-700 transition-colors">
                       Politique de Confidentialité
                     </Link>
                   </label>
@@ -201,12 +197,12 @@ export default function ParentSignup() {
                 
                 <button 
                   type="submit"
-                  className="w-full btn btn--primary btn--large disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-400 text-white font-semibold rounded-lg py-2 transition-colors disabled:cursor-not-allowed"
                   disabled={loading}
                 >
                   {loading ? (
                     <>
-                      <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                      <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full inline-block mr-2"></div>
                       Création en cours...
                     </>
                   ) : (
@@ -218,17 +214,13 @@ export default function ParentSignup() {
               <div className="mt-8 text-center">
                 <p className="text-gray-600">
                   Déjà un compte ?{' '}
-                  <Link to="/parent/login" className="text-patou-green font-semibold hover:text-patou-green-600 transition-colors">
+                  <Link to="/parent/login" className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors">
                     Se connecter
                   </Link>
                 </p>
               </div>
             </div>
-          </div>
         </div>
-      </main>
-      
-      <Footer />
     </div>
   )
 }

@@ -7,29 +7,27 @@ import Footer from '../components/Footer'
 export default function ParentLogin() {
   const [email, setEmail] = useState(''); const [password, setPassword] = useState('')
   const [err, setErr] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
   const nav = useNavigate()
 
   const login = async (e:React.FormEvent) => {
-    e.preventDefault(); setErr(null)
+    e.preventDefault(); setErr(null); setLoading(true)
     
     if (!email.trim() || !password.trim()) {
       setErr('Veuillez saisir votre email et mot de passe')
+      setLoading(false)
       return
     }
     
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) { setErr(error.message); return }
+    if (error) { setErr(error.message); setLoading(false); return }
     nav('/parent/dashboard')
   }
 
   return (
-    <div className="patou-layout">
-      <Header />
-      
-      <main className="patou-main">
-        <div className="container">
-          <div className="max-w-md mx-auto">
-            <div className="patou-card">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md lg:max-w-lg">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
               <div className="text-center mb-8">
                 <div className="text-4xl mb-4">👨‍👩‍👧‍👦</div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Connexion Parent</h1>
@@ -48,11 +46,12 @@ export default function ParentLogin() {
                     Adresse email
                   </label>
                   <input 
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
                     type="email" 
                     placeholder="votre@email.com" 
                     value={email} 
                     onChange={e => setEmail(e.target.value)} 
+                    disabled={loading}
                   />
                 </div>
                 
@@ -61,33 +60,34 @@ export default function ParentLogin() {
                     Mot de passe
                   </label>
                   <input 
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
                     type="password" 
                     placeholder="••••••••" 
                     value={password} 
                     onChange={e => setPassword(e.target.value)} 
+                    disabled={loading}
                   />
                 </div>
                 
-                <button type="submit" className="w-full btn btn--primary btn--large">
-                  Se connecter
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-400 text-white font-semibold rounded-lg py-2 transition-colors"
+                >
+                  {loading ? 'Connexion...' : 'Se connecter'}
                 </button>
               </form>
               
               <div className="mt-8 text-center">
                 <p className="text-gray-600">
                   Pas encore de compte ?{' '}
-                  <Link to="/parent/signup" className="text-patou-green font-semibold hover:text-patou-green-600 transition-colors">
+                  <Link to="/parent/signup" className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors">
                     Créer un compte
                   </Link>
                 </p>
               </div>
             </div>
-          </div>
         </div>
-      </main>
-      
-      <Footer />
     </div>
   )
 }
