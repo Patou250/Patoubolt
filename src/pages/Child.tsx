@@ -145,11 +145,13 @@ export default function Child() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4 pb-20 md:pb-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+      <div className="md:ml-64">
+        <div className="p-4 pb-20 md:pb-8">
       <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
         
         {/* Header avec salutation */}
-        <div className="text-center mb-6 md:mb-8">
+        <div className="text-center mb-4 md:mb-8 pt-4 md:pt-0">
           <div className="text-6xl md:text-8xl mb-4">{child.emoji}</div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
             Bonjour {child.name} ! 👋
@@ -158,7 +160,7 @@ export default function Child() {
         </div>
 
         {/* Section 1: PlayerSdk */}
-        <div className="flex justify-center mb-6 md:mb-8">
+        <div className="flex justify-center mb-4 md:mb-8">
           <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-6">
             <div className="flex items-center gap-3 mb-4">
               <Music className="w-6 h-6 text-blue-500" />
@@ -183,7 +185,7 @@ export default function Child() {
         </div>
 
         {/* Section 2: Playlists en carrousel */}
-        <div className="mb-6 md:mb-8">
+        <div className="mb-4 md:mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl md:text-2xl font-bold text-gray-800 flex items-center gap-2">
               <Heart className="w-6 h-6 text-pink-500" />
@@ -198,23 +200,23 @@ export default function Child() {
             </Link>
           </div>
           
-          <div className="overflow-x-auto">
-            <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex gap-3 md:gap-4 pb-4" style={{ width: 'max-content' }}>
               {playlists.map(playlist => (
                 <div 
                   key={playlist.id}
-                  className="flex-shrink-0 w-48 bg-white rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 cursor-pointer"
+                  className="flex-shrink-0 w-40 md:w-48 bg-white rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 cursor-pointer"
                 >
                   <img 
                     src={playlist.cover} 
                     alt={playlist.title}
-                    className="w-full h-32 object-cover rounded-t-xl"
+                    className="w-full h-24 md:h-32 object-cover rounded-t-xl"
                   />
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 text-sm mb-1 truncate">
+                  <div className="p-3 md:p-4">
+                    <h3 className="font-semibold text-gray-900 text-xs md:text-sm mb-1 truncate">
                       {playlist.title}
                     </h3>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 truncate">
                       {playlist.type === 'favorites' && 'Tes chansons préférées'}
                       {playlist.type === 'weekly' && 'Nouvelle sélection'}
                       {playlist.type === 'custom' && 'Playlist personnalisée'}
@@ -235,19 +237,19 @@ export default function Child() {
           
           {history.length > 0 ? (
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+              <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-200">
                 {history.map((track, index) => (
                   <div 
                     key={`${track.trackId}-${index}`}
-                    className="p-4 hover:bg-gray-50 transition-colors cursor-pointer flex items-center gap-3"
+                    className="p-3 md:p-4 hover:bg-gray-50 transition-colors cursor-pointer flex items-center gap-3"
                   >
                     <img 
                       src={track.cover} 
                       alt={track.name}
-                      className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                      className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover flex-shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-900 text-sm truncate">
+                      <h3 className="font-semibold text-gray-900 text-xs md:text-sm truncate">
                         {track.name}
                       </h3>
                       <p className="text-xs text-gray-600 truncate">
@@ -259,7 +261,7 @@ export default function Child() {
                     </div>
                     <Link
                       to={`/player?trackId=${track.trackId}`}
-                      className="flex-shrink-0 p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="flex-shrink-0 p-1.5 md:p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
                     >
                       <Music className="w-4 h-4" />
                     </Link>
@@ -268,10 +270,10 @@ export default function Child() {
               </div>
             </div>
           ) : (
-            <div className="bg-white rounded-xl shadow-md p-8 text-center">
+            <div className="bg-white rounded-xl shadow-md p-6 md:p-8 text-center">
               <Clock className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Aucun historique</h3>
-              <p className="text-gray-600 mb-4">
+              <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-2">Aucun historique</h3>
+              <p className="text-sm md:text-base text-gray-600 mb-4">
                 Commence à écouter de la musique pour voir ton historique ici
               </p>
               <Link 
@@ -285,38 +287,40 @@ export default function Child() {
         </div>
 
         {/* Actions rapides */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-6 md:mt-8">
           <Link 
             to="/child/search" 
-            className="bg-white rounded-xl shadow-md p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
+            className="bg-white rounded-xl shadow-md p-3 md:p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
           >
             <div className="text-3xl mb-2">🔍</div>
-            <span className="text-sm font-semibold text-gray-800">Rechercher</span>
+            <span className="text-xs md:text-sm font-semibold text-gray-800">Rechercher</span>
           </Link>
           
           <Link 
             to="/child/favorites" 
-            className="bg-white rounded-xl shadow-md p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
+            className="bg-white rounded-xl shadow-md p-3 md:p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
           >
             <div className="text-3xl mb-2">❤️</div>
-            <span className="text-sm font-semibold text-gray-800">Favoris</span>
+            <span className="text-xs md:text-sm font-semibold text-gray-800">Favoris</span>
           </Link>
           
           <Link 
             to="/child/playlists" 
-            className="bg-white rounded-xl shadow-md p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
+            className="bg-white rounded-xl shadow-md p-3 md:p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
           >
             <div className="text-3xl mb-2">🎧</div>
-            <span className="text-sm font-semibold text-gray-800">Playlists</span>
+            <span className="text-xs md:text-sm font-semibold text-gray-800">Playlists</span>
           </Link>
           
           <Link 
             to="/child/history" 
-            className="bg-white rounded-xl shadow-md p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
+            className="bg-white rounded-xl shadow-md p-3 md:p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
           >
             <div className="text-3xl mb-2">🕒</div>
-            <span className="text-sm font-semibold text-gray-800">Historique</span>
+            <span className="text-xs md:text-sm font-semibold text-gray-800">Historique</span>
           </Link>
+        </div>
+      </div>
         </div>
       </div>
     </div>

@@ -45,8 +45,8 @@ export default function Navigation({ userType = 'child' }: NavigationProps) {
   return (
     <>
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
-        <div className="flex items-center justify-around py-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 safe-area-pb">
+        <div className="flex items-center justify-around py-3 px-2">
           {navigationItems.map((item) => {
             const Icon = item.icon
             const active = isActive(item.path)
@@ -55,14 +55,14 @@ export default function Navigation({ userType = 'child' }: NavigationProps) {
               <Link
                 key={item.id}
                 to={item.path}
-                className={`flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-200 ${
+                className={`flex flex-col items-center py-2 px-2 rounded-lg transition-all duration-200 min-w-0 flex-1 ${
                   active
                     ? 'text-patou-green bg-patou-green-50'
                     : 'text-gray-500 hover:text-patou-green hover:bg-patou-green-50'
                 }`}
               >
-                <Icon size={20} className="mb-1" />
-                <span className="text-xs font-medium">{item.label}</span>
+                <Icon size={22} className="mb-1 flex-shrink-0" />
+                <span className="text-xs font-medium truncate">{item.label}</span>
               </Link>
             )
           })}
@@ -70,10 +70,10 @@ export default function Navigation({ userType = 'child' }: NavigationProps) {
       </nav>
 
       {/* Desktop Sidebar Navigation */}
-      <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-40">
+      <nav className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-40 shadow-sm">
         <div className="flex flex-col w-full">
           {/* Logo Section */}
-          <div className="p-6 border-b border-gray-200">
+          <div className="p-6 border-b border-gray-100">
             <Link to="/" className="flex items-center gap-3">
               <img 
                 src="/Patou emeraude sans fond.png" 
@@ -85,7 +85,7 @@ export default function Navigation({ userType = 'child' }: NavigationProps) {
           </div>
 
           {/* Navigation Items */}
-          <div className="flex-1 p-4">
+          <div className="flex-1 p-6">
             <div className="space-y-2">
               {navigationItems.map((item) => {
                 const Icon = item.icon
@@ -95,13 +95,13 @@ export default function Navigation({ userType = 'child' }: NavigationProps) {
                   <Link
                     key={item.id}
                     to={item.path}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                       active
-                        ? 'text-patou-green bg-patou-green-50 border border-patou-green-200'
-                        : 'text-gray-600 hover:text-patou-green hover:bg-patou-green-50'
+                        ? 'text-patou-green bg-patou-green-50 border border-patou-green-200 shadow-sm'
+                        : 'text-gray-600 hover:text-patou-green hover:bg-patou-green-50 hover:shadow-sm'
                     }`}
                   >
-                    <Icon size={20} />
+                    <Icon size={20} className="flex-shrink-0" />
                     <span className="font-medium">{item.label}</span>
                   </Link>
                 )
@@ -110,8 +110,8 @@ export default function Navigation({ userType = 'child' }: NavigationProps) {
           </div>
 
           {/* User Type Indicator */}
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
+          <div className="p-6 border-t border-gray-100">
+            <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
               <div className={`w-2 h-2 rounded-full ${
                 userType === 'parent' ? 'bg-patou-blue' : 'bg-patou-orange'
               }`} />

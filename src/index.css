@@ -48,3 +48,18 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Nunito', sans-serif;
   font-weight: 700;
 }
+
+/* Responsive utilities */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

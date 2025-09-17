@@ -85,9 +85,15 @@ export default function Player() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+      <div className="md:ml-64">
+        <div className="p-4 md:p-8">
+          <div className="max-w-2xl mx-auto">
       <PlayerSdk accessToken={token} trackId={trackId} />
       <div className="mt-4 text-sm text-gray-600">Astuce : ouvrez l'app Spotify et transférez la lecture vers "Patou Player".</div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
