@@ -16,7 +16,7 @@ export function usePreviewGate() {
   const mustGate = useMemo(() => {
     if (!enabled) return false;
     if (location.hostname === 'localhost') return false;
-    if (location.hostname.includes('bolt.new')) return false;
+    if (location.hostname && location.hostname.includes('bolt.new')) return false;
     if (localStorage.getItem('patou_preview_ok') === '1') return false;
     return true;
   }, [enabled]);
