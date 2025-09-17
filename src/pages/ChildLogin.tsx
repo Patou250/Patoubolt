@@ -106,7 +106,7 @@ export default function ChildLogin() {
                 Ton prénom
               </label>
               <input 
-                className="w-full border border-gray-300 rounded-md px-3 py-3 text-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
+                className="w-full border border-gray-300 rounded-md px-3 py-3 text-lg focus:border-awaken focus:ring-2 focus:ring-awaken-200 outline-none transition-all" 
                 placeholder="Emma, Lucas..." 
                 value={name} 
                 onChange={e => setName(e.target.value)}
@@ -120,7 +120,7 @@ export default function ChildLogin() {
                 Ton code secret
               </label>
               <input 
-                className="w-full border border-gray-300 rounded-md px-3 py-3 text-lg text-center tracking-widest focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
+                className="w-full border border-gray-300 rounded-md px-3 py-3 text-lg text-center tracking-widest focus:border-awaken focus:ring-2 focus:ring-awaken-200 outline-none transition-all" 
                 placeholder="••••" 
                 type="password"
                 value={pin} 
@@ -136,11 +136,11 @@ export default function ChildLogin() {
             <button 
               type="submit"
               disabled={loading || !name.trim() || !pin.trim()}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-400 text-white font-semibold rounded-lg py-2 transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-awaken hover:bg-awaken-600 disabled:bg-gray-400 text-gray-900 font-semibold rounded-lg py-2 transition-colors flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
-                  <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                  <div className="animate-spin w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full"></div>
                   Connexion...
                 </>
               ) : (

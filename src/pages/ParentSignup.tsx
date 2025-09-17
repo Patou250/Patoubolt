@@ -110,7 +110,7 @@ export default function ParentSignup() {
                       Prénom
                     </label>
                     <input 
-                      className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
+                      className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none transition-all" 
                       placeholder="Jean" 
                       value={firstName} 
                       onChange={e => setFirstName(e.target.value)}
@@ -122,7 +122,7 @@ export default function ParentSignup() {
                       Nom
                     </label>
                     <input 
-                      className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
+                      className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none transition-all" 
                       placeholder="Dupont" 
                       value={lastName} 
                       onChange={e => setLastName(e.target.value)}
@@ -136,7 +136,7 @@ export default function ParentSignup() {
                     Adresse email
                   </label>
                   <input 
-                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
+                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none transition-all" 
                     type="email" 
                     placeholder="jean.dupont@email.com" 
                     value={email} 
@@ -150,7 +150,7 @@ export default function ParentSignup() {
                     Mot de passe
                   </label>
                   <input 
-                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
+                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none transition-all" 
                     type="password" 
                     placeholder="••••••••" 
                     value={password} 
@@ -166,7 +166,7 @@ export default function ParentSignup() {
                     Date de naissance
                   </label>
                   <input 
-                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
+                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none transition-all" 
                     type="date" 
                     value={birthdate} 
                     onChange={e => setBirthdate(e.target.value)}
@@ -186,10 +186,11 @@ export default function ParentSignup() {
                   <label htmlFor="accept-terms" className="text-sm text-gray-600">
                     J'accepte les{' '}
                     <Link to="/cgu" className="text-emerald-600 hover:text-emerald-700 transition-colors">
+                    <Link to="/cgu" className="text-primary hover:text-primary-700 transition-colors">
                       Conditions Générales d'Utilisation
                     </Link>
                     {' '}et la{' '}
-                    <Link to="/privacy" className="text-emerald-600 hover:text-emerald-700 transition-colors">
+                    <Link to="/privacy" className="text-primary hover:text-primary-700 transition-colors">
                       Politique de Confidentialité
                     </Link>
                   </label>
@@ -197,7 +198,7 @@ export default function ParentSignup() {
                 
                 <button 
                   type="submit"
-                  className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-400 text-white font-semibold rounded-lg py-2 transition-colors disabled:cursor-not-allowed"
+                  className="w-full bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white font-semibold rounded-lg py-2 transition-colors disabled:cursor-not-allowed"
                   disabled={loading}
                 >
                   {loading ? (
@@ -214,7 +215,7 @@ export default function ParentSignup() {
               <div className="mt-8 text-center">
                 <p className="text-gray-600">
                   Déjà un compte ?{' '}
-                  <Link to="/parent/login" className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors">
+                  <Link to="/parent/login" className="text-primary font-semibold hover:text-primary-700 transition-colors">
                     Se connecter
                   </Link>
                 </p>

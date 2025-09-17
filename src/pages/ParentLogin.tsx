@@ -46,7 +46,7 @@ export default function ParentLogin() {
                     Adresse email
                   </label>
                   <input 
-                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
+                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none transition-all" 
                     type="email" 
                     placeholder="votre@email.com" 
                     value={email} 
@@ -60,7 +60,7 @@ export default function ParentLogin() {
                     Mot de passe
                   </label>
                   <input 
-                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all" 
+                    className="w-full border border-gray-300 rounded-md px-3 py-3 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none transition-all" 
                     type="password" 
                     placeholder="••••••••" 
                     value={password} 
@@ -72,7 +72,7 @@ export default function ParentLogin() {
                 <button 
                   type="submit" 
                   disabled={loading}
-                  className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-400 text-white font-semibold rounded-lg py-2 transition-colors"
+                  className="w-full bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white font-semibold rounded-lg py-2 transition-colors"
                 >
                   {loading ? 'Connexion...' : 'Se connecter'}
                 </button>
@@ -81,7 +81,7 @@ export default function ParentLogin() {
               <div className="mt-8 text-center">
                 <p className="text-gray-600">
                   Pas encore de compte ?{' '}
-                  <Link to="/parent/signup" className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors">
+                  <Link to="/parent/signup" className="text-primary font-semibold hover:text-primary-700 transition-colors">
                     Créer un compte
                   </Link>
                 </p>

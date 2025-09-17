@@ -163,7 +163,7 @@ export default function Child() {
         <div className="flex justify-center mb-4 md:mb-8">
           <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-6">
             <div className="flex items-center gap-3 mb-4">
-              <Music className="w-6 h-6 text-blue-500" />
+              <Music className="w-6 h-6 text-awaken" />
               <h2 className="text-xl font-bold text-gray-800">Lecteur Musical</h2>
             </div>
             {accessToken ? (
@@ -175,7 +175,7 @@ export default function Child() {
                 <p className="text-gray-600 mb-4">Connexion Spotify requise</p>
                 <Link 
                   to="/parent/login" 
-                  className="inline-block px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                  className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-600 transition-colors"
                 >
                   Demander à papa/maman
                 </Link>
@@ -188,12 +188,12 @@ export default function Child() {
         <div className="mb-4 md:mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl md:text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <Heart className="w-6 h-6 text-pink-500" />
+              <Heart className="w-6 h-6 text-share" />
               Mes Playlists
             </h2>
             <Link 
               to="/child/search" 
-              className="text-blue-500 hover:text-blue-600 transition-colors flex items-center gap-1"
+              className="text-awaken hover:text-awaken-600 transition-colors flex items-center gap-1"
             >
               Voir tout
               <ChevronRight className="w-4 h-4" />
@@ -231,7 +231,7 @@ export default function Child() {
         {/* Section 3: Historique d'écoute */}
         <div>
           <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <Clock className="w-6 h-6 text-orange-500" />
+            <Clock className="w-6 h-6 text-awaken" />
             Récemment écouté
           </h2>
           
@@ -261,7 +261,7 @@ export default function Child() {
                     </div>
                     <Link
                       to={`/player?trackId=${track.trackId}`}
-                      className="flex-shrink-0 p-1.5 md:p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="flex-shrink-0 p-1.5 md:p-2 text-awaken hover:bg-awaken-50 rounded-lg transition-colors"
                     >
                       <Music className="w-4 h-4" />
                     </Link>
@@ -278,7 +278,7 @@ export default function Child() {
               </p>
               <Link 
                 to="/child/search" 
-                className="inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                className="inline-block px-6 py-3 bg-awaken text-gray-900 rounded-lg hover:bg-awaken-600 transition-colors"
               >
                 Découvrir de la musique
               </Link>

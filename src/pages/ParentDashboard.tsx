@@ -353,7 +353,7 @@ export default function ParentDashboard() {
                   onClick={() => navigate('/parent/rules')}
                   className="bg-white rounded-xl shadow-md p-4 md:p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100 group"
                 >
-                  <Shield className="w-6 h-6 md:w-8 md:h-8 mb-3 text-patou-green group-hover:scale-110 transition-transform" />
+                  <Shield className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
                   <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Règles</h3>
                   <p className="text-xs md:text-sm text-gray-600 leading-relaxed">Configurer les horaires et restrictions d'écoute</p>
                 </button>
@@ -362,7 +362,7 @@ export default function ParentDashboard() {
                   onClick={() => navigate('/parent/curation')}
                   className="bg-white rounded-xl shadow-md p-4 md:p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100 group"
                 >
-                  <Calendar className="w-6 h-6 md:w-8 md:h-8 mb-3 text-patou-blue group-hover:scale-110 transition-transform" />
+                  <Calendar className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
                   <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Curation</h3>
                   <p className="text-xs md:text-sm text-gray-600 leading-relaxed">Gérer les playlists de la semaine</p>
                 </button>
@@ -371,7 +371,7 @@ export default function ParentDashboard() {
                   onClick={() => navigate('/parent/insights')}
                   className="bg-white rounded-xl shadow-md p-4 md:p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100 group"
                 >
-                  <BarChart3 className="w-6 h-6 md:w-8 md:h-8 mb-3 text-patou-orange group-hover:scale-110 transition-transform" />
+                  <BarChart3 className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
                   <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Insights</h3>
                   <p className="text-xs md:text-sm text-gray-600 leading-relaxed">Analyser les habitudes d'écoute</p>
                 </button>
@@ -380,7 +380,7 @@ export default function ParentDashboard() {
                   onClick={() => navigate('/parent/history')}
                   className="bg-white rounded-xl shadow-md p-4 md:p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100 group"
                 >
-                  <History className="w-6 h-6 md:w-8 md:h-8 mb-3 text-patou-yellow group-hover:scale-110 transition-transform" />
+                  <History className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
                   <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Historique</h3>
                   <p className="text-xs md:text-sm text-gray-600 leading-relaxed">Consulter l'historique d'écoute complet</p>
                 </button>
@@ -398,7 +398,7 @@ export default function ParentDashboard() {
                   onClick={() => navigate('/parent/shared-playlists')}
                   className="bg-white rounded-xl shadow-md p-4 md:p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100 group"
                 >
-                  <Share2 className="w-6 h-6 md:w-8 md:h-8 mb-3 text-purple-500 group-hover:scale-110 transition-transform" />
+                  <Share2 className="w-6 h-6 md:w-8 md:h-8 mb-3 text-share group-hover:scale-110 transition-transform" />
                   <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Playlists communes</h3>
                   <p className="text-xs md:text-sm text-gray-600 leading-relaxed">Créer des playlists partagées</p>
                 </button>
@@ -433,7 +433,7 @@ export default function ParentDashboard() {
                       <div className="flex gap-2">
                         <button
                           onClick={() => navigate(`/parent/rules/${child.id}`)}
-                          className="p-2 text-patou-blue hover:bg-patou-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-protect hover:bg-protect-50 rounded-lg transition-colors"
                           title="Règles"
                         >
                           <Shield size={16} />
@@ -471,7 +471,7 @@ export default function ParentDashboard() {
               <div className="mt-8 bg-white rounded-xl p-4 md:p-6 shadow-md border border-gray-100">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Music className="w-6 h-6 text-patou-green" />
+                    <Music className="w-6 h-6 text-primary" />
                     <div>
                       <h3 className="text-sm md:text-base font-semibold text-gray-900">Connexion Spotify</h3>
                       <p className="text-xs md:text-sm text-gray-600">
@@ -491,7 +491,7 @@ export default function ParentDashboard() {
                   <div className="mt-4">
                     <button
                       onClick={connectSpotify}
-                      className="px-4 py-2 bg-patou-green hover:bg-patou-green-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                      className="px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
                     >
                       <Music size={16} />
                       Connecter Spotify
@@ -533,7 +533,7 @@ export default function ParentDashboard() {
                     <div className="space-y-2 md:space-y-3">
                       <button
                         onClick={() => navigate(`/parent/rules/${child.id}`)}
-                        className="w-full flex items-center space-x-2 px-3 md:px-4 py-2 bg-patou-blue-50 text-patou-blue-700 rounded-lg hover:bg-patou-blue-100 transition-colors text-sm md:text-base"
+                        className="w-full flex items-center space-x-2 px-3 md:px-4 py-2 bg-protect-50 text-protect-700 rounded-lg hover:bg-protect-100 transition-colors text-sm md:text-base"
                       >
                         <Shield size={16} />
                         <span>Configurer les règles</span>
@@ -593,7 +593,7 @@ export default function ParentDashboard() {
                   </p>
                   <button
                     onClick={connectSpotify}
-                    className="px-6 py-3 bg-patou-green hover:bg-patou-green-600 text-white rounded-lg font-semibold transition-colors flex items-center gap-2 mx-auto"
+                    className="px-6 py-3 bg-primary hover:bg-primary-600 text-white rounded-lg font-semibold transition-colors flex items-center gap-2 mx-auto"
                   >
                     <Music size={16} />
                     Connecter Spotify
@@ -655,7 +655,7 @@ export default function ParentDashboard() {
                     
                     <button
                       onClick={() => handleSpotifyControl(playerState.isPlaying ? 'pause' : 'play')}
-                      className="bg-patou-green hover:bg-patou-green-600 text-white rounded-full p-2 md:p-3 transition-colors"
+                      className="bg-primary hover:bg-primary-600 text-white rounded-full p-2 md:p-3 transition-colors"
                     >
                       {playerState.isPlaying ? <Pause className="w-5 h-5 md:w-6 md:h-6" /> : <Play className="w-5 h-5 md:w-6 md:h-6 ml-0.5" />}
                     </button>
@@ -694,7 +694,7 @@ export default function ParentDashboard() {
                     <div className="flex gap-3 flex-wrap">
                       <button
                         onClick={connectSpotify}
-                        className="px-4 py-2 bg-patou-green hover:bg-patou-green-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                        className="px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
                       >
                         <Music size={16} />
                         Connecter Spotify
