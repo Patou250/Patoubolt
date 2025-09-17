@@ -1,35 +1,31 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
 
-export default function ChildLogin() {
-  const nav = useNavigate()
-  const [name, setName] = useState('')
-  const [pin, setPin] = useState('')
+export default function ChildLogin(){
+  const [identifier,setIdentifier]=useState(''); const [pin,setPin]=useState('')
+  const [err,setErr]=useState<string| null>(null)
+  const nav=useNavigate()
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!name || pin.length !== 4 || !/^\d{4}$/.test(pin)) return
-    localStorage.setItem('patou_child', JSON.stringify({ name, pin }))
+  const login = async (e:React.FormEvent) => {
+    e.preventDefault(); setErr(null)
+    const { data, error } = await supabase.from('children')
+      .select('id, display_name, child_identifier, pin')
+      .eq('child_identifier', identifier).eq('pin', pin).maybeSingle()
+    if (error || !data) { setErr('Identifiant ou PIN invalide'); return }
+    localStorage.setItem('patou_child', JSON.stringify({ id:data.id, identifier:data.child_identifier, name:data.display_name }))
     nav('/child')
   }
 
   return (
-    <form onSubmit={onSubmit} className="max-w-sm mx-auto space-y-4">
-      <h1 className="text-xl font-semibold">Espace enfant</h1>
-      <input
-        className="w-full border border-gray-300 rounded-lg px-3 py-2"
-        placeholder="Prénom"
-        value={name}
-        onChange={e=>setName(e.target.value)}
-      />
-      <input
-        className="w-full border border-gray-300 rounded-lg px-3 py-2"
-        placeholder="PIN (4 chiffres)"
-        value={pin}
-        onChange={e=>setPin(e.target.value.replace(/\D/g,''))}
-        maxLength={4}
-      />
-      <button className="w-full bg-black text-white rounded-lg px-3 py-2 font-medium">Entrer</button>
-    </form>
+    <div className="max-w-md mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-4">Connexion enfant</h1>
+      {err && <div className="mb-3 p-3 bg-red-50 border border-red-200 text-sm">{err}</div>}
+      <form onSubmit={login} className="space-y-3">
+        <input className="w-full border rounded px-3 py-2" placeholder="Identifiant enfant" value={identifier} onChange={e=>setIdentifier(e.target.value)} />
+        <input className="w-full border rounded px-3 py-2" placeholder="PIN" value={pin} onChange={e=>setPin(e.target.value)} />
+        <button className="w-full bg-green-600 text-white rounded py-2">Se connecter</button>
+      </form>
+    </div>
   )
 }
