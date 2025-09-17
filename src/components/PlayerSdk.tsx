@@ -87,6 +87,14 @@ export default function PlayerSdk({ accessToken, onTrackChange, trackId, initial
             body: JSON.stringify({ device_ids: [device_id], play: false })
           })
         } catch {}
+        // Transfer playback to this device so /play will target it
+        try {
+          await fetch('https://api.spotify.com/v1/me/player', {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ device_ids: [device_id], play: false })
+          })
+        } catch {}
         // Auto-start a context if none is loaded
         if (initialUris?.length) {
           startPlayback(initialUris)
