@@ -9,8 +9,6 @@ export default function Home() {
       <h1 className="text-2xl font-semibold mb-2">Musique familiale, en toute simplicité</h1>
       <p className="text-gray-600 mb-8">Bêta minimale — authentification Spotify requise pour le lecteur.</p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <button
-          onClick={handleSpotifyAuth}
           className="inline-block px-5 py-3 rounded-lg bg-black text-white font-medium"
         >
           Se connecter avec Spotify (Parent)
