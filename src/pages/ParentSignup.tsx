@@ -15,8 +15,8 @@ export default function ParentSignup() {
     const { data, error } = await supabase.auth.signUp({
       email, password,
       options: {
-        data: { first_name:firstName, last_name:lastName, birthdate },
-        emailRedirectTo: 'https://patou.app/parent/login'
+        data: { first_name: firstName, last_name: lastName, birthdate },
+        emailRedirectTo: `${window.location.origin}/parent/login`
       }
     })
     if (error) { setErr(error.message); return }
