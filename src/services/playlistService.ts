@@ -118,3 +118,132 @@ export async function getPlaylistsByBand(band?: string) {
     throw error;
   }
 }
+
+async function getSpotifyUserToken(): Promise<string> {
+  // Pour la bêta: utilise un token utilisateur récupéré manuellement (ou OAuth parent admin)
+  // Place-le en env: VITE_SPOTIFY_USER_OAUTH_TOKEN
+  const token = import.meta.env.VITE_SPOTIFY_USER_OAUTH_TOKEN;
+  if (!token) {
+    throw new Error('VITE_SPOTIFY_USER_OAUTH_TOKEN not configured');
+  }
+  return token;
+}
+
+export async function publishPlaylistToSpotify(playlistId: string) {
+  const { supabaseAdmin } = await import('../lib/supabaseAdmin');
+  
+  try {
+    // Get playlist data
+    const { data: playlist, error: playlistError } = await supabaseAdmin
+      .from('playlists')
+      .select('*')
+      .eq('id', playlistId)
+      .single();
+
+    if (playlistError) {
+      throw new Error(`Failed to fetch playlist: ${playlistError.message}`);
+    }
+
+    // Get playlist tracks
+    const { data: playlistTracks, error: tracksError } = await supabaseAdmin
+      .from('playlist_tracks')
+      .select(`
+        position,
+        tracks (
+          spotify_id,
+          title,
+          artist
+        )
+      `)
+      .eq('playlist_id', playlistId)
+      .order('position');
+
+    if (tracksError) {
+      throw new Error(`Failed to fetch tracks: ${tracksError.message}`);
+    }
+
+    const name = `Patou Vérifié – ${playlist.band.replace('_', '–')} — Semaine ${playlist.iso_week}`;
+    const token = await getSpotifyUserToken();
+
+    // Create or update Spotify playlist
+    let spotifyPlaylistId = playlist.spotify_playlist_id;
+    
+    if (!spotifyPlaylistId) {
+      // Create new playlist
+      const createResponse = await fetch('https://api.spotify.com/v1/me/playlists', {
+        method: 'POST',
+        headers: { 
+          'Authorization': `Bearer ${token}`, 
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ 
+          name, 
+          description: 'Playlist 100% adaptée aux enfants — Patou', 
+          public: true 
+        })
+      });
+
+      if (!createResponse.ok) {
+        throw new Error(`Failed to create Spotify playlist: ${createResponse.status}`);
+      }
+
+      const createData = await createResponse.json();
+      spotifyPlaylistId = createData.id;
+
+      // Update database with Spotify playlist ID
+      await supabaseAdmin
+        .from('playlists')
+        .update({ spotify_playlist_id: spotifyPlaylistId })
+        .eq('id', playlistId);
+    } else {
+      // Update existing playlist name/description
+      const updateResponse = await fetch(`https://api.spotify.com/v1/playlists/${spotifyPlaylistId}`, {
+        method: 'PUT',
+        headers: { 
+          'Authorization': `Bearer ${token}`, 
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ 
+          name, 
+          description: 'Playlist 100% adaptée aux enfants — Patou' 
+        })
+      });
+
+      if (!updateResponse.ok) {
+        throw new Error(`Failed to update Spotify playlist: ${updateResponse.status}`);
+      }
+    }
+
+    // Replace playlist tracks
+    const uris = (playlistTracks || []).map((pt: any) => `spotify:track:${pt.tracks.spotify_id}`);
+    
+    const tracksResponse = await fetch(`https://api.spotify.com/v1/playlists/${spotifyPlaylistId}/tracks`, {
+      method: 'PUT',
+      headers: { 
+        'Authorization': `Bearer ${token}`, 
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify({ uris })
+    });
+
+    if (!tracksResponse.ok) {
+      throw new Error(`Failed to update playlist tracks: ${tracksResponse.status}`);
+    }
+
+    // Mark playlist as published
+    await supabaseAdmin
+      .from('playlists')
+      .update({ status: 'published' })
+      .eq('id', playlistId);
+
+    return {
+      success: true,
+      spotify_playlist_id: spotifyPlaylistId,
+      playlist_url: `https://open.spotify.com/playlist/${spotifyPlaylistId}`
+    };
+
+  } catch (error) {
+    console.error('Error publishing playlist to Spotify:', error);
+    throw error;
+  }
+}

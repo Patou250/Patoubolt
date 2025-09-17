@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Plus, RefreshCw, Music, Calendar, Users } from 'lucide-react'
-import { generatePlaylistForBand, getPlaylistsByBand } from '../services/playlistService'
+import { ArrowLeft, Plus, RefreshCw, Music, Calendar, Users, Upload, ExternalLink } from 'lucide-react'
+import { generatePlaylistForBand, getPlaylistsByBand, publishPlaylistToSpotify } from '../services/playlistService'
 
 interface Playlist {
   id: string
   band: string
   year: number
   iso_week: number
+  status?: string
+  spotify_playlist_id?: string
   created_at: string
   playlist_tracks: Array<{
     position: number
@@ -26,6 +28,7 @@ export default function ParentCuration() {
   const [playlists, setPlaylists] = useState<Playlist[]>([])
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState<string | null>(null)
+  const [publishing, setPublishing] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const bands = [
@@ -65,6 +68,23 @@ export default function ParentCuration() {
       setError(err instanceof Error ? err.message : 'Erreur lors de la génération')
     } finally {
       setGenerating(null)
+    }
+  }
+
+  const handlePublishPlaylist = async (playlistId: string) => {
+    try {
+      setPublishing(playlistId)
+      setError(null)
+      
+      const result = await publishPlaylistToSpotify(playlistId)
+      
+      if (result.success) {
+        await loadPlaylists() // Reload to show updated status
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur lors de la publication')
+    } finally {
+      setPublishing(null)
     }
   }
 
@@ -177,12 +197,37 @@ export default function ParentCuration() {
                       <div className="text-sm text-gray-500">
                         Créée le {new Date(playlist.created_at).toLocaleDateString('fr-FR')}
                       </div>
+                      
+                      <div className="flex items-center gap-2 mt-2">
+                        {playlist.status === 'published' && playlist.spotify_playlist_id && (
+                          <a
+                            href={`https://open.spotify.com/playlist/${playlist.spotify_playlist_id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium hover:bg-green-200 transition-colors"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            Publiée sur Spotify
+                          </a>
+                        )}
+                        
+                        {(!playlist.status || playlist.status === 'draft') && (
+                          <button
+                            onClick={() => handlePublishPlaylist(playlist.id)}
+                            disabled={publishing === playlist.id}
+                            className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium hover:bg-blue-200 transition-colors disabled:opacity-50"
+                          >
+                            {publishing === playlist.id ? (
+                              <RefreshCw className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <Upload className="w-3 h-3" />
+                            )}
+                            {publishing === playlist.id ? 'Publication...' : 'Publier sur Spotify'}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
-
-                  {/* Track List Preview */}
-                  {playlist.playlist_tracks && playlist.playlist_tracks.length > 0 && (
-                    <div className="p-6">
                       <h4 className="font-medium text-gray-900 mb-3">Aperçu des pistes</h4>
                       <div className="space-y-2 max-h-60 overflow-y-auto">
                         {playlist.playlist_tracks
