@@ -89,7 +89,5 @@ export default function ParentLogin() {
       
       <Footer />
     </div>
-      </div>
-    </div>
   )
 }
