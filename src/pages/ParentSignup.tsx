@@ -32,6 +32,7 @@ export default function ParentSignup() {
         email,
         password,
         options: {
+          emailRedirectTo: undefined,
           data: {
             full_name: `${firstName} ${lastName}`,
             first_name: firstName,
@@ -57,11 +58,7 @@ export default function ParentSignup() {
       }
 
       if (data.user) {
-        if (data.user.email_confirmed_at) {
-          setMsg('✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.')
-        } else {
-          setMsg('📧 Inscription réussie ! Un email de confirmation a été envoyé à votre adresse. Vérifiez votre boîte mail (et les spams) puis connectez-vous.')
-        }
+        setMsg('✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.')
         
         // Reset form
         setFirstName('')
