@@ -197,37 +197,40 @@ export default function ParentCuration() {
                       <div className="text-sm text-gray-500">
                         Créée le {new Date(playlist.created_at).toLocaleDateString('fr-FR')}
                       </div>
+                    </div>
                       
-                      <div className="flex items-center gap-2 mt-2">
-                        {playlist.status === 'published' && playlist.spotify_playlist_id && (
-                          <a
-                            href={`https://open.spotify.com/playlist/${playlist.spotify_playlist_id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium hover:bg-green-200 transition-colors"
-                          >
-                            <ExternalLink className="w-3 h-3" />
-                            Publiée sur Spotify
-                          </a>
-                        )}
-                        
-                        {(!playlist.status || playlist.status === 'draft') && (
-                          <button
-                            onClick={() => handlePublishPlaylist(playlist.id)}
-                            disabled={publishing === playlist.id}
-                            className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium hover:bg-blue-200 transition-colors disabled:opacity-50"
-                          >
-                            {publishing === playlist.id ? (
-                              <RefreshCw className="w-3 h-3 animate-spin" />
-                            ) : (
-                              <Upload className="w-3 h-3" />
-                            )}
-                            {publishing === playlist.id ? 'Publication...' : 'Publier sur Spotify'}
-                          </button>
-                        )}
-                      </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      {playlist.status === 'published' && playlist.spotify_playlist_id && (
+                        <a
+                          href={`https://open.spotify.com/playlist/${playlist.spotify_playlist_id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium hover:bg-green-200 transition-colors"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          Publiée sur Spotify
+                        </a>
+                      )}
+                      
+                      {(!playlist.status || playlist.status === 'draft') && (
+                        <button
+                          onClick={() => handlePublishPlaylist(playlist.id)}
+                          disabled={publishing === playlist.id}
+                          className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium hover:bg-blue-200 transition-colors disabled:opacity-50"
+                        >
+                          {publishing === playlist.id ? (
+                            <RefreshCw className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <Upload className="w-3 h-3" />
+                          )}
+                          {publishing === playlist.id ? 'Publication...' : 'Publier sur Spotify'}
+                        </button>
+                      )}
                     </div>
                   </div>
+                  
+                  {playlist.playlist_tracks && playlist.playlist_tracks.length > 0 && (
+                    <div className="p-6">
                       <h4 className="font-medium text-gray-900 mb-3">Aperçu des pistes</h4>
                       <div className="space-y-2 max-h-60 overflow-y-auto">
                         {playlist.playlist_tracks
