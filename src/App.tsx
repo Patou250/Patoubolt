@@ -15,10 +15,18 @@ import ChildHistory from './pages/ChildHistory'
 
 // Component to handle Netlify function redirects
 function NetlifyFunctionRedirect() {
+  console.log('🔀 NetlifyFunctionRedirect component rendered')
+  console.log('🌐 Current pathname:', window.location.pathname)
+  
   useEffect(() => {
+    console.log('🔀 NetlifyFunctionRedirect useEffect triggered')
     // If we're on a Netlify function path, redirect immediately
     if (window.location.pathname.startsWith('/.netlify/functions/')) {
+      console.log('✅ Detected Netlify function path, redirecting...')
+      console.log('🔗 Redirecting to:', window.location.href)
       window.location.href = window.location.href
+    } else {
+      console.log('❌ Not a Netlify function path')
     }
   }, [])
   
@@ -26,11 +34,16 @@ function NetlifyFunctionRedirect() {
 }
 
 export default function App() {
+  console.log('🚀 App component rendered')
+  console.log('🌐 Current pathname:', window.location.pathname)
+  
   // Check if current path is a Netlify function
   if (window.location.pathname.startsWith('/.netlify/functions/')) {
+    console.log('🔀 Detected Netlify function path, using NetlifyFunctionRedirect')
     return <NetlifyFunctionRedirect />
   }
 
+  console.log('📱 Using normal React Router')
   return (
     <Router>
       <Routes>
