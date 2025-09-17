@@ -185,7 +185,6 @@ export default function ParentSignup() {
                   />
                   <label htmlFor="accept-terms" className="text-sm text-gray-600">
                     J'accepte les{' '}
-                    <Link to="/cgu" className="text-emerald-600 hover:text-emerald-700 transition-colors">
                     <Link to="/cgu" className="text-primary hover:text-primary-700 transition-colors">
                       Conditions Générales d'Utilisation
                     </Link>
