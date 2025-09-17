@@ -76,6 +76,25 @@ export default function ParentChildren() {
         return
       }
 
+      // Vérifier si un enfant avec ce nom existe déjà pour ce parent
+      const { data: existingChild, error: checkError } = await supabase
+        .from('children')
+        .select('id')
+        .eq('parent_id', userId)
+        .eq('name', name.trim())
+        .maybeSingle()
+
+      if (checkError) {
+        console.error('❌ Error checking existing child:', checkError)
+        setMsg(`Erreur lors de la vérification: ${checkError.message}`)
+        return
+      }
+
+      if (existingChild) {
+        setMsg('Un enfant avec ce nom existe déjà.')
+        return
+      }
+
       console.log('🔄 Creating child:', { name, emoji, userId })
 
       // Simple hash for PIN (in production, use proper hashing)
@@ -93,7 +112,15 @@ export default function ParentChildren() {
 
       if (error) {
         console.error('❌ Error creating child:', error)
-        setMsg(`Erreur lors de la création: ${error.message}`)
+        
+        // Gestion spécifique des erreurs courantes
+        if (error.code === '23505') {
+          setMsg('Un enfant avec ce nom ou ce PIN existe déjà.')
+        } else if (error.message.includes('duplicate')) {
+          setMsg('Un enfant avec ces informations existe déjà.')
+        } else {
+          setMsg(`Erreur lors de la création: ${error.message}`)
+        }
         return
       }
 
