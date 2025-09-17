@@ -26,8 +26,7 @@ export default function ParentSignup() {
       await supabase.from('profiles').upsert({
         id: data.user.id,
         email: email,
-        full_name: `${firstName} ${lastName}`,
-        role: 'parent'
+        full_name: `${firstName} ${lastName}`
       }, { onConflict: 'id' })
     }
     setMsg('📧 Un email de confirmation vous a été envoyé. Veuillez valider puis vous connecter.')
