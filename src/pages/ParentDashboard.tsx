@@ -101,29 +101,32 @@ export default function ParentDashboard() {
     try {
       console.log('🔍 Loading children for session:', session)
       
-      // First, get or create the profile for this parent using Supabase auth
+      // Get the current authenticated user
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      if (userError || !user) {
+        console.error('❌ No authenticated user found:', userError)
+        return
+      }
+      
+      console.log('👤 Authenticated user ID:', user.id)
+      
+      // First, get or create the profile for this parent
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('id')
-        .eq('email', session.parent.email)
+        .eq('id', user.id)
         .single()
 
       if (profileError) {
-        console.log('📝 Profile not found, creating one for:', session.parent.email)
-        // Create profile if it doesn't exist
-        const { data: { user } } = await supabase.auth.getUser()
-        if (!user) {
-          console.error('❌ No authenticated user found')
-          return
-        }
+        console.log('📝 Profile not found, creating one for user:', user.id)
         
+        // Create profile if it doesn't exist (without the role field)
         const { data: newProfile, error: createError } = await supabase
           .from('profiles')
           .insert({
-            id: user.id, // Use the auth user ID
+            id: user.id,
             email: session.parent.email,
-            full_name: session.parent.display_name || session.parent.email,
-            role: 'parent'
+            full_name: session.parent.display_name || session.parent.email
           })
           .select('id')
           .single()
