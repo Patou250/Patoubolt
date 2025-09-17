@@ -8,28 +8,30 @@ interface HeaderProps {
 
 export default function Header({ showNavigation = false, onSignOut }: HeaderProps) {
   return (
-    <header className="patou-header">
-      <div className="patou-header-content">
-        <Link to="/" className="patou-logo">
+    <header className="header-patou">
+      <div className="container-patou py-4">
+        <div className="flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-3">
           <img 
             src="/Patou emeraude sans fond.png" 
-            alt="Patou Logo" 
+            alt="Patou Logo"
+            className="h-8 w-auto"
           />
-          Patou
+          <span className="text-xl font-bold text-primary">Patou</span>
         </Link>
         
         {showNavigation && (
           <nav className="flex items-center gap-4">
             <Link 
               to="/parent/children" 
-              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-protect transition-colors"
+              className="nav-item-inactive"
             >
               <Users size={16} />
               Enfants
             </Link>
             <Link 
               to="/parent/settings" 
-              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-protect transition-colors"
+              className="nav-item-inactive"
             >
               <Settings size={16} />
               Paramètres
@@ -37,7 +39,7 @@ export default function Header({ showNavigation = false, onSignOut }: HeaderProp
             {onSignOut && (
               <button
                 onClick={onSignOut}
-                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-red-500 transition-colors"
+                className="nav-item-inactive hover:text-red-500"
               >
                 <LogOut size={16} />
                 Déconnexion
@@ -45,6 +47,8 @@ export default function Header({ showNavigation = false, onSignOut }: HeaderProp
             )}
           </nav>
         )}
+        </div>
+      </div>
       </div>
     </header>
   )

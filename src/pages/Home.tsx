@@ -21,7 +21,7 @@ export default function Home() {
       <main>
         <div className="max-w-6xl mx-auto">
           {/* Hero Section */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 pt-8">
             <h1 className="text-5xl font-bold text-gray-900 mb-6">
               Bienvenue sur <span className="text-primary">Patou</span>
             </h1>

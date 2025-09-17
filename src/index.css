@@ -2,57 +2,259 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Font import (Google Fonts) */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+/* Import Nunito font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap');
 
-/* Base type scale + lisibilité "tip-tap" */
+/* TipTap-style base layer with Patou palette */
 @layer base {
-  html { @apply antialiased; }
-  body { @apply font-sans text-gray-900 bg-gray-50; }
-  h1 { @apply text-2xl md:text-3xl font-extrabold tracking-tight; }
-  h2 { @apply text-xl md:text-2xl font-bold; }
-  h3 { @apply text-lg md:text-xl font-semibold; }
-  p  { @apply leading-relaxed; }
-  a  { @apply text-protect hover:underline; } /* liens bleus = Protéger (parents) */
+  html {
+    @apply antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  
+  body {
+    @apply font-sans text-gray-800 bg-gray-50 leading-relaxed;
+    font-family: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  /* Typography scale - TipTap inspired */
+  h1 {
+    @apply text-2xl md:text-3xl font-bold tracking-tight text-gray-900;
+    line-height: 1.2;
+  }
+  
+  h2 {
+    @apply text-xl md:text-2xl font-bold tracking-tight text-gray-900;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    @apply text-lg md:text-xl font-semibold text-gray-900;
+    line-height: 1.4;
+  }
+  
+  p {
+    @apply text-gray-800 leading-relaxed;
+    line-height: 1.6;
+  }
+  
+  a {
+    @apply text-protect hover:underline transition-colors duration-200;
+  }
+  
+  /* Focus states */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-white;
+  }
 }
 
-/* Components minimalistes (btn, card, input) */
+/* TipTap-style components layer */
 @layer components {
+  /* Button system with Patou colors */
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold transition
-           disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold transition-all duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2;
   }
-  .btn-primary   { @apply btn text-white bg-primary hover:brightness-95; }
-  .btn-protect   { @apply btn text-white bg-protect hover:brightness-95; }
-  .btn-share     { @apply btn text-white bg-share hover:brightness-95; }
-  .btn-awaken    { @apply btn text-gray-900 bg-awaken hover:brightness-95; }
-
+  
+  .btn-primary {
+    @apply btn bg-primary text-white hover:brightness-95 focus:ring-primary;
+  }
+  
+  .btn-protect {
+    @apply btn bg-protect text-white hover:brightness-95 focus:ring-protect;
+  }
+  
+  .btn-share {
+    @apply btn bg-share text-white hover:brightness-95 focus:ring-share;
+  }
+  
+  .btn-awaken {
+    @apply btn bg-awaken text-gray-900 hover:brightness-95 focus:ring-awaken;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-gray-500;
+  }
+  
+  .btn-ghost {
+    @apply btn bg-transparent text-gray-600 hover:bg-gray-100 focus:ring-gray-500;
+  }
+  
+  /* Card system - TipTap inspired */
   .card {
-    @apply bg-white rounded-xl shadow-card border border-gray-100;
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 transition-shadow duration-200;
   }
+  
+  .card:hover {
+    @apply shadow-md;
+  }
+  
   .card-pad {
     @apply p-4 md:p-6;
   }
-
-  .input {
-    @apply w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary;
+  
+  .card-interactive {
+    @apply card cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200;
   }
-
-  /* Badges / tags */
-  .badge       { @apply inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold; }
-  .badge-share { @apply badge bg-share text-white; }
-  .badge-awaken{ @apply badge bg-awaken text-gray-900; }
-  .badge-protect{ @apply badge bg-protect text-white; }
+  
+  /* Input system */
+  .input {
+    @apply w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500
+           focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
+           disabled:bg-gray-50 disabled:text-gray-500 transition-colors duration-200;
+  }
+  
+  .input-error {
+    @apply input border-red-300 focus:ring-red-500 focus:border-red-500;
+  }
+  
+  /* Badge system with Patou colors */
+  .badge {
+    @apply inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold;
+  }
+  
+  .badge-primary {
+    @apply badge bg-primary text-white;
+  }
+  
+  .badge-protect {
+    @apply badge bg-protect text-white;
+  }
+  
+  .badge-share {
+    @apply badge bg-share text-white;
+  }
+  
+  .badge-awaken {
+    @apply badge bg-awaken text-gray-900;
+  }
+  
+  .badge-gray {
+    @apply badge bg-gray-100 text-gray-700;
+  }
+  
+  /* Layout components */
+  .container-patou {
+    @apply max-w-6xl mx-auto px-4 md:px-8;
+  }
+  
+  .section-pad {
+    @apply py-8 md:py-12;
+  }
+  
+  /* Header and Footer */
+  .header-patou {
+    @apply bg-white border-b border-gray-200 sticky top-0 z-50;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+  
+  .footer-patou {
+    @apply bg-white border-t border-gray-200 mt-auto;
+  }
+  
+  /* Navigation styles */
+  .nav-item {
+    @apply flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors duration-200;
+  }
+  
+  .nav-item-active {
+    @apply nav-item bg-primary text-white;
+  }
+  
+  .nav-item-inactive {
+    @apply nav-item text-gray-600 hover:text-gray-900 hover:bg-gray-100;
+  }
+  
+  /* Context-specific nav colors */
+  .nav-parent-active {
+    @apply nav-item bg-protect text-white;
+  }
+  
+  .nav-child-active {
+    @apply nav-item bg-awaken text-gray-900;
+  }
+  
+  .nav-share-active {
+    @apply nav-item bg-share text-white;
+  }
 }
 
-/* Prose tip-tap (si plugin typography dispo) */
-.prose-tip {
-  @apply prose prose-neutral max-w-none;
+/* Utilities layer */
+@layer utilities {
+  /* Custom shadows */
+  .shadow-card {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+  
+  .shadow-card-hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* Responsive utilities */
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  /* Prose styles for rich content */
+  .prose-patou {
+    @apply prose prose-gray max-w-none;
+  }
+  
+  .prose-patou h1 {
+    @apply text-gray-900;
+  }
+  
+  .prose-patou h2 {
+    @apply text-gray-900;
+  }
+  
+  .prose-patou h3 {
+    @apply text-gray-900;
+  }
+  
+  .prose-patou a {
+    @apply text-protect no-underline hover:underline;
+  }
 }
 
-/* Utilities pour animations et états */
-.animate-spin {
-  animation: spin 1s linear infinite;
+/* Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes spin {
@@ -64,17 +266,15 @@
   }
 }
 
-/* Responsive utilities */
-.safe-area-pb {
-  padding-bottom: env(safe-area-inset-bottom);
+/* Loading spinner */
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 
-/* Hide scrollbar but keep functionality */
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
+/* Context-specific color utilities */
+.text-context-parent { @apply text-protect; }
+.text-context-child { @apply text-awaken; }
+.text-context-share { @apply text-share; }
+.bg-context-parent { @apply bg-protect; }
+.bg-context-child { @apply bg-awaken; }
+.bg-context-share { @apply bg-share; }
