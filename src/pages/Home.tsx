@@ -11,15 +11,13 @@ export default function Home() {
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <button
           onClick={handleSpotifyAuth}
-            window.location.replace('https://patou.app/.netlify/functions/spotify-auth-start')
-          }}
           className="inline-block px-5 py-3 rounded-lg bg-black text-white font-medium"
         >
           Se connecter avec Spotify (Parent)
         </button>
         <a href="/child/login" className="inline-block px-5 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium">
           Espace enfant
-        </button>
+        </a>
       </div>
     </section>
   )
