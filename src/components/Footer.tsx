@@ -1,28 +1,8 @@
-import { Link } from 'react-router-dom'
-
 export default function Footer() {
   return (
-    <footer className="footer-patou">
-      <div className="container-patou py-8">
-        <div className="text-center">
-        <p className="text-gray-500 text-sm mb-4">
-          © 2025 Patou - Musique sécurisée pour enfants
-        </p>
-        <div className="flex justify-center gap-6 flex-wrap">
-          <Link to="/cgu" className="text-gray-600 hover:text-protect text-sm transition-colors">
-            Conditions Générales d'Utilisation
-          </Link>
-          <Link to="/cgv" className="text-gray-600 hover:text-protect text-sm transition-colors">
-            Conditions Générales de Vente
-          </Link>
-          <Link to="/privacy" className="text-gray-600 hover:text-protect text-sm transition-colors">
-            Politique de Confidentialité
-          </Link>
-          <Link to="/contact" className="text-gray-600 hover:text-protect text-sm transition-colors">
-            Contact
-          </Link>
-        </div>
-        </div>
+    <footer className="border-t border-gray-100 bg-white">
+      <div className="mx-auto max-w-[1200px] px-4 md:px-8 h-12 flex items-center justify-center text-xs text-gray-500">
+        © {new Date().getFullYear()} Patou — Protéger • Partager • Éveiller
       </div>
     </footer>
   )
