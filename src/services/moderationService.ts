@@ -1,5 +1,5 @@
 import { supabaseAdmin } from '../lib/supabaseAdmin'
-import { getTrack } from '../lib/spotify'
+import { spotifyClient } from '../lib/spotify'
 import { findLyricsByTitleArtist } from '../lib/audd'
 import { moderationScores } from '../lib/moderation'
 import { loadDenylist, scanKeywords } from '../lib/keywords'
@@ -29,7 +29,7 @@ export async function moderateTrack(request: ModerationRequest): Promise<Moderat
   
   try {
     // 1. Fetch Spotify metadata
-    const track = await getTrack(spotify_track_id)
+    const track = await spotifyClient.getTrack(spotify_track_id)
     const trackInfo = {
       id: track.id,
       name: track.name,

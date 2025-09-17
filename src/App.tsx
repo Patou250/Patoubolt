@@ -15,6 +15,8 @@ import Child from './pages/Child'
 import ChildSearch from './pages/ChildSearch'
 import Player from './pages/Player'
 import ParentCallback from './pages/ParentCallback'
+import TestModeration from './pages/TestModeration'
+import AdminModeration from './pages/AdminModeration'
 
 export default function App() {
   return (
@@ -33,6 +35,9 @@ export default function App() {
             {/* Routes d'accès direct pour tests */}
             <Route path="/direct/parent" element={<ParentDashboard />} />
             <Route path="/direct/child" element={<Child />} />
+            {/* Routes de test et admin */}
+            <Route path="/test/moderation" element={<TestModeration />} />
+            <Route path="/admin/moderation" element={<AdminModeration />} />
             {/* Enfant */}
             <Route path="/child/login" element={<ChildLogin />} />
             <Route path="/child" element={<Child />} />
