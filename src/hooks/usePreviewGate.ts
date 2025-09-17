@@ -1,6 +1,15 @@
 import { useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export function usePreviewGate() {
+  const location = useLocation();
+  const path = location.pathname;
+  
+  // ✅ Ne JAMAIS bloquer l'espace parent ni le player
+  if (path.startsWith('/parent') || path.startsWith('/player')) {
+    return { mustGate: false };
+  }
+  
   const enabled = import.meta.env.VITE_PREVIEW_ENABLED === 'true';
   const pass = import.meta.env.VITE_PREVIEW_PASS as string | undefined;
 
