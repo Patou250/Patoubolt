@@ -12,12 +12,25 @@ export default function ParentSignup() {
     if (!firstName || !lastName || !email || !password || !birthdate || !accept) {
       setErr('Merci de remplir tous les champs et d\'accepter les CGU.'); return
     }
+    
+    console.log('Attempting signup with:', { email, password: '***' })
+    
     const { data, error } = await supabase.auth.signUp({
       email, 
       password
     })
+    
+    console.log('Signup response:', { data, error })
+    
     if (error) { setErr(error.message); return }
-    setMsg('📧 Un email de confirmation vous a été envoyé. Veuillez valider puis vous connecter.')
+    
+    if (data.user && !data.user.email_confirmed_at) {
+      setMsg('📧 Un email de confirmation vous a été envoyé. Veuillez vérifier votre boîte mail (et les spams) puis vous connecter.')
+    } else if (data.user && data.user.email_confirmed_at) {
+      setMsg('✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.')
+    } else {
+      setMsg('⚠️ Inscription effectuée mais statut incertain. Essayez de vous connecter.')
+    }
   }
 
   return (
