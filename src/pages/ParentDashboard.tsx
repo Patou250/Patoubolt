@@ -54,10 +54,13 @@ export default function ParentDashboard() {
           timestamp: Date.now()
         }
         localStorage.setItem('patou_parent_session', JSON.stringify(parentSession))
-        window.location.reload()
+        // Pas besoin de recharger, continuer avec la session créée
+        checkSpotifyConnection()
+        loadChildren(parentSession)
+        initializeSpotifyPlayer()
       })
       .catch(() => {
-        navigate('/parent/login')
+        navigate('/')
       })
       return
     }
