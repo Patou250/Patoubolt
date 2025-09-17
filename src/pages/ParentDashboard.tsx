@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { 
   Music, Users, Settings, BarChart3, History, Shield, Clock, Calendar, List, Ban, Share2,
   Plus, Edit2, LogOut, AlertCircle, Volume2, Play, Pause, SkipForward, SkipBack,
-  Headphones, UserPlus, Timer, List, TrendingUp, Activity
+  Headphones, UserPlus, Timer, TrendingUp, Activity
 } from 'lucide-react'
 import { getParentSession, clearParentSession } from '../utils/auth'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
