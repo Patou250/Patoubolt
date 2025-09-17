@@ -23,11 +23,6 @@ export default function Home() {
           <div className="text-center max-w-4xl mx-auto">
             {/* Hero Section */}
             <div className="mb-16">
-              <img 
-                src="/Patou emeraude sans fond.png" 
-                alt="Patou Logo" 
-                className="h-24 w-auto mx-auto mb-8"
-              />
               <h1 className="text-5xl font-bold text-gray-900 mb-6">
                 Bienvenue sur <span className="text-patou-green">Patou</span>
               </h1>
