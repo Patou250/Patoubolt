@@ -12,11 +12,6 @@ export default function Header({ showNavigation = false, onSignOut }: HeaderProp
       <div className="container-patou py-4">
         <div className="flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          <img 
-            src="/Patou emeraude sans fond.png" 
-            alt="Patou Logo"
-            className="h-8 w-auto"
-          />
           <span className="text-xl font-bold text-primary">Patou</span>
         </Link>
         

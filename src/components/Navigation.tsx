@@ -19,7 +19,6 @@ export default function Navigation(){
       {/* Sidebar desktop */}
       <aside className="hidden md:flex md:flex-col md:w-60 md:shrink-0 border-r border-gray-100 bg-white min-h-screen px-4 py-6">
         <div className="flex items-center gap-2 mb-6">
-          <img src="/Patou emeraude sans fond.png" alt="Patou" className="h-8" />
           <span className="font-extrabold text-primary text-lg">Patou</span>
         </div>
         <nav className="flex flex-col gap-1">
