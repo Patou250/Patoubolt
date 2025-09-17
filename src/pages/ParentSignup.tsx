@@ -230,7 +230,5 @@ export default function ParentSignup() {
       
       <Footer />
     </div>
-      </div>
-    </div>
   )
 }
