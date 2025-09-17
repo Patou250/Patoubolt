@@ -49,7 +49,6 @@ export default function Header({ showNavigation = false, onSignOut }: HeaderProp
         )}
         </div>
       </div>
-      </div>
     </header>
   )
 }
