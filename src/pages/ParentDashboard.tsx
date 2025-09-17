@@ -41,7 +41,7 @@ export default function ParentDashboard() {
     }
 
     checkSpotifyConnection()
-    loadChildren()
+    loadChildren(session)
     initializeSpotifyPlayer()
   }, [navigate])
 
@@ -97,15 +97,45 @@ export default function ParentDashboard() {
     player.connect()
   }
 
-  const loadChildren = async () => {
+  const loadChildren = async (session: any) => {
     try {
-      const session = getParentSession()
-      if (!session) return
+      // First, get or create the profile for this parent
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', session.parent.email)
+        .single()
 
+      if (profileError) {
+        console.error('Profile not found, creating one...')
+        // Create profile if it doesn't exist
+        const { data: newProfile, error: createError } = await supabase
+          .from('profiles')
+          .insert({
+            email: session.parent.email,
+            full_name: session.parent.display_name || session.parent.email,
+            role: 'parent'
+          })
+          .select('id')
+          .single()
+        
+        if (createError) {
+          console.error('Failed to create profile:', createError)
+          return
+        }
+        
+        // Use the new profile ID
+        const profileId = newProfile.id
+      } else {
+        // Use existing profile ID
+        const profileId = profile.id
+      }
+
+      // Now get children using the profile UUID
       const { data, error } = await supabase
         .from('children')
         .select('*')
-        .eq('parent_id', session.parent.id)
+        .eq('parent_id', profileId)
         .order('created_at', { ascending: true })
 
       if (error) throw error
