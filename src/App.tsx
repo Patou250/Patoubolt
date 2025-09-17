@@ -8,6 +8,7 @@ import ParentDashboard from './pages/ParentDashboard'
 import ParentSignup from './pages/ParentSignup'
 import ChildLogin from './pages/ChildLogin'
 import Child from './pages/Child'
+import ChildSearch from './pages/ChildSearch'
 import Player from './pages/Player'
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
         {/* Enfant */}
         <Route path="/child/login" element={<ChildLogin />} />
         <Route path="/child" element={<Child />} />
+        <Route path="/child/search" element={<ChildSearch />} />
         {/* Player */}
         <Route path="/player" element={<Player />} />
       </Routes>
