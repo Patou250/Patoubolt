@@ -86,3 +86,61 @@ export function isTokenValid(): boolean {
   console.log('🎯 Tokens valides?', isValid)
   return isValid
 }
+
+// Fonction pour rafraîchir les tokens côté client
+export async function refreshSpotifyTokens(): Promise<boolean> {
+  try {
+    const tokens = getSpotifyTokens()
+    if (!tokens || !tokens.refresh_token) {
+      console.log('❌ Pas de refresh token disponible')
+      return false
+    }
+
+    console.log('🔄 Rafraîchissement des tokens Spotify...')
+    
+    const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID
+    const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET
+    
+    if (!clientId || !clientSecret) {
+      console.error('❌ Configuration Spotify manquante')
+      return false
+    }
+
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`
+      },
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: tokens.refresh_token
+      })
+    })
+
+    if (!response.ok) {
+      console.error('❌ Erreur lors du rafraîchissement:', response.status)
+      clearSpotifyTokens()
+      return false
+    }
+
+    const newTokens = await response.json()
+    console.log('✅ Nouveaux tokens reçus')
+
+    // Mettre à jour les tokens (garder l'ancien refresh_token si pas fourni)
+    const updatedTokens = {
+      access_token: newTokens.access_token,
+      refresh_token: newTokens.refresh_token || tokens.refresh_token,
+      expires_in: newTokens.expires_in,
+      token_type: newTokens.token_type,
+      scope: newTokens.scope || tokens.scope
+    }
+
+    setSpotifyTokens(updatedTokens)
+    return true
+  } catch (error) {
+    console.error('❌ Erreur rafraîchissement tokens:', error)
+    clearSpotifyTokens()
+    return false
+  }
+}
