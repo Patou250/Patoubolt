@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
 export default function ParentSignup() {
   const [firstName, setFirstName] = useState('')
@@ -80,79 +82,154 @@ export default function ParentSignup() {
   }
 
   return (
-    <div className="max-w-md mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4">Créer un compte parent</h1>
+    <div className="patou-layout">
+      <Header />
       
-      {err && (
-        <div className="mb-3 p-3 bg-red-50 border border-red-200 text-sm text-red-700 rounded">
-          {err}
+      <main className="patou-main">
+        <div className="container">
+          <div className="max-w-md mx-auto">
+            <div className="patou-card">
+              <div className="text-center mb-8">
+                <div className="text-4xl mb-4">✨</div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Créer un compte</h1>
+                <p className="text-gray-600">Rejoignez la communauté Patou</p>
+              </div>
+              
+              {err && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-700 text-sm">{err}</p>
+                </div>
+              )}
+              
+              {msg && (
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-green-700 text-sm">{msg}</p>
+                </div>
+              )}
+              
+              <form onSubmit={signup} className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Prénom
+                    </label>
+                    <input 
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                      placeholder="Jean" 
+                      value={firstName} 
+                      onChange={e => setFirstName(e.target.value)}
+                      disabled={loading}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Nom
+                    </label>
+                    <input 
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                      placeholder="Dupont" 
+                      value={lastName} 
+                      onChange={e => setLastName(e.target.value)}
+                      disabled={loading}
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Adresse email
+                  </label>
+                  <input 
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                    type="email" 
+                    placeholder="jean.dupont@email.com" 
+                    value={email} 
+                    onChange={e => setEmail(e.target.value)}
+                    disabled={loading}
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Mot de passe
+                  </label>
+                  <input 
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                    type="password" 
+                    placeholder="••••••••" 
+                    value={password} 
+                    onChange={e => setPassword(e.target.value)}
+                    disabled={loading}
+                    minLength={6}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Minimum 6 caractères</p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Date de naissance
+                  </label>
+                  <input 
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-patou-green focus:ring-2 focus:ring-patou-green-100 outline-none transition-all" 
+                    type="date" 
+                    value={birthdate} 
+                    onChange={e => setBirthdate(e.target.value)}
+                    disabled={loading}
+                  />
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <input 
+                    type="checkbox" 
+                    id="accept-terms"
+                    checked={accept} 
+                    onChange={e => setAccept(e.target.checked)}
+                    disabled={loading}
+                    className="mt-1"
+                  />
+                  <label htmlFor="accept-terms" className="text-sm text-gray-600">
+                    J'accepte les{' '}
+                    <Link to="/cgu" className="text-patou-green hover:text-patou-green-600 transition-colors">
+                      Conditions Générales d'Utilisation
+                    </Link>
+                    {' '}et la{' '}
+                    <Link to="/privacy" className="text-patou-green hover:text-patou-green-600 transition-colors">
+                      Politique de Confidentialité
+                    </Link>
+                  </label>
+                </div>
+                
+                <button 
+                  type="submit"
+                  className="w-full btn btn--primary btn--large disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                      Création en cours...
+                    </>
+                  ) : (
+                    'Créer mon compte'
+                  )}
+                </button>
+              </form>
+              
+              <div className="mt-8 text-center">
+                <p className="text-gray-600">
+                  Déjà un compte ?{' '}
+                  <Link to="/parent/login" className="text-patou-green font-semibold hover:text-patou-green-600 transition-colors">
+                    Se connecter
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      )}
+      </main>
       
-      {msg && (
-        <div className="mb-3 p-3 bg-green-50 border border-green-200 text-sm text-green-700 rounded">
-          {msg}
-        </div>
-      )}
-      
-      <form onSubmit={signup} className="space-y-3">
-        <input 
-          className="w-full border rounded px-3 py-2" 
-          placeholder="Prénom" 
-          value={firstName} 
-          onChange={e => setFirstName(e.target.value)}
-          disabled={loading}
-        />
-        <input 
-          className="w-full border rounded px-3 py-2" 
-          placeholder="Nom" 
-          value={lastName} 
-          onChange={e => setLastName(e.target.value)}
-          disabled={loading}
-        />
-        <input 
-          className="w-full border rounded px-3 py-2" 
-          type="email" 
-          placeholder="Email" 
-          value={email} 
-          onChange={e => setEmail(e.target.value)}
-          disabled={loading}
-        />
-        <input 
-          className="w-full border rounded px-3 py-2" 
-          type="password" 
-          placeholder="Mot de passe (min. 6 caractères)" 
-          value={password} 
-          onChange={e => setPassword(e.target.value)}
-          disabled={loading}
-          minLength={6}
-        />
-        <input 
-          className="w-full border rounded px-3 py-2" 
-          type="date" 
-          value={birthdate} 
-          onChange={e => setBirthdate(e.target.value)}
-          disabled={loading}
-        />
-        <label className="text-sm flex items-center gap-2">
-          <input 
-            type="checkbox" 
-            checked={accept} 
-            onChange={e => setAccept(e.target.checked)}
-            disabled={loading}
-          />
-          J'accepte les CGV/CGU
-        </label>
-        <button 
-          className="w-full bg-black text-white rounded py-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          disabled={loading}
-        >
-          {loading ? 'Création en cours...' : 'Créer mon compte'}
-        </button>
-      </form>
-      
-      <div className="mt-4 text-sm text-center">
-        Déjà un compte ? <Link to="/parent/login" className="underline text-blue-600">Se connecter</Link>
+      <Footer />
+    </div>
       </div>
     </div>
   )

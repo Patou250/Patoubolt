@@ -2,14 +2,14 @@
 
 .dashboard {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f0f9f1 0%, #f0f9ff 50%, #fefce8 100%);
+  background: linear-gradient(135deg, #ECFDF5 0%, #EFF6FF 50%, #FEFCE8 100%);
   display: flex;
   flex-direction: column;
 }
 
 .header {
   background: white;
-  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   padding: 1rem 0;
 }
 
@@ -25,9 +25,15 @@
 .logo {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
   font-size: 1.25rem;
-  font-weight: 600;
-  color: #287233;
+  font-weight: 700;
+  color: #34D399;
+}
+
+.logo img {
+  height: 40px;
+  width: auto;
 }
 
 .headerStatus {
@@ -47,8 +53,8 @@
 }
 
 .connected {
-  background: #dcf2df;
-  color: #1e5e29;
+  background: #D1FAE5;
+  color: #047857;
 }
 
 .disconnected {
@@ -61,7 +67,7 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem 0.5rem;
-  background: #287233;
+  background: #34D399;
   color: white;
   border: none;
   border-radius: 0.375rem;
@@ -71,7 +77,7 @@
 }
 
 .connectButton:hover {
-  background: #1e5e29;
+  background: #10B981;
 }
 
 .tabs {
@@ -107,8 +113,8 @@
 }
 
 .tab.active {
-  color: #287233;
-  border-bottom-color: #287233;
+  color: #34D399;
+  border-bottom-color: #34D399;
 }
 
 .content {
@@ -148,18 +154,20 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: #287233;
+  background: #34D399;
   color: white;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
 }
 
 .primaryButton:hover {
-  background: #1e5e29;
+  background: #10B981;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(52, 211, 153, 0.12);
 }
 
 .secondaryButton {
@@ -170,10 +178,10 @@
   background: white;
   color: #374151;
   border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
+  border-radius: 16px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
 }
 
@@ -190,13 +198,19 @@
 
 .childCard {
   background: white;
-  border-radius: 0.75rem;
+  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 16px rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.childCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(52, 211, 153, 0.12);
 }
 
 .childInfo h3 {
@@ -225,10 +239,10 @@
   height: 2.5rem;
   background: #f3f4f6;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 12px;
   color: #6b7280;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .iconButton:hover {
@@ -244,10 +258,16 @@
 
 .settingCard {
   background: white;
-  border-radius: 0.75rem;
+  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 16px rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.08);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settingCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(52, 211, 153, 0.12);
 }
 
 .settingCard h3 {
@@ -290,7 +310,7 @@
   width: 2rem;
   height: 2rem;
   border: 2px solid #e5e7eb;
-  border-top: 2px solid #287233;
+  border-top: 2px solid #34D399;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

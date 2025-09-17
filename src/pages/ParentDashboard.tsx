@@ -10,6 +10,8 @@ import { getSpotifyTokens } from '../utils/spotify-tokens'
 import { supabase } from '../lib/supabase'
 import type { Child } from '../types/child'
 import styles from './ParentDashboard.module.css'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
 interface SpotifyPlayerState {
   isPlaying: boolean
@@ -316,37 +318,7 @@ export default function ParentDashboard() {
   return (
     <div className={styles.dashboard}>
       {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.headerContent}>
-          <div className={styles.logo}>
-            <img 
-              src="/Patou emeraude sans fond.png" 
-              alt="Patou Logo" 
-              className="h-5 w-auto mr-2"
-            />
-            Patou Parent
-          </div>
-          <div className={styles.headerStatus}>
-            <div className={`${styles.spotifyStatus} ${spotifyConnected ? styles.connected : styles.disconnected}`}>
-              <Music size={16} />
-              {spotifyConnected ? 'Spotify connecté' : 'Spotify déconnecté'}
-              {!spotifyConnected && (
-                <button
-                  onClick={connectSpotify}
-                  className={styles.connectButton}
-                >
-                  <Music size={12} />
-                  Connecter
-                </button>
-              )}
-            </div>
-            <button onClick={handleSignOut} className={styles.secondaryButton}>
-              <LogOut size={16} />
-              Déconnexion
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header showNavigation onSignOut={handleSignOut} />
 
       {/* Navigation Tabs */}
       <nav className={styles.tabs}>
@@ -394,16 +366,16 @@ export default function ParentDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 <button
                   onClick={() => navigate('/parent/children')}
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white p-6 rounded-lg text-left transition-colors"
+                  className="bg-patou-green hover:bg-patou-green-600 text-white p-6 rounded-2xl text-left transition-all transform hover:-translate-y-1 hover:shadow-lg"
                 >
                   <UserPlus className="w-8 h-8 mb-3" />
                   <h3 className="text-lg font-semibold mb-2">Créer un enfant</h3>
-                  <p className="text-emerald-100 text-sm">Ajouter un nouveau profil enfant</p>
+                  <p className="text-green-100 text-sm">Ajouter un nouveau profil enfant</p>
                 </button>
                 
                 <button
                   onClick={() => navigate('/parent/rules/choose')}
-                  className="bg-orange-500 hover:bg-orange-600 text-white p-6 rounded-lg text-left transition-colors"
+                  className="bg-patou-orange hover:bg-patou-orange-600 text-white p-6 rounded-2xl text-left transition-all transform hover:-translate-y-1 hover:shadow-lg"
                 >
                   <Timer className="w-8 h-8 mb-3" />
                   <h3 className="text-lg font-semibold mb-2">Régler les horaires</h3>
@@ -412,11 +384,11 @@ export default function ParentDashboard() {
                 
                 <button
                   onClick={() => navigate('/parent/curation')}
-                  className="bg-indigo-500 hover:bg-indigo-600 text-white p-6 rounded-lg text-left transition-colors"
+                  className="bg-patou-blue hover:bg-patou-blue-600 text-white p-6 rounded-2xl text-left transition-all transform hover:-translate-y-1 hover:shadow-lg"
                 >
                   <Calendar className="w-8 h-8 mb-3" />
                   <h3 className="text-lg font-semibold mb-2">Publier playlist</h3>
-                  <p className="text-indigo-100 text-sm">Gérer les playlists de la semaine</p>
+                  <p className="text-blue-100 text-sm">Gérer les playlists de la semaine</p>
                 </button>
               </div>
               <div className={styles.childrenGrid}>
@@ -462,6 +434,39 @@ export default function ParentDashboard() {
                   </div>
                 )}
               </div>
+              
+              {/* Status Spotify */}
+              <div className="mt-8 patou-card">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Music className="w-6 h-6 text-patou-green" />
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Connexion Spotify</h3>
+                      <p className="text-sm text-gray-600">
+                        {spotifyConnected ? 'Connecté et prêt à l\'utilisation' : 'Connexion requise pour le lecteur'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    spotifyConnected 
+                      ? 'bg-green-100 text-green-700' 
+                      : 'bg-red-100 text-red-700'
+                  }`}>
+                    {spotifyConnected ? 'Connecté' : 'Déconnecté'}
+                  </div>
+                </div>
+                {!spotifyConnected && (
+                  <div className="mt-4">
+                    <button
+                      onClick={connectSpotify}
+                      className="btn btn--primary"
+                    >
+                      <Music size={16} />
+                      Connecter Spotify
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -482,7 +487,7 @@ export default function ParentDashboard() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {children.map(child => (
-                  <div key={child.id} className="bg-white rounded-lg shadow-lg p-6">
+                  <div key={child.id} className="patou-card">
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="text-3xl">{child.emoji}</div>
                       <div>
@@ -496,7 +501,7 @@ export default function ParentDashboard() {
                     <div className="space-y-3">
                       <button
                         onClick={() => navigate(`/parent/rules/${child.id}`)}
-                        className="w-full flex items-center space-x-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
+                        className="w-full flex items-center space-x-2 px-4 py-2 bg-patou-blue-50 text-patou-blue-700 rounded-lg hover:bg-patou-blue-100 transition-colors"
                       >
                         <Shield size={16} />
                         <span>Configurer les règles</span>
@@ -544,7 +549,7 @@ export default function ParentDashboard() {
               </div>
 
               {!spotifyConnected ? (
-                <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+                <div className="patou-card text-center">
                   <Music className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Spotify non connecté</h3>
                   <p className="text-gray-600 mb-6">
@@ -559,13 +564,13 @@ export default function ParentDashboard() {
                   </button>
                 </div>
               ) : (
-                <div className="bg-gradient-to-br from-gray-900 to-black text-white rounded-lg p-6">
+                <div className="bg-gradient-to-br from-gray-900 to-black text-white rounded-2xl p-6">
                   {playerState.currentTrack ? (
                     <div className="flex items-center space-x-4 mb-6">
                       <img
                         src={playerState.currentTrack.album?.images[0]?.url || 'https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=300'}
                         alt={playerState.currentTrack.album?.name}
-                        className="w-16 h-16 rounded-lg shadow-lg"
+                        className="w-16 h-16 rounded-xl shadow-lg"
                       />
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold">{playerState.currentTrack.name}</h3>
@@ -614,7 +619,7 @@ export default function ParentDashboard() {
                     
                     <button
                       onClick={() => handleSpotifyControl(playerState.isPlaying ? 'pause' : 'play')}
-                      className="bg-green-500 hover:bg-green-600 text-white rounded-full p-3 transition-colors"
+                      className="bg-patou-green hover:bg-patou-green-600 text-white rounded-full p-3 transition-colors"
                     >
                       {playerState.isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
                     </button>
@@ -705,6 +710,8 @@ export default function ParentDashboard() {
           )}
         </div>
       </main>
+      
+      <Footer />
     </div>
   )
 }
