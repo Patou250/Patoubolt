@@ -95,6 +95,12 @@ export default function PlayerSdk({ accessToken, onTrackChange, trackId, initial
             body: JSON.stringify({ device_ids: [device_id], play: false })
           })
         } catch {}
+        
+        if (trackId) {
+          await startPlayback([`spotify:track:${trackId}`])
+        } else {
+          await startPlayback(['spotify:track:4VqPOruhp5EdPBeR92t6lQ']) // une valeur par défaut
+        }
         // Auto-start a context if none is loaded
         if (initialUris?.length) {
           startPlayback(initialUris)
