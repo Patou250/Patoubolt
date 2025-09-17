@@ -5,6 +5,10 @@ import Home from './pages/Home'
 import ParentCallback from './pages/ParentCallback'
 import ParentLogin from './pages/ParentLogin'
 import ParentDashboard from './pages/ParentDashboard'
+import ParentHistory from './pages/ParentHistory'
+import ParentExcluded from './pages/ParentExcluded'
+import ParentInsights from './pages/ParentInsights'
+import ParentPlayer from './pages/ParentPlayer'
 import Player from './pages/Player'
 import ChildLogin from './pages/ChildLogin'
 import Child from './pages/Child'
@@ -21,6 +25,10 @@ export default function App() {
           <Route path="/parent/callback" element={<ParentCallback />} />
           <Route path="/parent/login" element={<ParentLogin />} />
           <Route path="/parent/dashboard" element={<ParentDashboard />} />
+          <Route path="/parent/history" element={<ParentHistory />} />
+          <Route path="/parent/excluded" element={<ParentExcluded />} />
+          <Route path="/parent/insights" element={<ParentInsights />} />
+          <Route path="/parent/player" element={<ParentPlayer />} />
           <Route path="/player" element={<Player />} />
           <Route path="/child/login" element={<ChildLogin />} />
           <Route path="/child" element={<Child />} />
