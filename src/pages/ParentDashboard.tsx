@@ -35,8 +35,35 @@ export default function ParentDashboard() {
 
   useEffect(() => {
     const session = getParentSession()
+    const tokens = getSpotifyTokens()
+    
+    // Si pas de session mais qu'on a des tokens Spotify, créer une session
+    if (!session && tokens) {
+      // Récupérer les infos utilisateur depuis Spotify
+      fetch('https://api.spotify.com/v1/me', {
+        headers: { 'Authorization': `Bearer ${tokens.access_token}` }
+      })
+      .then(res => res.json())
+      .then(user => {
+        const parentSession = {
+          parent: {
+            id: user.id,
+            email: user.email,
+            spotify_id: user.id
+          },
+          timestamp: Date.now()
+        }
+        localStorage.setItem('patou_parent_session', JSON.stringify(parentSession))
+        window.location.reload()
+      })
+      .catch(() => {
+        navigate('/parent/login')
+      })
+      return
+    }
+    
     if (!session) {
-      navigate('/parent/login')
+      navigate('/')
       return
     }
 

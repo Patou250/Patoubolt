@@ -138,7 +138,7 @@ export default function ParentCallback() {
 
         setStatus('Connexion réussie!')
         setTimeout(() => {
-          navigate('/parent/dashboard')
+          navigate('/parent')
         }, 1000)
 
       } catch (error) {

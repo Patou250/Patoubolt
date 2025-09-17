@@ -18,6 +18,7 @@ export default function App() {
         {/* Parent */}
         <Route path="/parent/login" element={<ParentLogin />} />
         <Route path="/parent/callback" element={<ParentCallback />} />
+        <Route path="/parent" element={<ParentDashboard />} />
         <Route path="/parent/signup" element={<ParentSignup />} />
         <Route path="/parent/settings" element={<ParentDashboard />} />
         <Route path="/parent/children" element={<ParentChildren />} />
