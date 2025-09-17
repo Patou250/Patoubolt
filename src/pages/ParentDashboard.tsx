@@ -35,6 +35,22 @@ export default function ParentDashboard() {
   const navigate = useNavigate()
 
   useEffect(() => {
+    // Si on accède via /direct/parent, créer une session factice
+    if (window.location.pathname === '/direct/parent') {
+      const fakeSession = {
+        parent: {
+          id: 'test-parent-id',
+          email: 'test@patou.app',
+          spotify_id: 'test-spotify-id'
+        },
+        timestamp: Date.now()
+      }
+      localStorage.setItem('patou_parent_session', JSON.stringify(fakeSession))
+      checkSpotifyConnection()
+      setIsLoading(false)
+      return
+    }
+
     const tokens = getSpotifyTokens()
     
     // Si on a des tokens Spotify, créer une session

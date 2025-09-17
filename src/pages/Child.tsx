@@ -1,6 +1,19 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function Child() {
+  useEffect(() => {
+    // Si on accède via /direct/child, créer une session factice
+    if (window.location.pathname === '/direct/child') {
+      const fakeChild = {
+        id: 'test-child-id',
+        identifier: 'test-child',
+        name: 'Enfant Test'
+      }
+      localStorage.setItem('patou_child', JSON.stringify(fakeChild))
+    }
+  }, [])
+
   const lastRaw = localStorage.getItem('patou_last_track')
   const last = lastRaw ? JSON.parse(lastRaw) : null
   const favsRaw = localStorage.getItem('patou_favorites')

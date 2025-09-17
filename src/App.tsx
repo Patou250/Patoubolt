@@ -23,6 +23,9 @@ export default function App() {
         <Route path="/parent/settings" element={<ParentDashboard />} />
         <Route path="/parent/children" element={<ParentChildren />} />
         <Route path="/parent/dashboard" element={<ParentDashboard />} />
+        {/* Routes d'accès direct pour tests */}
+        <Route path="/direct/parent" element={<ParentDashboard />} />
+        <Route path="/direct/child" element={<Child />} />
         {/* Enfant */}
         <Route path="/child/login" element={<ChildLogin />} />
         <Route path="/child" element={<Child />} />
