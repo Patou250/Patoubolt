@@ -1,33 +1,35 @@
-import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Navigation from './components/Navigation'
+import AppShell from './components/AppShell'
+import Header from './components/Header'
+import Footer from './components/Footer'
+import Navigation from './components/Navigation' // ta nav mobile/desktop existante
+
+// …imports pages
 import Home from './pages/Home'
 import ParentLogin from './pages/ParentLogin'
-import ParentCallback from './pages/ParentCallback'
-import ParentChildren from './pages/ParentChildren'
-import ParentDashboard from './pages/ParentDashboard'
 import ParentSignup from './pages/ParentSignup'
+import ParentDashboard from './pages/ParentDashboard'
+import ParentChildren from './pages/ParentChildren'
 import ChildLogin from './pages/ChildLogin'
 import Child from './pages/Child'
 import ChildSearch from './pages/ChildSearch'
 import Player from './pages/Player'
+import ParentCallback from './pages/ParentCallback'
 
 export default function App() {
   return (
     <Router>
-      <div className="flex">
-        <Navigation />
-        <main className="flex-1 min-h-screen pb-16 md:pb-0 px-4 md:px-8 py-6">
+      <Header />
+      <AppShell sidebar={<div className="hidden md:block"><Navigation /></div>}>
+        <main className="pb-16 md:pb-0">
           <Routes>
             <Route path="/" element={<Home />} />
             {/* Parent */}
             <Route path="/parent/login" element={<ParentLogin />} />
-            <Route path="/parent/callback" element={<ParentCallback />} />
-            <Route path="/parent" element={<ParentDashboard />} />
             <Route path="/parent/signup" element={<ParentSignup />} />
-            <Route path="/parent/settings" element={<ParentDashboard />} />
-            <Route path="/parent/children" element={<ParentChildren />} />
             <Route path="/parent/dashboard" element={<ParentDashboard />} />
+            <Route path="/parent/children" element={<ParentChildren />} />
+            <Route path="/parent/callback" element={<ParentCallback />} />
             {/* Routes d'accès direct pour tests */}
             <Route path="/direct/parent" element={<ParentDashboard />} />
             <Route path="/direct/child" element={<Child />} />
@@ -39,7 +41,12 @@ export default function App() {
             <Route path="/player" element={<Player />} />
           </Routes>
         </main>
+      </AppShell>
+      {/* Bottom nav mobile en dehors d'AppShell pour coller au bas de l'écran */}
+      <div className="md:hidden fixed bottom-0 inset-x-0 z-40">
+        <Navigation />
       </div>
+      <Footer />
     </Router>
   )
 }
