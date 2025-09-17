@@ -10,6 +10,7 @@ import ParentLogin from './pages/ParentLogin'
 import ParentSignup from './pages/ParentSignup'
 import ParentDashboard from './pages/ParentDashboard'
 import ParentChildren from './pages/ParentChildren'
+import ParentCuration from './pages/ParentCuration'
 import ChildLogin from './pages/ChildLogin'
 import Child from './pages/Child'
 import ChildSearch from './pages/ChildSearch'
@@ -31,6 +32,7 @@ export default function App() {
             <Route path="/parent/signup" element={<ParentSignup />} />
             <Route path="/parent/dashboard" element={<ParentDashboard />} />
             <Route path="/parent/children" element={<ParentChildren />} />
+            <Route path="/parent/curation" element={<ParentCuration />} />
             <Route path="/parent/callback" element={<ParentCallback />} />
             {/* Routes d'accès direct pour tests */}
             <Route path="/direct/parent" element={<ParentDashboard />} />
