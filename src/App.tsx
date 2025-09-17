@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
 import AppShell from './components/AppShell'
 import Home from './pages/Home'
 import ParentCallback from './pages/ParentCallback'
@@ -12,7 +13,24 @@ import ChildSearch from './pages/ChildSearch'
 import ChildPlaylists from './pages/ChildPlaylists'
 import ChildHistory from './pages/ChildHistory'
 
+// Component to handle Netlify function redirects
+function NetlifyFunctionRedirect() {
+  useEffect(() => {
+    // If we're on a Netlify function path, redirect immediately
+    if (window.location.pathname.startsWith('/.netlify/functions/')) {
+      window.location.href = window.location.href
+    }
+  }, [])
+  
+  return null
+}
+
 export default function App() {
+  // Check if current path is a Netlify function
+  if (window.location.pathname.startsWith('/.netlify/functions/')) {
+    return <NetlifyFunctionRedirect />
+  }
+
   return (
     <Router>
       <Routes>

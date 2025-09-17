@@ -1,7 +1,8 @@
 export default function Home() {
   const handleSpotifyAuth = () => {
     // Force complete page navigation to bypass React Router
-    window.location.href = `${window.location.origin}/.netlify/functions/spotify-auth-start`
+    // Force a complete page navigation
+    window.open('/.netlify/functions/spotify-auth-start', '_self')
   }
 
   return (
