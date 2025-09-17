@@ -14,9 +14,9 @@ export const handler: Handler = async (event, context) => {
 
   try {
     const { code, state } = JSON.parse(event.body || '{}')
-    const clientId = process.env.VITE_SPOTIFY_CLIENT_ID
-    const clientSecret = process.env.VITE_SPOTIFY_CLIENT_SECRET
-    const redirectUri = process.env.VITE_REDIRECT_URI || 'https://patou.app/parent/callback'
+    const clientId = 'dc55e43e7ed24d1fa603a216e56bb4e9'
+    const clientSecret = '5d4ec03936134187ad7e59f1d1526f76'
+    const redirectUri = 'https://patou.app/parent/callback'
 
     if (!code || !clientId || !clientSecret) {
       return {

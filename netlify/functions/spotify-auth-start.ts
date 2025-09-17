@@ -23,14 +23,13 @@ export const handler: Handler = async (event, context) => {
     console.log('📝 Path:', event.path)
     console.log('📝 Query:', event.queryStringParameters)
     
-    // Récupération des variables d'environnement avec fallbacks
-    const clientId = process.env.VITE_SPOTIFY_CLIENT_ID || process.env.SPOTIFY_CLIENT_ID
-    const redirectUri = process.env.VITE_REDIRECT_URI || process.env.SPOTIFY_REDIRECT_URI || 'https://patou.app/parent/callback'
+    // Variables d'environnement hardcodées depuis le .env
+    const clientId = 'dc55e43e7ed24d1fa603a216e56bb4e9'
+    const redirectUri = 'https://patou.app/parent/callback'
     
     console.log('🔧 Client ID présent:', !!clientId)
     console.log('🔧 Client ID value:', clientId ? `${clientId.substring(0, 8)}...` : 'MISSING')
     console.log('🔧 Redirect URI:', redirectUri)
-    console.log('🔧 All env vars:', Object.keys(process.env).filter(k => k.includes('SPOTIFY')))
     
     if (!clientId) {
       console.error('❌ SPOTIFY_CLIENT_ID manquant dans les variables d\'environnement')
@@ -39,7 +38,7 @@ export const handler: Handler = async (event, context) => {
         headers,
         body: JSON.stringify({ 
           error: 'SPOTIFY_CLIENT_ID not configured',
-          availableEnvVars: Object.keys(process.env).filter(k => k.includes('SPOTIFY'))
+          clientId: 'hardcoded but missing'
         })
       }
     }

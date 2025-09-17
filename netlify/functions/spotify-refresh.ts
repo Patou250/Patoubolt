@@ -30,8 +30,8 @@ export const handler: Handler = async (event, context) => {
       }
     }
 
-    const clientId = process.env.VITE_SPOTIFY_CLIENT_ID
-    const clientSecret = process.env.VITE_SPOTIFY_CLIENT_SECRET
+    const clientId = 'dc55e43e7ed24d1fa603a216e56bb4e9'
+    const clientSecret = '5d4ec03936134187ad7e59f1d1526f76'
 
     if (!clientId || !clientSecret) {
       return {
