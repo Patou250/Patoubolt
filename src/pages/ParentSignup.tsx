@@ -184,14 +184,16 @@ export default function ParentSignup() {
                     className="mt-1"
                   />
                   <label htmlFor="accept-terms" className="text-sm text-gray-600">
-                    J'accepte les{' '}
-                    <Link to="/cgu" className="text-primary hover:text-primary-700 transition-colors">
-                      Conditions Générales d'Utilisation
-                    </Link>
-                    {' '}et la{' '}
-                    <Link to="/privacy" className="text-primary hover:text-primary-700 transition-colors">
-                      Politique de Confidentialité
-                    </Link>
+                    <>
+                      J'accepte les{' '}
+                      <Link to="/cgu" className="text-primary hover:text-primary-700 transition-colors">
+                        Conditions Générales d'Utilisation
+                      </Link>
+                      {' '}et la{' '}
+                      <Link to="/privacy" className="text-primary hover:text-primary-700 transition-colors">
+                        Politique de Confidentialité
+                      </Link>
+                    </>
                   </label>
                 </div>
                 
