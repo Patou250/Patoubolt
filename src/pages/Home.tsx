@@ -1,4 +1,8 @@
 export default function Home() {
+  const handleSpotifyAuth = () => {
+    window.location.replace('https://patou.app/.netlify/functions/spotify-auth-start')
+  }
+
   return (
     <section className="mx-auto max-w-xl text-center">
       <img src="/patou-logo.svg" alt="Patou" className="h-20 w-20 mx-auto mb-4" />
@@ -6,7 +10,7 @@ export default function Home() {
       <p className="text-gray-600 mb-8">Bêta minimale — authentification Spotify requise pour le lecteur.</p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <button
-          onClick={() => {
+          onClick={handleSpotifyAuth}
             window.location.replace('https://patou.app/.netlify/functions/spotify-auth-start')
           }}
           className="inline-block px-5 py-3 rounded-lg bg-black text-white font-medium"
@@ -15,7 +19,7 @@ export default function Home() {
         </button>
         <a href="/child/login" className="inline-block px-5 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium">
           Espace enfant
-        </a>
+        </button>
       </div>
     </section>
   )
