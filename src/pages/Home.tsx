@@ -20,24 +20,10 @@ export default function Home() {
       
       <main className="min-h-screen bg-gray-50">
         <div className="container-patou py-16">
-          {/* Hero Section */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Bienvenue sur <span className="text-primary">Patou</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
-              La plateforme musicale sécurisée qui accompagne vos enfants dans la découverte de la musique,
-              avec des contenus adaptés et un contrôle parental avancé.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link to="/parent/login" className="btn btn-primary">
-                👨‍👩‍👧‍👦 Espace Parent
-              </Link>
-              <Link to="/child/login" className="btn btn-protect">
-                🎵 Espace Enfant
-              </Link>
-            </div>
+          <div className="prose max-w-none prose-headings:tracking-tight prose-h1:text-primary prose-a:text-protect">
+            <h1>Bienvenue sur Patou</h1>
+            <p>Patou aide les familles à…</p>
+            <a href="/parent/login">Commencer</a>
           </div>
               
           {/* Features Grid */}
