@@ -16,13 +16,6 @@ export default function Home() {
 
   return (
     <div className="patou-layout">
-      <Header />
-      
-      <main className="patou-main">
-        <div className="container">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Hero Section */}
-            <div className="mb-16">
               <h1 className="text-5xl font-bold text-gray-900 mb-6">
                 Bienvenue sur <span className="text-primary">Patou</span>
               </h1>
