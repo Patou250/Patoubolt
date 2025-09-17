@@ -11,7 +11,6 @@ export default function ParentSignup() {
     e.preventDefault(); setErr(null); setMsg(null)
     if (!firstName || !lastName || !email || !password || !birthdate || !accept) {
       setErr('Merci de remplir tous les champs et d\'accepter les CGU.'); return
-      )
     }
     const { data, error } = await supabase.auth.signUp({
       email, password,
