@@ -15,6 +15,13 @@ export default function Home() {
   }
 
   return (
+    <>
+      <Header />
+      
+      <main className="min-h-screen bg-gray-50">
+        <div className="container-patou py-16">
+          {/* Hero Section */}
+          <div className="text-center mb-16">
             <h1 className="text-5xl font-bold text-gray-900 mb-6">
               Bienvenue sur <span className="text-primary">Patou</span>
             </h1>
@@ -74,6 +81,11 @@ export default function Home() {
               </Link>
             </div>
           </div>
+        </div>
+      </main>
+      
+      <Footer />
+    </>
         </div>
       </main>
       
