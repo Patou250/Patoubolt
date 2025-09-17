@@ -19,16 +19,28 @@ export default function ParentChildren(){
     e.preventDefault(); setMsg(null)
     if (!userId || !name || !pin) { setMsg('Champs requis manquants.'); return }
     
+    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+      setMsg('Le PIN doit contenir exactement 4 chiffres.')
+      return
+    }
+    
     // Hash the PIN (simple hash for demo - in production use proper hashing)
     const pinHash = btoa(pin) // Simple base64 encoding for demo
     
-    const { error } = await supabase.from('children').insert({
+    const { data, error } = await supabase.from('children').insert({
       parent_id: userId, 
       name: name, 
       emoji: emoji,
       pin_hash: pinHash
-    })
-    if (error) { setMsg(error.message); return }
+    }).select()
+    
+    if (error) { 
+      console.error('❌ Erreur création enfant:', error)
+      setMsg(`Erreur: ${error.message}`)
+      return 
+    }
+    
+    console.log('✅ Enfant créé:', data)
     const { data:rows } = await supabase.from('children').select('*').eq('parent_id', userId).order('name')
     setList(rows || []); setName(''); setEmoji('👶'); setPin(''); setMsg('Enfant ajouté.')
   }

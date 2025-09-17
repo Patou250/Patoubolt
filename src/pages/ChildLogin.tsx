@@ -10,13 +10,41 @@ export default function ChildLogin(){
   const login = async (e:React.FormEvent) => {
     e.preventDefault(); setErr(null)
     
+    if (!name.trim() || !pin.trim()) {
+      setErr('Veuillez saisir le nom et le PIN')
+      return
+    }
+    
+    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+      setErr('Le PIN doit contenir 4 chiffres')
+      return
+    }
+    
     // Hash the PIN to match stored format
     const pinHash = btoa(pin)
     
+    console.log('🔍 Tentative de connexion enfant:', { name, pinHash })
+    
     const { data, error } = await supabase.from('children')
       .select('id, name, emoji, pin_hash')
-      .eq('name', name).eq('pin_hash', pinHash).maybeSingle()
-    if (error || !data) { setErr('Nom ou PIN invalide'); return }
+      .eq('name', name)
+      .eq('pin_hash', pinHash)
+      .maybeSingle()
+    
+    console.log('📡 Réponse Supabase:', { data, error })
+    
+    if (error) { 
+      console.error('❌ Erreur Supabase:', error)
+      setErr('Erreur de connexion')
+      return 
+    }
+    
+    if (!data) { 
+      setErr('Nom ou PIN invalide')
+      return 
+    }
+    
+    console.log('✅ Connexion enfant réussie')
     localStorage.setItem('patou_child', JSON.stringify({ id:data.id, name:data.name, emoji:data.emoji }))
     nav('/child')
   }
