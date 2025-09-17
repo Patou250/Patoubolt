@@ -1,31 +1,30 @@
 import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { supabase } from '../supabase/client'
 
 export default function ParentLogin() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [birthdate, setBirthdate] = useState('')
+  const [email, setEmail] = useState(''); const [password, setPassword] = useState('')
+  const [err, setErr] = useState<string | null>(null)
+  const nav = useNavigate()
 
-  const signup = async (e: React.FormEvent) => {
-    e.preventDefault()
-    // TODO: call Supabase to create parent account with email/password/birthdate
+  const login = async (e:React.FormEvent) => {
+    e.preventDefault(); setErr(null)
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) { setErr(error.message); return }
+    nav('/parent/dashboard')
   }
 
   return (
-    <div className="max-w-md mx-auto mt-12 p-6 border rounded-lg">
-      <h1 className="text-xl font-bold mb-4">Connexion parent</h1>
-      <form onSubmit={signup} className="space-y-3">
-        <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="w-full border px-3 py-2 rounded"/>
-        <input type="password" placeholder="Mot de passe" value={password} onChange={e => setPassword(e.target.value)} className="w-full border px-3 py-2 rounded"/>
-        <input type="date" value={birthdate} onChange={e => setBirthdate(e.target.value)} className="w-full border px-3 py-2 rounded"/>
-        <button className="w-full bg-black text-white py-2 rounded">Créer mon compte</button>
+    <div className="max-w-md mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-4">Connexion parent</h1>
+      {err && <div className="mb-3 p-3 bg-red-50 border border-red-200 text-sm">{err}</div>}
+      <form onSubmit={login} className="space-y-3">
+        <input className="w-full border rounded px-3 py-2" type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} />
+        <input className="w-full border rounded px-3 py-2" type="password" placeholder="Mot de passe" value={password} onChange={e=>setPassword(e.target.value)} />
+        <button className="w-full bg-black text-white rounded py-2">Se connecter</button>
       </form>
-      <div className="mt-6 text-center">
-        <button
-          onClick={() => window.location.assign('/.netlify/functions/spotify-auth-start')}
-          className="inline-block px-5 py-3 rounded-lg bg-green-600 text-white font-medium"
-        >
-          Se connecter avec Spotify
-        </button>
+      <div className="mt-4 text-sm">
+        Pas de compte ? <Link to="/parent/signup" className="underline">Créer un compte</Link>
       </div>
     </div>
   )
