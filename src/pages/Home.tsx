@@ -1,4 +1,34 @@
 export default function Home() {
+  // Test direct de la fonction Netlify
+  const testNetlifyFunction = async () => {
+    console.log('🧪 Test direct de la fonction Netlify...')
+    try {
+      const response = await fetch('/.netlify/functions/spotify-auth-start', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      console.log('📡 Response status:', response.status)
+      console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()))
+      
+      if (response.status === 302) {
+        const location = response.headers.get('Location')
+        console.log('🔗 Redirect location:', location)
+        if (location) {
+          window.location.href = location
+        }
+      } else {
+        const text = await response.text()
+        console.log('📄 Response body:', text)
+      }
+    } catch (error) {
+      console.error('❌ Erreur test fonction:', error)
+    }
+  }
+
   const handleSpotifyAuth = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -60,6 +90,14 @@ export default function Home() {
           className="inline-block px-5 py-3 rounded-lg bg-black text-white font-medium hover:bg-gray-800 transition-colors"
         >
           Se connecter avec Spotify (Parent)
+        </button>
+        
+        {/* Bouton de test direct */}
+        <button
+          onClick={testNetlifyFunction}
+          className="inline-block px-5 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
+        >
+          🧪 Test fonction Netlify
         </button>
         
         {/* Lien direct alternatif */}
