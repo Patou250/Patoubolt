@@ -19,6 +19,7 @@ interface SpotifyPlayerState {
 }
 
 export default function ParentDashboard() {
+  useEffect(() => { console.log('🧭 ParentDashboard mounted') }, [])
   const [children, setChildren] = useState<Child[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('overview')
