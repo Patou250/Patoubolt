@@ -9,6 +9,12 @@ export default function ParentLogin() {
 
   const login = async (e:React.FormEvent) => {
     e.preventDefault(); setErr(null)
+    
+    if (!email.trim() || !password.trim()) {
+      setErr('Veuillez saisir votre email et mot de passe')
+      return
+    }
+    
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) { setErr(error.message); return }
     nav('/parent/dashboard')
