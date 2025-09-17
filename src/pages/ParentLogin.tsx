@@ -12,7 +12,7 @@ export default function ParentLogin() {
     
     if (!email.trim() || !password.trim()) {
       setErr('Veuillez saisir votre email et mot de passe')
-      nav('/parent/dashboard')
+      return
     }
     
     const { error } = await supabase.auth.signInWithPassword({ email, password })
