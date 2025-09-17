@@ -2,7 +2,6 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import ParentLogin from './pages/ParentLogin'
-import ParentSignup from './pages/ParentSignup'
 import ParentSettings from './pages/ParentSettings'
 import ParentChildren from './pages/ParentChildren'
 import ParentDashboard from './pages/ParentDashboard'
@@ -17,7 +16,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         {/* Parent */}
         <Route path="/parent/login" element={<ParentLogin />} />
-        <Route path="/parent/signup" element={<ParentSignup />} />
+        <Route path="/parent/signup" element={<ParentLogin />} />
         <Route path="/parent/settings" element={<ParentSettings />} />
         <Route path="/parent/children" element={<ParentChildren />} />
         <Route path="/parent/dashboard" element={<ParentDashboard />} />
