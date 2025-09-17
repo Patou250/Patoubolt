@@ -13,11 +13,8 @@ export default function ParentSignup() {
       setErr('Merci de remplir tous les champs et d\'accepter les CGU.'); return
     }
     const { data, error } = await supabase.auth.signUp({
-      email, password,
-      options: {
-        data: { first_name: firstName, last_name: lastName, birthdate },
-        emailRedirectTo: `${window.location.origin}/parent/login`
-      }
+      email, 
+      password
     })
     if (error) { setErr(error.message); return }
     setMsg('📧 Un email de confirmation vous a été envoyé. Veuillez valider puis vous connecter.')
