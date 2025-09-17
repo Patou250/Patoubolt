@@ -20,15 +20,6 @@ export default function ParentSignup() {
       }
     })
     if (error) { setErr(error.message); return }
-    // crée/maj profil parent
-    if (data?.user?.id) {
-      // Créer le profil utilisateur dans la table profiles
-      await supabase.from('profiles').upsert({
-        id: data.user.id,
-        email: email,
-        full_name: `${firstName} ${lastName}`
-      }, { onConflict: 'id' })
-    }
     setMsg('📧 Un email de confirmation vous a été envoyé. Veuillez valider puis vous connecter.')
   }
 
