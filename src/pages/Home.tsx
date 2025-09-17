@@ -22,14 +22,6 @@ export default function Home() {
         <div className="container-patou py-16">
           {/* Hero Section */}
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-gray-900 mb-6">
-              Bienvenue sur <span className="text-primary">Patou</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
-              La plateforme musicale sécurisée qui accompagne vos enfants dans la découverte de la musique, 
-              avec des contenus adaptés et un contrôle parental avancé.
-            </p>
-            
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Link to="/parent/login" className="btn btn-primary">
                 👨‍👩‍👧‍👦 Espace Parent
