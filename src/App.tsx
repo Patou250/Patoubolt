@@ -36,16 +36,21 @@ function NetlifyFunctionRedirect() {
 export default function App() {
   console.log('🚀 App component rendered')
   console.log('🌐 Current pathname:', window.location.pathname)
+  console.log('🌐 Full location:', window.location.href)
+  console.log('🔍 Checking if Netlify function path...')
   
   // Check if current path is a Netlify function
   if (window.location.pathname.startsWith('/.netlify/functions/')) {
     console.log('🔀 Detected Netlify function path, using NetlifyFunctionRedirect')
+    console.log('🔀 Path detected:', window.location.pathname)
     return <NetlifyFunctionRedirect />
   }
 
   console.log('📱 Using normal React Router')
+  console.log('📱 Will render Router with routes')
   return (
     <Router>
+      {console.log('📱 Router component rendering')}
       <Routes>
         <Route element={<AppShell />}>
           <Route path="/" element={<Home />} />
