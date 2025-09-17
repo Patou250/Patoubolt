@@ -76,7 +76,7 @@ export default function Home() {
               <p className="text-lg text-gray-600 mb-8">
                 Créez votre compte parent et configurez les profils de vos enfants en quelques minutes.
               </p>
-              <Link to="/parent/signup" className="btn-primary">
+              <Link to="/parent/signup" className="btn btn-primary">
                 Créer un compte gratuit
               </Link>
             </div>
