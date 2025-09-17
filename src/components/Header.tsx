@@ -22,14 +22,14 @@ export default function Header({ showNavigation = false, onSignOut }: HeaderProp
           <nav className="flex items-center gap-4">
             <Link 
               to="/parent/children" 
-              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-patou-green transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-protect transition-colors"
             >
               <Users size={16} />
               Enfants
             </Link>
             <Link 
               to="/parent/settings" 
-              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-patou-green transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-protect transition-colors"
             >
               <Settings size={16} />
               Paramètres

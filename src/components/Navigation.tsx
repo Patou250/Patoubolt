@@ -81,6 +81,7 @@ export default function Navigation({ userType = 'child' }: NavigationProps) {
                 className="h-10 w-auto"
               />
               <span className="text-xl font-bold text-patou-green">Patou</span>
+              <span className="text-xl font-bold text-primary">Patou</span>
             </Link>
           </div>
 
@@ -97,8 +98,8 @@ export default function Navigation({ userType = 'child' }: NavigationProps) {
                     to={item.path}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                       active
-                        ? 'text-patou-green bg-patou-green-50 border border-patou-green-200 shadow-sm'
-                        : 'text-gray-600 hover:text-patou-green hover:bg-patou-green-50 hover:shadow-sm'
+                        ? 'text-protect bg-protect-50 border border-protect-200 shadow-sm'
+                        : 'text-gray-600 hover:text-protect hover:bg-protect-50 hover:shadow-sm'
                     }`}
                   >
                     <Icon size={20} className="flex-shrink-0" />
@@ -113,7 +114,7 @@ export default function Navigation({ userType = 'child' }: NavigationProps) {
           <div className="p-6 border-t border-gray-100">
             <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
               <div className={`w-2 h-2 rounded-full ${
-                userType === 'parent' ? 'bg-patou-blue' : 'bg-patou-orange'
+                userType === 'parent' ? 'bg-protect' : 'bg-awaken'
               }`} />
               <span className="text-sm font-medium text-gray-600 capitalize">
                 {userType === 'parent' ? 'Espace Parent' : 'Espace Enfant'}

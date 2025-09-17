@@ -24,7 +24,7 @@ export default function Home() {
             {/* Hero Section */}
             <div className="mb-16">
               <h1 className="text-5xl font-bold text-gray-900 mb-6">
-                Bienvenue sur <span className="text-patou-green">Patou</span>
+                Bienvenue sur <span className="text-primary">Patou</span>
               </h1>
               <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
                 La plateforme musicale sécurisée qui accompagne vos enfants dans la découverte de la musique, 

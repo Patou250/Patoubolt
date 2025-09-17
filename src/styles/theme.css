@@ -1,63 +1,9 @@
 :root {
-  /* Palette Patou - Identité visuelle officielle */
-  --color-patou-green: #34D399;      /* Vert principal (emerald) */
-  --color-patou-green-light: #6EE7B7;
-  --color-patou-green-dark: #10B981;
-  --color-patou-green-50: #ECFDF5;
-  --color-patou-green-100: #D1FAE5;
-  --color-patou-green-200: #A7F3D0;
-  --color-patou-green-300: #6EE7B7;
-  --color-patou-green-400: #34D399;
-  --color-patou-green-500: #10B981;
-  --color-patou-green-600: #059669;
-  --color-patou-green-700: #047857;
-  --color-patou-green-800: #065F46;
-  --color-patou-green-900: #064E3B;
-
-  /* Bleu secondaire (lagoon) */
-  --color-patou-blue: #3B82F6;
-  --color-patou-blue-light: #60A5FA;
-  --color-patou-blue-dark: #2563EB;
-  --color-patou-blue-50: #EFF6FF;
-  --color-patou-blue-100: #DBEAFE;
-  --color-patou-blue-200: #BFDBFE;
-  --color-patou-blue-300: #93C5FD;
-  --color-patou-blue-400: #60A5FA;
-  --color-patou-blue-500: #3B82F6;
-  --color-patou-blue-600: #2563EB;
-  --color-patou-blue-700: #1D4ED8;
-  --color-patou-blue-800: #1E40AF;
-  --color-patou-blue-900: #1E3A8A;
-
-  /* Orange accent (terracotta) */
-  --color-patou-orange: #F97316;
-  --color-patou-orange-light: #FB923C;
-  --color-patou-orange-dark: #EA580C;
-  --color-patou-orange-50: #FFF7ED;
-  --color-patou-orange-100: #FFEDD5;
-  --color-patou-orange-200: #FED7AA;
-  --color-patou-orange-300: #FDBA74;
-  --color-patou-orange-400: #FB923C;
-  --color-patou-orange-500: #F97316;
-  --color-patou-orange-600: #EA580C;
-  --color-patou-orange-700: #C2410C;
-  --color-patou-orange-800: #9A3412;
-  --color-patou-orange-900: #7C2D12;
-
-  /* Jaune accent (mustard) */
-  --color-patou-yellow: #FACC15;
-  --color-patou-yellow-light: #FDE047;
-  --color-patou-yellow-dark: #EAB308;
-  --color-patou-yellow-50: #FEFCE8;
-  --color-patou-yellow-100: #FEF9C3;
-  --color-patou-yellow-200: #FEF08A;
-  --color-patou-yellow-300: #FDE047;
-  --color-patou-yellow-400: #FACC15;
-  --color-patou-yellow-500: #EAB308;
-  --color-patou-yellow-600: #CA8A04;
-  --color-patou-yellow-700: #A16207;
-  --color-patou-yellow-800: #854D0E;
-  --color-patou-yellow-900: #713F12;
+  /* Palette Patou officielle */
+  --color-primary: #287233;
+  --color-protect: #017ba6;
+  --color-share: #e2725b;
+  --color-awaken: #ffd447;
 
   /* Couleurs neutres */
   --color-white: #FFFFFF;
@@ -74,24 +20,15 @@
   --color-gray-900: #111827;
 
   /* Système de couleurs sémantiques */
-  --color-primary: var(--color-patou-green);
-  --color-primary-light: var(--color-patou-green-100);
-  --color-primary-dark: var(--color-patou-green-700);
-  --color-secondary: var(--color-patou-blue);
-  --color-secondary-light: var(--color-patou-blue-100);
-  --color-accent: var(--color-patou-orange);
-  --color-accent-light: var(--color-patou-orange-100);
-  --color-warning: var(--color-patou-yellow);
-  --color-warning-light: var(--color-patou-yellow-100);
-  --color-success: var(--color-patou-green);
+  --color-success: var(--color-primary);
   --color-error: #EF4444;
 
   /* Design System */
   --patou-radius: 16px;
   --patou-radius-sm: 8px;
   --patou-radius-lg: 24px;
-  --patou-shadow: 0 4px 16px rgba(52, 211, 153, 0.08);
-  --patou-shadow-hover: 0 8px 24px rgba(52, 211, 153, 0.12);
+  --patou-shadow: 0 4px 16px rgba(40, 114, 51, 0.08);
+  --patou-shadow-hover: 0 8px 24px rgba(40, 114, 51, 0.12);
   --patou-shadow-header: 0 2px 8px rgba(0, 0, 0, 0.06);
 
   /* Espacement harmonieux */
@@ -131,7 +68,7 @@ body {
   font-size: var(--font-size-base);
   line-height: 1.6;
   color: var(--color-gray-800);
-  background: linear-gradient(135deg, var(--color-patou-green-50) 0%, var(--color-patou-blue-50) 50%, var(--color-patou-yellow-50) 100%);
+  background: linear-gradient(135deg, #f0f9f1 0%, #f0f9ff 50%, #fffbeb 100%);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -232,7 +169,7 @@ body {
 }
 
 .btn--primary {
-  background: linear-gradient(135deg, var(--color-patou-green), var(--color-patou-green-600));
+  background: var(--color-primary);
   color: var(--color-white);
   box-shadow: var(--patou-shadow);
 }
@@ -240,11 +177,11 @@ body {
 .btn--primary:hover {
   transform: translateY(-2px);
   box-shadow: var(--patou-shadow-hover);
-  background: linear-gradient(135deg, var(--color-patou-green-600), var(--color-patou-green-700));
+  background: #236029;
 }
 
 .btn--secondary {
-  background: linear-gradient(135deg, var(--color-patou-blue), var(--color-patou-blue-600));
+  background: var(--color-protect);
   color: var(--color-white);
   box-shadow: var(--patou-shadow);
 }
@@ -252,11 +189,11 @@ body {
 .btn--secondary:hover {
   transform: translateY(-2px);
   box-shadow: var(--patou-shadow-hover);
-  background: linear-gradient(135deg, var(--color-patou-blue-600), var(--color-patou-blue-700));
+  background: #0369a1;
 }
 
 .btn--accent {
-  background: linear-gradient(135deg, var(--color-patou-orange), var(--color-patou-orange-600));
+  background: var(--color-share);
   color: var(--color-white);
   box-shadow: var(--patou-shadow);
 }
@@ -264,11 +201,11 @@ body {
 .btn--accent:hover {
   transform: translateY(-2px);
   box-shadow: var(--patou-shadow-hover);
-  background: linear-gradient(135deg, var(--color-patou-orange-600), var(--color-patou-orange-700));
+  background: #d35a42;
 }
 
 .btn--warning {
-  background: linear-gradient(135deg, var(--color-patou-yellow), var(--color-patou-yellow-600));
+  background: var(--color-awaken);
   color: var(--color-gray-900);
   box-shadow: var(--patou-shadow);
 }
@@ -276,7 +213,7 @@ body {
 .btn--warning:hover {
   transform: translateY(-2px);
   box-shadow: var(--patou-shadow-hover);
-  background: linear-gradient(135deg, var(--color-patou-yellow-600), var(--color-patou-yellow-700));
+  background: #f59e0b;
 }
 
 .btn--outline {
@@ -303,7 +240,7 @@ body {
   padding: var(--spacing-lg);
   box-shadow: var(--patou-shadow);
   transition: all var(--transition-normal);
-  border: 1px solid rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(40, 114, 51, 0.08);
   position: relative;
   overflow: hidden;
 }
@@ -357,20 +294,20 @@ body {
 }
 
 /* Utilitaires couleurs Patou */
-.text-patou-green { color: var(--color-patou-green); }
-.text-patou-blue { color: var(--color-patou-blue); }
-.text-patou-orange { color: var(--color-patou-orange); }
-.text-patou-yellow { color: var(--color-patou-yellow); }
+.text-primary { color: var(--color-primary); }
+.text-protect { color: var(--color-protect); }
+.text-share { color: var(--color-share); }
+.text-awaken { color: var(--color-awaken); }
 
-.bg-patou-green { background-color: var(--color-patou-green); }
-.bg-patou-blue { background-color: var(--color-patou-blue); }
-.bg-patou-orange { background-color: var(--color-patou-orange); }
-.bg-patou-yellow { background-color: var(--color-patou-yellow); }
+.bg-primary { background-color: var(--color-primary); }
+.bg-protect { background-color: var(--color-protect); }
+.bg-share { background-color: var(--color-share); }
+.bg-awaken { background-color: var(--color-awaken); }
 
 /* Focus states */
 .btn:focus-visible,
 .patou-card:focus-visible {
-  outline: 3px solid var(--color-patou-yellow-400);
+  outline: 3px solid var(--color-awaken);
   outline-offset: 2px;
 }
 

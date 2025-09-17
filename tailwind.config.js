@@ -1,0 +1,70 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Palette Patou officielle
+        primary: {
+          DEFAULT: '#287233',
+          50: '#f0f9f1',
+          100: '#dcf2de',
+          200: '#bce5c1',
+          300: '#8fd197',
+          400: '#5cb567',
+          500: '#287233',
+          600: '#236029',
+          700: '#1e4d22',
+          800: '#1a3d1d',
+          900: '#163218',
+        },
+        protect: {
+          DEFAULT: '#017ba6',
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#017ba6',
+          600: '#0369a1',
+          700: '#0f5a85',
+          800: '#0c4a6e',
+          900: '#0a3d5c',
+        },
+        share: {
+          DEFAULT: '#e2725b',
+          50: '#fef7f3',
+          100: '#fdeee6',
+          200: '#fbd9cc',
+          300: '#f7bfa8',
+          400: '#f19b7d',
+          500: '#e2725b',
+          600: '#d35a42',
+          700: '#b04735',
+          800: '#8f3c30',
+          900: '#74342b',
+        },
+        awaken: {
+          DEFAULT: '#ffd447',
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#ffd447',
+          500: '#f59e0b',
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+        },
+      },
+      fontFamily: {
+        sans: ['Nunito', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
+}
