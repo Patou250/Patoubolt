@@ -8,13 +8,13 @@ export interface Child {
   updated_at: string
 }
 
-export interface CreateChildData {
+interface CreateChildData {
   name: string
   emoji: string
   pin: string
 }
 
-export interface ChildSession {
+interface ChildSession {
   childId: string
   parentId: string
   timestamp: number

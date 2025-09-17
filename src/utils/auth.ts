@@ -2,7 +2,7 @@ import { supabase } from '../lib/supabase'
 import { getStoredTokens as getSpotifyTokens } from './spotify-auth'
 
 // Types
-export interface Parent {
+interface Parent {
   id: string
   email: string
   spotify_id: string
@@ -11,14 +11,14 @@ export interface Parent {
   updated_at?: string
 }
 
-export interface SpotifyUser {
+interface SpotifyUser {
   id: string
   email: string
   display_name: string
 }
 
 // Parent session management
-export interface ParentSession {
+interface ParentSession {
   parent: {
     id: string
     email: string
@@ -28,7 +28,7 @@ export interface ParentSession {
 }
 
 // Child session management
-export interface ChildSession {
+interface ChildSession {
   child: {
     id: string
     name: string
@@ -40,7 +40,7 @@ export interface ChildSession {
 const PARENT_SESSION_KEY = 'patou_parent_session'
 const CHILD_SESSION_KEY = 'patou_child_session'
 
-export function setParentSession(session: ParentSession): void {
+function setParentSession(session: ParentSession): void {
   try {
     console.log('💾 Sauvegarde de la session parent...')
     localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(session))
@@ -79,7 +79,7 @@ export function clearParentSession(): void {
   console.log('Parent session cleared, Spotify tokens preserved')
 }
 
-export function setChildSession(session: ChildSession): void {
+function setChildSession(session: ChildSession): void {
   try {
     localStorage.setItem(CHILD_SESSION_KEY, JSON.stringify(session))
   } catch (error) {
@@ -87,7 +87,7 @@ export function setChildSession(session: ChildSession): void {
   }
 }
 
-export function getChildSession(): ChildSession | null {
+function getChildSession(): ChildSession | null {
   try {
     const stored = localStorage.getItem(CHILD_SESSION_KEY)
     if (!stored) return null
@@ -99,25 +99,25 @@ export function getChildSession(): ChildSession | null {
   }
 }
 
-export function clearChildSession(): void {
+function clearChildSession(): void {
   localStorage.removeItem(CHILD_SESSION_KEY)
 }
 
-export function isParentAuthenticated(): boolean {
+function isParentAuthenticated(): boolean {
   return getParentSession() !== null
 }
 
-export function isChildAuthenticated(): boolean {
+function isChildAuthenticated(): boolean {
   return getChildSession() !== null
 }
 
 // Export Spotify tokens function for child access
-export function getStoredTokens() {
+function getStoredTokens() {
   return getSpotifyTokens()
 }
 
 // Spotify API functions
-export async function getSpotifyUserProfile(accessToken: string): Promise<SpotifyUser> {
+async function getSpotifyUserProfile(accessToken: string): Promise<SpotifyUser> {
   const response = await fetch('https://api.spotify.com/v1/me', {
     headers: {
       'Authorization': `Bearer ${accessToken}`
@@ -131,7 +131,7 @@ export async function getSpotifyUserProfile(accessToken: string): Promise<Spotif
   return response.json()
 }
 
-export async function createOrUpdateParent(user: SpotifyUser, refreshToken: string): Promise<Parent> {
+async function createOrUpdateParent(user: SpotifyUser, refreshToken: string): Promise<Parent> {
   const { data, error } = await supabase
     .from('parents')
     .upsert({
@@ -153,7 +153,7 @@ export async function createOrUpdateParent(user: SpotifyUser, refreshToken: stri
 }
 
 // Token refresh utility
-export async function refreshParentToken(): Promise<boolean> {
+async function refreshParentToken(): Promise<boolean> {
   const session = getParentSession()
   if (!session) return false
 

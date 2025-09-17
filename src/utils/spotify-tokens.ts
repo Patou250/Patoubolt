@@ -1,5 +1,5 @@
 // Utility functions for managing Spotify tokens
-export interface SpotifyTokens {
+interface SpotifyTokens {
   access_token: string
   refresh_token: string
   expires_in: number
@@ -80,7 +80,7 @@ export function clearSpotifyTokens(): void {
   localStorage.removeItem(TOKENS_KEY)
 }
 
-export function isTokenValid(): boolean {
+function isTokenValid(): boolean {
   const tokens = getSpotifyTokens()
   const isValid = tokens !== null
   console.log('🎯 Tokens valides?', isValid)
@@ -88,7 +88,7 @@ export function isTokenValid(): boolean {
 }
 
 // Fonction pour rafraîchir les tokens côté client
-export async function refreshSpotifyTokens(): Promise<boolean> {
+async function refreshSpotifyTokens(): Promise<boolean> {
   try {
     const tokens = getSpotifyTokens()
     if (!tokens || !tokens.refresh_token) {

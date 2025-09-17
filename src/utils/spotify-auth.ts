@@ -11,14 +11,14 @@ function getApiBaseUrl(): string {
   return 'http://localhost:3001'
 }
 
-export interface SpotifyAuthConfig {
+interface SpotifyAuthConfig {
   clientId: string
   clientSecret: string
   redirectUri: string
   scopes: string[]
 }
 
-export function buildAuthUrl(config: SpotifyAuthConfig): string {
+function buildAuthUrl(config: SpotifyAuthConfig): string {
   console.log('🔗 Construction de l\'URL d\'authentification...')
   console.log('🔧 Configuration:', {
     hasClientId: !!config.clientId,
@@ -44,7 +44,7 @@ export function buildAuthUrl(config: SpotifyAuthConfig): string {
   return authUrl
 }
 
-export async function exchangeCodeForTokens(
+async function exchangeCodeForTokens(
   code: string, 
   state: string,
   config: SpotifyAuthConfig
@@ -113,7 +113,7 @@ export async function exchangeCodeForTokens(
   console.log('✅ Tokens sauvegardés')
 }
 
-export function clearTokens(): void {
+function clearTokens(): void {
   console.log('🧹 Nettoyage de tous les tokens')
   clearSpotifyTokens()
   localStorage.removeItem('spotify_auth_state')
