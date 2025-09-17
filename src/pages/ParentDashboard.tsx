@@ -99,7 +99,9 @@ export default function ParentDashboard() {
 
   const loadChildren = async (session: any) => {
     try {
-      // First, get or create the profile for this parent
+      console.log('🔍 Loading children for session:', session)
+      
+      // First, get or create the profile for this parent using Supabase auth
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('id')
@@ -107,11 +109,18 @@ export default function ParentDashboard() {
         .single()
 
       if (profileError) {
-        console.error('Profile not found, creating one...')
+        console.log('📝 Profile not found, creating one for:', session.parent.email)
         // Create profile if it doesn't exist
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+          console.error('❌ No authenticated user found')
+          return
+        }
+        
         const { data: newProfile, error: createError } = await supabase
           .from('profiles')
           .insert({
+            id: user.id, // Use the auth user ID
             email: session.parent.email,
             full_name: session.parent.display_name || session.parent.email,
             role: 'parent'
@@ -120,28 +129,38 @@ export default function ParentDashboard() {
           .single()
         
         if (createError) {
-          console.error('Failed to create profile:', createError)
+          console.error('❌ Failed to create profile:', createError)
           return
         }
         
-        // Use the new profile ID
-        const profileId = newProfile.id
+        console.log('✅ Profile created with ID:', newProfile.id)
+        
+        // Now get children using the new profile UUID
+        const { data, error } = await supabase
+          .from('children')
+          .select('*')
+          .eq('parent_id', newProfile.id)
+          .order('created_at', { ascending: true })
+
+        if (error) throw error
+        console.log('📋 Children loaded:', data?.length || 0)
+        setChildren(data || [])
       } else {
-        // Use existing profile ID
-        const profileId = profile.id
+        console.log('✅ Profile found with ID:', profile.id)
+        
+        // Now get children using the existing profile UUID
+        const { data, error } = await supabase
+          .from('children')
+          .select('*')
+          .eq('parent_id', profile.id)
+          .order('created_at', { ascending: true })
+
+        if (error) throw error
+        console.log('📋 Children loaded:', data?.length || 0)
+        setChildren(data || [])
       }
-
-      // Now get children using the profile UUID
-      const { data, error } = await supabase
-        .from('children')
-        .select('*')
-        .eq('parent_id', profileId)
-        .order('created_at', { ascending: true })
-
-      if (error) throw error
-      setChildren(data || [])
     } catch (error) {
-      console.error('Failed to load children:', error)
+      console.error('❌ Failed to load children:', error)
     } finally {
       setIsLoading(false)
     }
