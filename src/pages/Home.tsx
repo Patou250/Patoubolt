@@ -53,14 +53,6 @@ export default function Home() {
     window.location.href = authUrl
   }
 
-  const testEnvVars = () => {
-    console.log('🧪 Test des variables d\'environnement:')
-    console.log('VITE_SPOTIFY_CLIENT_ID:', import.meta.env.VITE_SPOTIFY_CLIENT_ID ? 'PRÉSENT' : 'MANQUANT')
-    console.log('VITE_SPOTIFY_CLIENT_SECRET:', import.meta.env.VITE_SPOTIFY_CLIENT_SECRET ? 'PRÉSENT' : 'MANQUANT')
-    console.log('VITE_REDIRECT_URI:', import.meta.env.VITE_REDIRECT_URI || 'MANQUANT')
-    console.log('Toutes les variables:', import.meta.env)
-  }
-
   return (
     <section className="mx-auto max-w-xl text-center">
       <img src="/patou-logo.svg" alt="Patou" className="h-20 w-20 mx-auto mb-4" />
@@ -74,14 +66,6 @@ export default function Home() {
           className="inline-block px-5 py-3 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 transition-colors"
         >
           🎵 Se connecter avec Spotify (Parent)
-        </button>
-        
-        {/* Bouton de test des variables d'environnement */}
-        <button
-          onClick={testEnvVars}
-          className="inline-block px-5 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
-        >
-          🧪 Test variables env
         </button>
         
         <a href="/child/login" className="inline-block px-5 py-3 rounded-lg border border-gray-300 text-gray-900 font-medium hover:bg-gray-50 transition-colors">
