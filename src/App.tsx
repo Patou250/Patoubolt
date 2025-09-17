@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import ParentLogin from './pages/ParentLogin'
 import ParentChildren from './pages/ParentChildren'
 import ParentDashboard from './pages/ParentDashboard'
+import ParentSignup from './pages/ParentSignup'
 import ChildLogin from './pages/ChildLogin'
 import Child from './pages/Child'
 import Player from './pages/Player'
@@ -15,7 +16,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         {/* Parent */}
         <Route path="/parent/login" element={<ParentLogin />} />
-        <Route path="/parent/signup" element={<ParentLogin />} />
+        <Route path="/parent/signup" element={<ParentSignup />} />
         <Route path="/parent/settings" element={<ParentDashboard />} />
         <Route path="/parent/children" element={<ParentChildren />} />
         <Route path="/parent/dashboard" element={<ParentDashboard />} />
