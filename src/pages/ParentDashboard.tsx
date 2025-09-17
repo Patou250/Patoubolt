@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { 
-  Music, Users, Settings, BarChart3, History, Shield, Clock, Calendar,
+  Music, Users, Settings, BarChart3, History, Shield, Clock, Calendar, List, Ban, Share2,
   Plus, Edit2, LogOut, AlertCircle, Volume2, Play, Pause, SkipForward, SkipBack,
   Headphones, UserPlus, Timer, List, TrendingUp, Activity
 } from 'lucide-react'
@@ -344,53 +344,78 @@ export default function ParentDashboard() {
             <div>
               <div className={styles.tabHeader}>
                 <h2>Vue d'ensemble</h2>
-                <div className={styles.headerActions}>
-                  <button
-                    onClick={() => navigate('/player')}
-                    className={styles.secondaryButton}
-                  >
-                    <Music size={16} />
-                    Lecteur
-                  </button>
-                  <button 
-                    onClick={() => navigate('/parent/children')}
-                    className={styles.primaryButton}
-                  >
-                    <Users size={16} />
-                    Gérer les enfants
-                  </button>
-                </div>
               </div>
 
-              {/* Actions rapides */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              {/* Fonctionnalités Parent */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
                 <button
-                  onClick={() => navigate('/parent/children')}
-                  className="bg-patou-green hover:bg-patou-green-600 text-white p-6 rounded-2xl text-left transition-all transform hover:-translate-y-1 hover:shadow-lg"
+                  onClick={() => navigate('/parent/rules')}
+                  className="bg-white rounded-xl shadow-md p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100"
                 >
-                  <UserPlus className="w-8 h-8 mb-3" />
-                  <h3 className="text-lg font-semibold mb-2">Créer un enfant</h3>
-                  <p className="text-green-100 text-sm">Ajouter un nouveau profil enfant</p>
-                </button>
-                
-                <button
-                  onClick={() => navigate('/parent/rules/choose')}
-                  className="bg-patou-orange hover:bg-patou-orange-600 text-white p-6 rounded-2xl text-left transition-all transform hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <Timer className="w-8 h-8 mb-3" />
-                  <h3 className="text-lg font-semibold mb-2">Régler les horaires</h3>
-                  <p className="text-orange-100 text-sm">Configurer les règles d'écoute</p>
+                  <Shield className="w-8 h-8 mb-3 text-patou-green" />
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Règles</h3>
+                  <p className="text-sm text-gray-600">Configurer les horaires et restrictions d'écoute</p>
                 </button>
                 
                 <button
                   onClick={() => navigate('/parent/curation')}
-                  className="bg-patou-blue hover:bg-patou-blue-600 text-white p-6 rounded-2xl text-left transition-all transform hover:-translate-y-1 hover:shadow-lg"
+                  className="bg-white rounded-xl shadow-md p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100"
                 >
-                  <Calendar className="w-8 h-8 mb-3" />
-                  <h3 className="text-lg font-semibold mb-2">Publier playlist</h3>
-                  <p className="text-blue-100 text-sm">Gérer les playlists de la semaine</p>
+                  <Calendar className="w-8 h-8 mb-3 text-patou-blue" />
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Curation</h3>
+                  <p className="text-sm text-gray-600">Gérer les playlists de la semaine</p>
+                </button>
+                
+                <button
+                  onClick={() => navigate('/parent/insights')}
+                  className="bg-white rounded-xl shadow-md p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100"
+                >
+                  <BarChart3 className="w-8 h-8 mb-3 text-patou-orange" />
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Insights</h3>
+                  <p className="text-sm text-gray-600">Analyser les habitudes d'écoute</p>
+                </button>
+                
+                <button
+                  onClick={() => navigate('/parent/history')}
+                  className="bg-white rounded-xl shadow-md p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100"
+                >
+                  <History className="w-8 h-8 mb-3 text-patou-yellow" />
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Historique</h3>
+                  <p className="text-sm text-gray-600">Consulter l'historique d'écoute complet</p>
+                </button>
+                
+                <button
+                  onClick={() => navigate('/parent/exclusions')}
+                  className="bg-white rounded-xl shadow-md p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100"
+                >
+                  <Ban className="w-8 h-8 mb-3 text-red-500" />
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Exclusions</h3>
+                  <p className="text-sm text-gray-600">Gérer les contenus bloqués</p>
+                </button>
+                
+                <button
+                  onClick={() => navigate('/parent/shared-playlists')}
+                  className="bg-white rounded-xl shadow-md p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100"
+                >
+                  <Share2 className="w-8 h-8 mb-3 text-purple-500" />
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Playlists communes</h3>
+                  <p className="text-sm text-gray-600">Créer des playlists partagées</p>
                 </button>
               </div>
+              
+              {/* Gestion des enfants */}
+              <div className="mb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-900">Enfants configurés</h3>
+                  <button
+                    onClick={() => navigate('/parent/children')}
+                    className={styles.primaryButton}
+                  >
+                    <Plus size={16} />
+                    Ajouter un enfant
+                  </button>
+                </div>
+                
               <div className={styles.childrenGrid}>
                 {children.map(child => (
                   <div key={child.id} className={styles.childCard}>
@@ -433,6 +458,7 @@ export default function ParentDashboard() {
                     </button>
                   </div>
                 )}
+              </div>
               </div>
               
               {/* Status Spotify */}
