@@ -26,8 +26,8 @@ class SpotifyClient {
       return this.accessToken
     }
 
-    const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID
-    const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET
+    const clientId = import.meta.env.SPOTIFY_CLIENT_ID || import.meta.env.VITE_SPOTIFY_CLIENT_ID
+    const clientSecret = import.meta.env.SPOTIFY_CLIENT_SECRET || import.meta.env.VITE_SPOTIFY_CLIENT_SECRET
 
     if (!clientId || !clientSecret) {
       throw new Error('Missing Spotify credentials')

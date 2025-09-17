@@ -8,7 +8,7 @@ interface AuddLyricsResponse {
 }
 
 export async function findLyricsByTitleArtist(title: string, artist: string): Promise<string | null> {
-  const apiToken = import.meta.env.VITE_AUDD_API_TOKEN
+  const apiToken = import.meta.env.AUDD_API_TOKEN || import.meta.env.VITE_AUDD_API_TOKEN
   
   if (!apiToken) {
     console.warn('AUDD API token not configured')

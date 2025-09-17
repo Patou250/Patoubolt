@@ -122,7 +122,7 @@ export async function getPlaylistsByBand(band?: string) {
 async function getSpotifyUserToken(): Promise<string> {
   // Pour la bêta: utilise un token utilisateur récupéré manuellement (ou OAuth parent admin)
   // Place-le en env: VITE_SPOTIFY_USER_OAUTH_TOKEN
-  const token = import.meta.env.VITE_SPOTIFY_USER_OAUTH_TOKEN;
+  const token = import.meta.env.SPOTIFY_USER_OAUTH_TOKEN || import.meta.env.VITE_SPOTIFY_USER_OAUTH_TOKEN;
   if (!token) {
     throw new Error('VITE_SPOTIFY_USER_OAUTH_TOKEN not configured');
   }
