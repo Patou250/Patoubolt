@@ -10,19 +10,6 @@ export default function Home() {
   const navigate = useNavigate()
   const { mustGate } = usePreviewGate()
 
-  useEffect(() => {
-    // Vérifier s'il y a déjà une session parent active
-    const session = getParentSession()
-    const tokens = getSpotifyTokens()
-    
-    // Si on a une session parent OU des tokens Spotify, rediriger vers le dashboard
-    if (session || tokens) {
-      console.log('🔄 Session/tokens trouvés, redirection vers dashboard')
-      navigate('/parent/dashboard', { replace: true })
-      return
-    }
-  }, [navigate])
-
   // Afficher le gate de prévisualisation si nécessaire
   if (mustGate) {
     return <PreviewGate />

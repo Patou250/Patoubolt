@@ -34,11 +34,10 @@ export default function ParentDashboard() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const session = getParentSession()
     const tokens = getSpotifyTokens()
     
-    // Si pas de session mais qu'on a des tokens Spotify, créer une session
-    if (!session && tokens) {
+    // Si on a des tokens Spotify, créer une session
+    if (tokens) {
       // Récupérer les infos utilisateur depuis Spotify
       fetch('https://api.spotify.com/v1/me', {
         headers: { 'Authorization': `Bearer ${tokens.access_token}` }
@@ -56,7 +55,7 @@ export default function ParentDashboard() {
         localStorage.setItem('patou_parent_session', JSON.stringify(parentSession))
         // Pas besoin de recharger, continuer avec la session créée
         checkSpotifyConnection()
-        loadChildren(parentSession)
+        loadChildren(parentSession) 
         initializeSpotifyPlayer()
       })
       .catch(() => {
@@ -65,14 +64,18 @@ export default function ParentDashboard() {
       return
     }
     
-    if (!session) {
-      navigate('/')
+    // Vérifier s'il y a une session parent
+    const session = getParentSession()
+    if (!session && !tokens) {
+      navigate('/parent/login')
       return
     }
 
-    checkSpotifyConnection()
-    loadChildren(session)
-    initializeSpotifyPlayer()
+    if (session) {
+      checkSpotifyConnection()
+      loadChildren(session)
+      initializeSpotifyPlayer()
+    }
   }, [navigate])
 
   const checkSpotifyConnection = () => {
