@@ -16,7 +16,7 @@ export default function ParentSignup() {
       email, password,
       options: {
         data: { first_name:firstName, last_name:lastName, birthdate },
-        emailRedirectTo: `${window.location.origin}/parent/login`
+        emailRedirectTo: 'https://patou.app/parent/login'
       }
     })
     if (error) { setErr(error.message); return }
