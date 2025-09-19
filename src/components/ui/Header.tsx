@@ -1,45 +1,28 @@
-import { Link } from 'react-router-dom'
-import { Users, Baby } from 'lucide-react'
+import { Link, NavLink } from 'react-router-dom'
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
-      <div className="mx-auto max-w-[1200px] px-4 md:px-8 h-14 flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-3">
-          <img 
-            src="/Patou emeraude sans fond.png" 
-            alt="Patou" 
-            className="h-8 w-auto"
-          />
-          <span className="font-extrabold text-primary text-lg">Patou</span>
+    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-gray-100">
+      <div className="mx-auto max-w-6xl h-14 px-4 md:px-8 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2">
+          <img src="/patou-logo.svg" alt="Patou" className="h-7" />
+          <span className="font-extrabold text-primary">Patou</span>
         </Link>
 
-        {/* Home link - center on mobile, hidden on desktop */}
-        <Link 
-          to="/" 
-          className="md:hidden font-semibold text-gray-700 hover:text-primary transition-colors"
-        >
-          Accueil
-        </Link>
-
-        {/* Navigation buttons - hidden on mobile, visible on desktop */}
-        <div className="hidden md:flex items-center gap-3">
+        <nav className="hidden md:flex items-center gap-4 text-sm">
+          <NavLink to="/parent/login" className="text-gray-600 hover:text-gray-900">
+            Espace parent
+          </NavLink>
+          <NavLink to="/child" className="text-gray-600 hover:text-gray-900">
+            Espace enfant
+          </NavLink>
           <Link
-            to="/parent/login"
-            className="flex items-center gap-2 px-4 py-2 bg-protect text-white rounded-lg hover:bg-protect-600 transition-colors text-sm font-medium"
+            to="/parent/signup"
+            className="ml-2 inline-flex items-center rounded-lg bg-primary px-3 py-1.5 text-white font-semibold hover:brightness-95"
           >
-            <Users className="w-4 h-4" />
-            Espace Parent
+            Créer un compte
           </Link>
-          <Link
-            to="/child/login"
-            className="flex items-center gap-2 px-4 py-2 bg-awaken text-gray-900 rounded-lg hover:bg-awaken-600 transition-colors text-sm font-medium"
-          >
-            <Baby className="w-4 h-4" />
-            Espace Enfant
-          </Link>
-        </div>
+        </nav>
       </div>
     </header>
   )
