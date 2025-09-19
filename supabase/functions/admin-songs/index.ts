@@ -3,7 +3,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "https://patou.app", // <-- mets ton domaine
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-admin-token",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-admin-token, Authorization",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
 };
 
@@ -12,6 +12,16 @@ serve(async (req) => {
 
   try {
     const url = new URL(req.url);
+    
+    // Vérifier l'en-tête Authorization Supabase
+    const authHeader = req.headers.get('authorization') || req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: "Missing authorization header" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json", ...cors },
+      });
+    }
+    
     const status = (url.searchParams.get("status") || "allowed") as
       | "allowed"
       | "blocked";
@@ -36,8 +46,19 @@ serve(async (req) => {
     const { createClient } = await import(
       "https://esm.sh/@supabase/supabase-js@2.45.1"
     );
+    
+    // Utiliser la clé de service pour bypasser RLS
     const supabase = createClient(projectUrl, serviceKey, {
-      auth: { persistSession: false },
+      auth: { 
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
+      },
+      global: {
+        headers: {
+          Authorization: `Bearer ${serviceKey}`
+        }
+      }
     });
 
     // requête sur la vue
