@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom'
 import { App, Page, Navbar, Block, Button, List, ListItem } from 'konsta/react'
 import { usePreviewGate } from '../hooks/usePreviewGate'
 import PreviewGate from '../components/PreviewGate'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 
 export default function Home() {
   const { mustGate } = usePreviewGate()

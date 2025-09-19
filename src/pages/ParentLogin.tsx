@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 
 export default function ParentLogin() {
   const [email, setEmail] = useState(''); const [password, setPassword] = useState('')

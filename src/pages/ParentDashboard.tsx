@@ -10,8 +10,6 @@ import { getSpotifyTokens } from '../utils/spotify-tokens'
 import { supabase } from '../lib/supabase'
 import type { Child } from '../types/child'
 import styles from './ParentDashboard.module.css'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 
 interface SpotifyPlayerState {
   isPlaying: boolean
@@ -317,8 +315,6 @@ export default function ParentDashboard() {
 
   return (
     <div className={styles.dashboard}>
-      {/* Header */}
-      <Header showNavigation onSignOut={handleSignOut} />
 
       {/* Navigation Tabs */}
       <nav className={styles.tabs}>
@@ -752,7 +748,6 @@ export default function ParentDashboard() {
         </div>
       </main>
       
-      <Footer />
     </div>
   )
 }
