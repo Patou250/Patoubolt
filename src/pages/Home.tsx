@@ -120,6 +120,10 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Découverte musicale</h3>
               <p className="text-gray-700 leading-relaxed">
+                Énergie et découvertes musicales adaptées
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
