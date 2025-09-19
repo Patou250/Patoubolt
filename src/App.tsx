@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import ChildLayout from './layouts/ChildLayout'
 
@@ -24,7 +24,7 @@ import KonstaTest from './pages/_dev/KonstaTest'
 
 export default function App() {
   return (
-    <Router>
+    <>
       <Routes>
         <Route path="/" element={<Home />} />
         {/* Parent */}
@@ -63,6 +63,6 @@ export default function App() {
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40">
         <Navigation />
       </div>
-    </Router>
+    </>
   )
 }

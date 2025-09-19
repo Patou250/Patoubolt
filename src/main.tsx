@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App.tsx'
 import AppShell from './components/ui/AppShell'
 import './index.css'
@@ -8,8 +9,10 @@ import './styles/app.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AppShell>
-      <App />
-    </AppShell>
+    <Router>
+      <AppShell>
+        <App />
+      </AppShell>
+    </Router>
   </React.StrictMode>,
 )
