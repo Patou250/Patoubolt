@@ -5,37 +5,34 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50">
       {/* Hero Section */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-3xl mx-auto px-4 md:px-8 text-center">
-          <img 
-            src="/Patou emeraude sans fond.png" 
-            alt="Patou Logo" 
-            className="h-20 w-auto mx-auto mb-6"
-          />
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Musique sécurisée pour toute la famille
-          </h1>
-          <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
-            Patou offre un environnement musical adapté aux enfants, avec contrôle parental avancé et contenus vérifiés.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/parent/signup"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-semibold hover:bg-primary-600 transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
-            >
-              Créer un compte
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              to="/child/login"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-700 border border-gray-300 rounded-xl font-semibold hover:bg-gray-50 transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
-            >
-              Espace enfant
-            </Link>
-          </div>
+      <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
+        <img 
+          src="/Patou emeraude sans fond.png" 
+          alt="Patou Logo" 
+          className="h-24 max-h-24 w-auto"
+        />
+        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 text-center mt-6">
+          Musique sécurisée pour toute la famille
+        </h1>
+        <p className="text-lg text-gray-600 text-center mt-4 max-w-2xl mx-auto">
+          Patou offre un environnement musical adapté aux enfants, avec contrôle parental avancé et contenus vérifiés.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+          <Link
+            to="/parent/signup"
+            className="bg-primary text-white px-6 py-3 rounded-lg shadow-lg hover:bg-primary/90 font-semibold transition-colors"
+          >
+            Créer un compte gratuit
+          </Link>
+          <Link
+            to="/child/login"
+            className="bg-protect text-white px-6 py-3 rounded-lg hover:bg-protect/90 ml-0 sm:ml-4 font-semibold transition-colors"
+          >
+            Espace enfant
+          </Link>
         </div>
-      </section>
+      </div>
 
       {/* Features Section */}
       <section className="py-16">
