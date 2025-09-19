@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 const ADMIN_API = import.meta.env.VITE_ADMIN_API_URL;
 const ADMIN_TOKEN = import.meta.env.VITE_ADMIN_TOKEN;
 const ANON_KEY    = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 type Item = { id:string; spotify_id:string; name:string; artist_name:string; decided_at:string|null; rules_fired:any[]|null; };
 
