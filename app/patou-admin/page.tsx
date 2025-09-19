@@ -1,97 +1,106 @@
 'use client';
-import useSWR from 'swr';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 
-const ADMIN_API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL || process.env.VITE_ADMIN_API_URL || 'https://umqzlqrgpxbdrnrmvjpe.supabase.co/functions/v1/admin-songs';
-const ADMIN_TOKEN = process.env.NEXT_PUBLIC_ADMIN_TOKEN || process.env.VITE_ADMIN_TOKEN || 'patou_admin_2025_secure_token_xyz789';
+const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'https://umqzlqrgpxbdrnrmvjpe.functions.supabase.co/admin-songs';
+const ADMIN_TOKEN = process.env.NEXT_PUBLIC_ADMIN_TOKEN || 'patou_admin_2025_secure_token_xyz789';
 
-const fetcher = (url: string) =>
-  fetch(`${ADMIN_API_URL}${url}`, { 
-    headers: { 'x-admin-token': ADMIN_TOKEN } 
-  })
-    .then(r => { if (!r.ok) throw new Error('Forbidden or error'); return r.json(); });
+type Item = { id:string; spotify_id:string; name:string; artist_name:string; decided_at:string|null; rules_fired:any[]|null; };
 
 export default function PatouAdmin() {
-  const [status, setStatus] = useState<'allowed'|'blocked'>('allowed');
-  const [q, setQ] = useState('');
-  const [page, setPage] = useState(1);
+  const [status, setStatus] = useState<"allowed"|"blocked">("allowed");
+  const [q, setQ] = useState(""); const [page, setPage] = useState(1);
   const pageSize = 50;
 
-  const url = useMemo(() =>
-    `?status=${status}&q=${encodeURIComponent(q)}&page=${page}&pageSize=${pageSize}`,
-    [status, q, page]
-  );
-  const { data, error, isLoading, mutate } = useSWR(url, fetcher);
+  const url = useMemo(() => {
+    const u = new URL(ADMIN_API);
+    u.searchParams.set("status", status);
+    if (q.trim()) u.searchParams.set("q", q.trim());
+    u.searchParams.set("page", String(page));
+    u.searchParams.set("pageSize", String(pageSize));
+    return u.toString();
+  }, [status, q, page]);
+
+  const [data, setData] = useState<{items:Item[]; total:number} | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string|null>(null);
+
+  async function load() {
+    setLoading(true); setErr(null);
+    try {
+      const r = await fetch(url, {
+        headers: {
+          // On envoie le token dans Authorization: Bearer (la fonction accepte aussi x-admin-token)
+          "Authorization": `Bearer ${ADMIN_TOKEN}`,
+        }
+      });
+      if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+      const j = await r.json(); setData({ items: j.items, total: j.total });
+    } catch(e:any){ setErr(e.message||String(e)); } finally { setLoading(false); }
+  }
+  useEffect(() => { load(); /* eslint-disable-line */ }, [url]);
 
   return (
-    <main className="p-6 space-y-6">
-      <header className="rounded-xl p-4 border bg-white">
-        <h1 className="text-3xl font-extrabold tracking-tight">✅ PATOU ADMIN — Playlists & Modération</h1>
-        <p className="text-sm text-gray-600 mt-1">
-          Cette page est dédiée. Si tu vois ce header, tu es bien sur <b>/patou-admin</b>.
-        </p>
-      </header>
+    <main style={{ padding:24 }}>
+      <div style={{ padding:16, border:"1px solid #e5e7eb", borderRadius:12, background:"#fff" }}>
+        <h1 style={{ fontSize:24, fontWeight:800 }}>✅ PATOU ADMIN — /patou-admin</h1>
+        <p style={{ color:"#6b7280" }}>Autorisées / Rejetées + recherche</p>
+      </div>
 
-      <section className="flex items-center gap-3">
-        <div className="inline-flex rounded-lg border overflow-hidden">
-          <button onClick={()=>{setStatus('allowed'); setPage(1);}}
-            className={`px-4 py-2 ${status==='allowed' ? 'bg-white' : 'bg-neutral-100'}`}>Autorisées</button>
-          <button onClick={()=>{setStatus('blocked'); setPage(1);}}
-            className={`px-4 py-2 ${status==='blocked' ? 'bg-white' : 'bg-neutral-100'}`}>Rejetées</button>
+      <div style={{ display:"flex", gap:8, alignItems:"center", marginTop:16 }}>
+        <div style={{ display:"inline-flex", border:"1px solid #e5e7eb", borderRadius:8, overflow:"hidden" }}>
+          <button onClick={()=>{setStatus("allowed"); setPage(1);}} style={{ padding:"8px 16px", background: status==="allowed"?"#fff":"#f3f4f6" }}>Autorisées</button>
+          <button onClick={()=>{setStatus("blocked"); setPage(1);}} style={{ padding:"8px 16px", background: status==="blocked"?"#fff":"#f3f4f6" }}>Rejetées</button>
         </div>
-        <input
-          placeholder="Rechercher (titre ou artiste)…"
-          value={q}
-          onChange={e=>{setQ(e.target.value); setPage(1);}}
-          className="px-3 py-2 border rounded-lg w-80"
-        />
-        <button onClick={()=>mutate()} className="px-3 py-2 border rounded-lg">Rafraîchir</button>
-      </section>
+        <input placeholder="Rechercher (titre ou artiste)…" value={q}
+          onChange={(e)=>{ setQ(e.target.value); setPage(1); }}
+          style={{ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:8, width:320 }} />
+        <button onClick={load} style={{ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:8 }}>Rafraîchir</button>
+      </div>
 
-      {isLoading && <div>Chargement…</div>}
-      {error && <div className="text-red-600">Erreur: {String(error.message || error)}</div>}
+      {loading && <div style={{ marginTop:12 }}>Chargement…</div>}
+      {err && <div style={{ color:"red", marginTop:12 }}>Erreur: {err}</div>}
 
-      <div className="overflow-x-auto rounded-xl border bg-white">
-        <table className="w-full text-sm">
+      <div style={{ overflowX:"auto", border:"1px solid #e5e7eb", borderRadius:12, marginTop:16, background:"#fff" }}>
+        <table style={{ width:"100%", fontSize:14 }}>
           <thead>
-            <tr className="border-b bg-neutral-50">
-              <th className="text-left py-2 px-3">Titre</th>
-              <th className="text-left px-3">Artiste</th>
-              <th className="text-left px-3">Raisons</th>
-              <th className="text-left px-3">Décision le</th>
-              <th className="text-left px-3">Spotify</th>
+            <tr style={{ borderBottom:"1px solid #e5e7eb", background:"#f9fafb" }}>
+              <th style={{ textAlign:"left", padding:"8px 12px" }}>Titre</th>
+              <th style={{ textAlign:"left", padding:"8px 12px" }}>Artiste</th>
+              <th style={{ textAlign:"left", padding:"8px 12px" }}>Raisons</th>
+              <th style={{ textAlign:"left", padding:"8px 12px" }}>Décision le</th>
+              <th style={{ textAlign:"left", padding:"8px 12px" }}>Spotify</th>
             </tr>
           </thead>
           <tbody>
-            {(data?.items || []).map((row: any) => (
-              <tr key={row.id} className="border-b">
-                <td className="py-2 px-3">{row.name}</td>
-                <td className="px-3">{row.artist_name}</td>
-                <td className="px-3 max-w-[520px]">
-                  {(row.rules_fired || []).slice(0,6).map((r: any, i: number) => (
-                    <span key={i} className="inline-block mr-2 mb-1 px-2 py-1 rounded bg-neutral-100">
-                      {r.rule}{r.term?`: ${r.term}`:''}{r.context?` (${r.context})`:''}
+            {(data?.items || []).map((row) => (
+              <tr key={row.id} style={{ borderBottom:"1px solid #f3f4f6" }}>
+                <td style={{ padding:"8px 12px" }}>{row.name}</td>
+                <td style={{ padding:"8px 12px" }}>{row.artist_name}</td>
+                <td style={{ padding:"8px 12px", maxWidth:520 }}>
+                  {(row.rules_fired || []).slice(0,6).map((r:any,i:number)=>(
+                    <span key={i} style={{ display:"inline-block", marginRight:8, marginBottom:6, padding:"4px 8px", borderRadius:8, background:"#f3f4f6" }}>
+                      {r.rule}{r.term?`: ${r.term}`:""}{r.context?` (${r.context})`:""}
                     </span>
                   ))}
                   {(row.rules_fired || []).length > 6 && <span>…</span>}
                 </td>
-                <td className="px-3">{row.decided_at ? new Date(row.decided_at).toLocaleString() : '-'}</td>
-                <td className="px-3">
-                  <a className="underline" href={`https://open.spotify.com/track/${row.spotify_id}`} target="_blank" rel="noreferrer">Ouvrir</a>
+                <td style={{ padding:"8px 12px" }}>{row.decided_at ? new Date(row.decided_at).toLocaleString() : "-"}</td>
+                <td style={{ padding:"8px 12px" }}>
+                  <a href={`https://open.spotify.com/track/${row.spotify_id}`} target="_blank" rel="noreferrer">Ouvrir</a>
                 </td>
               </tr>
             ))}
-            {(!data?.items?.length && !isLoading) && (
-              <tr><td className="py-4 px-3" colSpan={5}>Aucun résultat.</td></tr>
-            )}
+            {(!data?.items?.length && !loading) && <tr><td style={{ padding:16 }} colSpan={5}>Aucun résultat.</td></tr>}
           </tbody>
         </table>
       </div>
 
-      <div className="flex items-center gap-2">
-        <button onClick={()=>setPage(p=>Math.max(1,p-1))} className="px-3 py-2 border rounded-lg" disabled={page<=1}>Précédent</button>
+      <div style={{ display:"flex", gap:8, alignItems:"center", marginTop:12 }}>
+        <button onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={page<=1}
+          style={{ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:8 }}>Précédent</button>
         <span>Page {page}</span>
-        <button onClick={()=>setPage(p=>p+1)} className="px-3 py-2 border rounded-lg"
+        <button onClick={()=>setPage(p=>p+1)}
+          style={{ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:8 }}
           disabled={!!data && data.items && data.items.length < pageSize}>Suivant</button>
       </div>
     </main>
