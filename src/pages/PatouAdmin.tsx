@@ -29,7 +29,7 @@ export default function PatouAdmin() {
     try {
       const r = await fetch(url, {
         headers: {
-          "x-admin-token": ADMIN_TOKEN, // ✅ seul header
+          "x-admin-token": import.meta.env.VITE_ADMIN_TOKEN, // ✅ seul header
         }
       });
       if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
@@ -60,14 +60,11 @@ export default function PatouAdmin() {
         <button
           onClick={async () => {
             try {
-              const ADMIN = import.meta.env.VITE_ADMIN_TOKEN || "";
-              console.log("FRONT DIAG", { lenAdminFront: ADMIN.length });
-
               const r = await fetch(
                 "https://umqzlqrgpxbdrnrmvjpe.functions.supabase.co/spotify-auth-start",
                 {
                   headers: {
-                    "x-admin-token": ADMIN, // ✅ seul header
+                    "x-admin-token": import.meta.env.VITE_ADMIN_TOKEN, // ✅ seul header
                   },
                 }
               );
@@ -95,7 +92,7 @@ export default function PatouAdmin() {
             const r = await fetch("https://umqzlqrgpxbdrnrmvjpe.functions.supabase.co/publish-weekly-playlists", {
               method: "POST",
               headers: {
-                "x-admin-token": ADMIN_TOKEN, // ✅ seul header
+                "x-admin-token": import.meta.env.VITE_ADMIN_TOKEN, // ✅ seul header
               }
             });
             const j = await r.json();
