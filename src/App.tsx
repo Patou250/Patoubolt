@@ -56,6 +56,7 @@ export default function App() {
                   <Route path="/playlists" element={<ChildPlaylists />} />
                   <Route path="/playlists/:id" element={<ChildPlaylists />} />
                   <Route path="/search" element={<ChildSearch />} />
+                  <Route path="/search" element={<ChildSearch />} />
                 </Routes>
               </ChildLayout>
             } />
