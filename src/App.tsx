@@ -18,6 +18,7 @@ import Player from './pages/Player'
 import ParentCallback from './pages/ParentCallback'
 import TestModeration from './pages/TestModeration'
 import AdminModeration from './pages/AdminModeration'
+import KonstaTest from './pages/KonstaTest'
 
 export default function App() {
   return (
@@ -40,6 +41,7 @@ export default function App() {
             {/* Routes de test et admin */}
             <Route path="/test/moderation" element={<TestModeration />} />
             <Route path="/admin/moderation" element={<AdminModeration />} />
+            <Route path="/konsta-test" element={<KonstaTest />} />
             {/* Enfant */}
             <Route path="/child/login" element={<ChildLogin />} />
             <Route path="/child" element={<Child />} />

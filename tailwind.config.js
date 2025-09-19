@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import konstaConfig from 'konsta/config'
+
 export default {
   content: ["./index.html","./src/**/*.{ts,tsx,js,jsx}"],
   darkMode: 'class',
@@ -61,11 +63,7 @@ export default {
       }
     },
   },
-  plugins: [
-    // Uncomment if you want to add these plugins later
-    // require('@tailwindcss/forms'),
-    // require('@tailwindcss/typography'),
-  ],
+  plugins: [],
   safelist: [
     // Prevent purging of dynamic Patou color classes
     { pattern: /(bg|text|border|ring)-(primary|protect|share|awaken)/ },
@@ -83,3 +81,6 @@ export default {
     'bg-context-share',
   ],
 }
+
+// Merge with Konsta UI config
+export default konstaConfig(config)
