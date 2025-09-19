@@ -3,7 +3,9 @@ import useSWR from 'swr';
 import { useMemo, useState } from 'react';
 
 const fetcher = (url: string) =>
-  fetch(url, { headers: { 'x-admin-token': (process.env.NEXT_PUBLIC_ADMIN_TOKEN as string) } })
+  fetch(`https://patou.app${url}`, { 
+    headers: { 'x-admin-token': (process.env.NEXT_PUBLIC_ADMIN_TOKEN as string) } 
+  })
     .then(r => { if (!r.ok) throw new Error('Forbidden or error'); return r.json(); });
 
 export default function PatouAdmin() {
