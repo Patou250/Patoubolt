@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 
 const ADMIN_API = import.meta.env.VITE_ADMIN_API_URL;
 const ADMIN_TOKEN = import.meta.env.VITE_ADMIN_TOKEN;
+const ANON_KEY    = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 type Item = { id:string; spotify_id:string; name:string; artist_name:string; decided_at:string|null; rules_fired:any[]|null; };
@@ -29,6 +30,9 @@ export default function PatouAdmin() {
     try {
       const r = await fetch(url, {
         headers: {
+          // 1) requis par la gateway Supabase Functions v1 (sinon 401)
+          "Authorization": `Bearer ${ANON_KEY}`,
+          // 2) requis par TON code de fonction (auth admin)
           // 1) requis par la gateway Supabase Functions v1 (sinon 401)
           "Authorization": `Bearer ${ANON_KEY}`,
           // 2) requis par TON code de fonction (auth admin)
