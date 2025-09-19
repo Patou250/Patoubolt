@@ -1,8 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import AppShell from './components/AppShell'
-import Header from './components/Header'
-import Footer from './components/Footer'
-import Navigation from './components/Navigation' // ta nav mobile/desktop existante
+import Navigation from './components/Navigation'
 import ChildLayout from './layouts/ChildLayout'
 
 // …imports pages
@@ -28,50 +25,44 @@ import KonstaTest from './pages/_dev/KonstaTest'
 export default function App() {
   return (
     <Router>
-      <Header />
-      <AppShell sidebar={<div className="hidden md:block"><Navigation /></div>}>
-        <main className="pb-16 md:pb-0">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            {/* Parent */}
-            <Route path="/parent/login" element={<ParentLogin />} />
-            <Route path="/parent/signup" element={<ParentSignup />} />
-            <Route path="/parent/dashboard" element={<ParentDashboard />} />
-            <Route path="/parent/children" element={<ParentChildren />} />
-            <Route path="/parent/curation" element={<ParentCuration />} />
-            <Route path="/parent/callback" element={<ParentCallback />} />
-            {/* Routes d'accès direct pour tests */}
-            <Route path="/direct/parent" element={<ParentDashboard />} />
-            <Route path="/direct/child" element={<Child />} />
-            {/* Routes de test et admin */}
-            <Route path="/test/moderation" element={<TestModeration />} />
-            <Route path="/admin/moderation" element={<AdminModeration />} />
-            {/* Dev routes */}
-            <Route path="/_dev/konsta" element={<KonstaTest />} />
-            {/* Enfant - routes groupées sous ChildLayout */}
-            <Route path="/child/login" element={<ChildLogin />} />
-            <Route path="/child/*" element={
-              <ChildLayout>
-                <Routes>
-                  <Route path="/" element={<Child />} />
-                  <Route path="/favorites" element={<ChildFavorites />} />
-                  <Route path="/playlists" element={<ChildPlaylists />} />
-                  <Route path="/playlists/:id" element={<ChildPlaylists />} />
-                  <Route path="/search" element={<ChildSearch />} />
-                  <Route path="/search" element={<ChildSearch />} />
-                </Routes>
-              </ChildLayout>
-            } />
-            {/* Player */}
-            <Route path="/player" element={<Player />} />
-          </Routes>
-        </main>
-      </AppShell>
-      {/* Bottom nav mobile en dehors d'AppShell pour coller au bas de l'écran */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {/* Parent */}
+        <Route path="/parent/login" element={<ParentLogin />} />
+        <Route path="/parent/signup" element={<ParentSignup />} />
+        <Route path="/parent/dashboard" element={<ParentDashboard />} />
+        <Route path="/parent/children" element={<ParentChildren />} />
+        <Route path="/parent/curation" element={<ParentCuration />} />
+        <Route path="/parent/callback" element={<ParentCallback />} />
+        {/* Routes d'accès direct pour tests */}
+        <Route path="/direct/parent" element={<ParentDashboard />} />
+        <Route path="/direct/child" element={<Child />} />
+        {/* Routes de test et admin */}
+        <Route path="/test/moderation" element={<TestModeration />} />
+        <Route path="/admin/moderation" element={<AdminModeration />} />
+        {/* Dev routes */}
+        <Route path="/_dev/konsta" element={<KonstaTest />} />
+        {/* Enfant - routes groupées sous ChildLayout */}
+        <Route path="/child/login" element={<ChildLogin />} />
+        <Route path="/child/*" element={
+          <ChildLayout>
+            <Routes>
+              <Route path="/" element={<Child />} />
+              <Route path="/favorites" element={<ChildFavorites />} />
+              <Route path="/playlists" element={<ChildPlaylists />} />
+              <Route path="/playlists/:id" element={<ChildPlaylists />} />
+              <Route path="/search" element={<ChildSearch />} />
+            </Routes>
+          </ChildLayout>
+        } />
+        {/* Player */}
+        <Route path="/player" element={<Player />} />
+      </Routes>
+      
+      {/* Bottom nav mobile pour les routes non-child */}
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40">
         <Navigation />
       </div>
-      <Footer />
     </Router>
   )
 }
