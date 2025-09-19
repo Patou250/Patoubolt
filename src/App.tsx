@@ -21,6 +21,7 @@ import TestModeration from './pages/TestModeration'
 import AdminModeration from './pages/AdminModeration'
 import ChildFavorites from './pages/ChildFavorites'
 import ChildPlaylists from './pages/ChildPlaylists'
+import PatouAdmin from './pages/PatouAdmin'
 
 // Import du composant de test pour les routes dev
 import KonstaTest from './pages/_dev/KonstaTest'
@@ -45,6 +46,7 @@ export default function App() {
           {/* Routes de test et admin */}
           <Route path="/test/moderation" element={<TestModeration />} />
           <Route path="/admin/moderation" element={<AdminModeration />} />
+          <Route path="/patou-admin" element={<PatouAdmin />} />
           {/* Dev routes */}
           <Route path="/_dev/konsta" element={<KonstaTest />} />
           
