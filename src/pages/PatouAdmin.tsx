@@ -67,8 +67,7 @@ export default function PatouAdmin() {
                 "https://umqzlqrgpxbdrnrmvjpe.functions.supabase.co/spotify-auth-start",
                 {
                   headers: {
-                    "x-admin-token": ADMIN,               // 1) notre header custom
-                    "Authorization": `Bearer ${ADMIN}`,    // 2) fallback si jamais x- est filtré
+                    "x-admin-token": ADMIN, // ✅ seul header
                   },
                 }
               );
