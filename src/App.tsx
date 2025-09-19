@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import ChildLayout from './layouts/ChildLayout'
+import Header from './components/ui/Header'
+import Footer from './components/ui/Footer'
 
 // …imports pages
 import Home from './pages/Home'
@@ -25,6 +27,7 @@ import KonstaTest from './pages/_dev/KonstaTest'
 export default function App() {
   return (
     <>
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         {/* Parent */}
@@ -58,6 +61,7 @@ export default function App() {
         {/* Player */}
         <Route path="/player" element={<Player />} />
       </Routes>
+      <Footer />
       
       {/* Bottom nav mobile pour les routes non-child */}
       <div className="md:hidden fixed bottom-0 inset-x-0 z-40">
