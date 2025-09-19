@@ -34,6 +34,42 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Features Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 max-w-5xl mx-auto px-4">
+        {/* Card 1: Protéger */}
+        <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+          <div className="w-16 h-16 bg-protect/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Shield className="w-8 h-8 text-protect" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-3">Protéger</h3>
+          <p className="text-gray-700">
+            Sécurité et confiance grâce à des contenus filtrés
+          </p>
+        </div>
+
+        {/* Card 2: Partager */}
+        <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+          <div className="w-16 h-16 bg-share/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Share2 className="w-8 h-8 text-share" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-3">Partager</h3>
+          <p className="text-gray-700">
+            Un lien musical entre parents et enfants
+          </p>
+        </div>
+
+        {/* Card 3: Éveiller */}
+        <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+          <div className="w-16 h-16 bg-awaken/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Sparkles className="w-8 h-8 text-awaken" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-3">Éveiller</h3>
+          <p className="text-gray-700">
+            Énergie et découvertes musicales adaptées
+          </p>
+        </div>
+      </div>
+
       {/* Features Section */}
       <section className="py-16">
         <div className="max-w-3xl mx-auto px-4 md:px-8">
