@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { useMemo, useState } from 'react';
 
 const fetcher = (url: string) =>
-  fetch(`https://patou.app${url}`, { 
+  fetch(`/api/admin/songs${url.replace('/api/admin/songs', '')}`, { 
     headers: { 'x-admin-token': (process.env.NEXT_PUBLIC_ADMIN_TOKEN as string) } 
   })
     .then(r => { if (!r.ok) throw new Error('Forbidden or error'); return r.json(); });
@@ -15,7 +15,7 @@ export default function PatouAdmin() {
   const pageSize = 50;
 
   const url = useMemo(() =>
-    `/api/admin/songs?status=${status}&q=${encodeURIComponent(q)}&page=${page}&pageSize=${pageSize}`,
+    `?status=${status}&q=${encodeURIComponent(q)}&page=${page}&pageSize=${pageSize}`,
     [status, q, page]
   );
   const { data, error, isLoading, mutate } = useSWR(url, fetcher);
