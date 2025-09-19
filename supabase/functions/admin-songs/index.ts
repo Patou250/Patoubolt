@@ -3,7 +3,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "x-admin-token, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-admin-token",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
 };
 
@@ -21,7 +21,7 @@ serve(async (req) => {
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    // Sécurité simple via token admin uniquement
+    // Sécurité via token admin
     const token = req.headers.get("x-admin-token");
     if (!token || token !== Deno.env.get("ADMIN_TOKEN")) {
       return new Response(JSON.stringify({ error: "Forbidden - Invalid admin token" }), {
