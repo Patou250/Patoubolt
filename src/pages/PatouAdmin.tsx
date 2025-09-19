@@ -62,6 +62,32 @@ export default function PatouAdmin() {
         <button onClick={load} style={{ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:8 }}>Rafraîchir</button>
       </div>
 
+      <div style={{ display:"flex", gap:8, marginTop:16 }}>
+        <button
+          onClick={async () => {
+            const r = await fetch("https://umqzlqrgpxbdrnrmvjpe.functions.supabase.co/spotify-auth-start", {
+              headers: { "x-admin-token": import.meta.env.VITE_ADMIN_TOKEN }
+            });
+            const j = await r.json();
+            if (j.authorize_url) window.location.href = j.authorize_url;
+            else alert("Erreur auth-start: " + JSON.stringify(j));
+          }}
+          style={{ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:8 }}
+        >Connecter Spotify (1er setup)</button>
+
+        <button
+          onClick={async () => {
+            const r = await fetch("https://umqzlqrgpxbdrnrmvjpe.functions.supabase.co/publish-weekly-playlists", {
+              method: "POST",
+              headers: { "x-admin-token": import.meta.env.VITE_ADMIN_TOKEN }
+            });
+            const j = await r.json();
+            alert(j.ok ? "Playlists publiées ✅" : "Erreur publish: " + JSON.stringify(j));
+          }}
+          style={{ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:8 }}
+        >Publier les 3 playlists</button>
+      </div>
+
       {loading && <div style={{ marginTop:12 }}>Chargement…</div>}
       {err && <div style={{ color:"red", marginTop:12 }}>Erreur: {err}</div>}
 
