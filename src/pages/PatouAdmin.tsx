@@ -65,15 +65,37 @@ export default function PatouAdmin() {
       <div style={{ display:"flex", gap:8, marginTop:16 }}>
         <button
           onClick={async () => {
-            const r = await fetch("https://umqzlqrgpxbdrnrmvjpe.functions.supabase.co/spotify-auth-start", {
-              headers: { "x-admin-token": import.meta.env.VITE_ADMIN_TOKEN }
-            });
-            const j = await r.json();
-            if (j.authorize_url) window.location.href = j.authorize_url;
-            else alert("Erreur auth-start: " + JSON.stringify(j));
+            try {
+              const ADMIN = import.meta.env.VITE_ADMIN_TOKEN || "";
+              console.log("FRONT DIAG", { lenAdminFront: ADMIN.length });
+
+              const r = await fetch(
+                "https://umqzlqrgpxbdrnrmvjpe.functions.supabase.co/spotify-auth-start",
+                {
+                  headers: {
+                    "x-admin-token": ADMIN,               // 1) notre header custom
+                    "Authorization": `Bearer ${ADMIN}`,    // 2) fallback si jamais x- est filtré
+                  },
+                }
+              );
+              const j = await r.json().catch(() => ({}));
+              if (!r.ok) {
+                alert(`auth-start ${r.status}: ${JSON.stringify(j)}`);
+                return;
+              }
+              if (j.authorize_url) {
+                window.location.href = j.authorize_url;
+              } else {
+                alert("auth-start: réponse inattendue " + JSON.stringify(j));
+              }
+            } catch (e:any) {
+              alert("auth-start: " + (e.message || String(e)));
+            }
           }}
           style={{ padding:"8px 12px", border:"1px solid #e5e7eb", borderRadius:8 }}
-        >Connecter Spotify (1er setup)</button>
+        >
+          Connecter Spotify (1er setup)
+        </button>
 
         <button
           onClick={async () => {
