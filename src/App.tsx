@@ -42,6 +42,7 @@ export default function App() {
             <Route path="/test/moderation" element={<TestModeration />} />
             <Route path="/admin/moderation" element={<AdminModeration />} />
             <Route path="/konsta-test" element={<KonstaTest />} />
+            <Route path="/konsta-test" element={<KonstaTest />} />
             {/* Enfant */}
             <Route path="/child/login" element={<ChildLogin />} />
             <Route path="/child" element={<Child />} />
