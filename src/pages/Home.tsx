@@ -118,6 +118,19 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Call-to-Action Section */}
+      <div className="bg-gradient-to-r from-primary to-protect text-white py-12 px-6 text-center rounded-lg max-w-3xl mx-auto mt-16">
+        <h2 className="text-2xl md:text-3xl font-bold mb-6">
+          Prêt à commencer l'aventure musicale ?
+        </h2>
+        <Link
+          to="/parent/signup"
+          className="inline-block bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+        >
+          Créer mon compte
+        </Link>
+      </div>
     </div>
   )
 }
