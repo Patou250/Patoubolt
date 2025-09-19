@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
-import { App, Page, Tabbar, Tab, TabbarLink } from 'konsta/react'
+import { App, Page, Tabbar, TabbarLink } from 'konsta/react'
 import { Music, Heart, List, Search } from 'lucide-react'
 
 interface ChildLayoutProps {
@@ -61,17 +61,16 @@ export default function ChildLayout({ children }: ChildLayoutProps) {
             const isActive = getActiveTab() === tab.id
             
             return (
-              <Tab key={tab.id}>
-                <TabbarLink
-                  href={tab.path}
-                  className={`flex flex-col items-center justify-center py-2 ${
-                    isActive ? 'text-primary' : 'text-gray-500'
-                  }`}
-                >
-                  <Icon className="w-5 h-5 mb-1" />
-                  <span className="text-xs font-medium">{tab.label}</span>
-                </TabbarLink>
-              </Tab>
+              <TabbarLink
+                key={tab.id}
+                href={tab.path}
+                className={`flex flex-col items-center justify-center py-2 ${
+                  isActive ? 'text-primary' : 'text-gray-500'
+                }`}
+              >
+                <Icon className="w-5 h-5 mb-1" />
+                <span className="text-xs font-medium">{tab.label}</span>
+              </TabbarLink>
             )
           })}
         </Tabbar>
