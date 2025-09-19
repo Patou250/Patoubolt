@@ -1,4 +1,3 @@
-import { Routes, Route } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import ChildLayout from './layouts/ChildLayout'
 import AppShell from './components/ui/AppShell'
