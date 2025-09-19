@@ -1,65 +1,113 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import { App, Page, Navbar, Block, Button, List, ListItem } from 'konsta/react'
-import { usePreviewGate } from '../hooks/usePreviewGate'
-import PreviewGate from '../components/PreviewGate'
+import { Shield, Share2, Sparkles, ArrowRight } from 'lucide-react'
 
 export default function Home() {
-  const { mustGate } = usePreviewGate()
-
-  // Afficher le gate de prévisualisation si nécessaire
-  if (mustGate) {
-    return <PreviewGate />
-  }
-
   return (
-    <App theme="ios">
-      <Page>
-        <Navbar title="Patou - Test Konsta UI" />
-        
-        <Block>
-          <h2 className="text-2xl font-bold mb-4 text-primary">🎉 Konsta UI Integration Test</h2>
-          <p className="mb-4 text-gray-600">
-            Konsta UI est correctement intégré avec les couleurs Patou et la police Nunito !
-          </p>
-        </Block>
-
-        <Block>
-          <h3 className="text-lg font-semibold mb-3 text-protect">Test des couleurs Patou</h3>
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            <Button className="bg-primary text-white">Primary #287233</Button>
-            <Button className="bg-protect text-white">Protect #017ba6</Button>
-            <Button className="bg-share text-white">Share #e2725b</Button>
-            <Button className="bg-awaken text-gray-900">Awaken #ffd447</Button>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50">
+      {/* Hero Section */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-3xl mx-auto px-4 md:px-8 text-center">
+          <div className="mb-8">
+            <img 
+              src="/Patou emeraude sans fond.png" 
+              alt="Patou Logo" 
+              className="h-20 w-auto mx-auto mb-6"
+            />
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Musique sécurisée pour toute la famille
+            </h1>
+            <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
+              Patou offre un environnement musical adapté aux enfants, avec contrôle parental avancé et contenus vérifiés.
+            </p>
           </div>
-        </Block>
-
-        <List>
-          <ListItem title="Police Nunito" subtitle="Font-family appliquée globalement" />
-          <ListItem title="Couleurs Patou" subtitle="Intégrées dans Tailwind config" />
-          <ListItem title="Konsta UI" subtitle="Composants iOS/Material Design" />
-        </List>
-
-        <Block>
-          <div className="bg-gradient-to-r from-primary to-protect text-white p-4 rounded-lg text-center mb-6">
-            <h4 className="font-bold">Gradient Patou</h4>
-            <p className="text-sm opacity-90">Primary → Protect</p>
-          </div>
-        </Block>
-
-        <Block>
-          <h3 className="text-lg font-semibold mb-3 text-share">Navigation Patou</h3>
-          <div className="space-y-2">
-            <Link to="/parent/login" className="block w-full">
-              <Button className="w-full bg-protect text-white">Espace Parent</Button>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/parent/signup"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-semibold hover:bg-primary-600 transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
+            >
+              Créer un compte
+              <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link to="/child/login" className="block w-full">
-              <Button className="w-full bg-awaken text-gray-900">Espace Enfant</Button>
+            <Link
+              to="/child/login"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-700 border border-gray-300 rounded-xl font-semibold hover:bg-gray-50 transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
+            >
+              Espace enfant
             </Link>
           </div>
-        </Block>
-      </Page>
-    </App>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16">
+        <div className="max-w-3xl mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Protéger */}
+            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 text-center">
+              <div className="w-16 h-16 bg-protect-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-protect" />
+              </div>
+              <div className="inline-flex items-center px-3 py-1 bg-protect-100 text-protect-800 rounded-full text-sm font-medium mb-3">
+                Protéger
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Sécurité garantie</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Contenus vérifiés et adaptés à l'âge de vos enfants. Contrôle parental complet pour une écoute sereine.
+              </p>
+            </div>
+
+            {/* Partager */}
+            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 text-center">
+              <div className="w-16 h-16 bg-share-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Share2 className="w-8 h-8 text-share" />
+              </div>
+              <div className="inline-flex items-center px-3 py-1 bg-share-100 text-share-800 rounded-full text-sm font-medium mb-3">
+                Partager
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Moments en famille</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Créez des playlists communes et partagez vos découvertes musicales en famille.
+              </p>
+            </div>
+
+            {/* Éveiller */}
+            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 text-center">
+              <div className="w-16 h-16 bg-awaken-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-8 h-8 text-awaken-600" />
+              </div>
+              <div className="inline-flex items-center px-3 py-1 bg-awaken-100 text-awaken-800 rounded-full text-sm font-medium mb-3">
+                Éveiller
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Découverte musicale</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Playlists éducatives et découvertes adaptées pour développer la curiosité musicale.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16">
+        <div className="max-w-3xl mx-auto px-4 md:px-8">
+          <div className="bg-gradient-to-r from-primary to-protect text-white rounded-2xl p-8 md:p-12 text-center shadow-xl">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Prêt à commencer l'aventure ?
+            </h2>
+            <p className="text-lg md:text-xl opacity-90 mb-8 leading-relaxed">
+              Rejoignez des milliers de familles qui font confiance à Patou pour une expérience musicale sécurisée.
+            </p>
+            <Link
+              to="/parent/signup"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-primary rounded-xl font-semibold hover:bg-gray-50 transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
+            >
+              Commencer gratuitement
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
   )
 }
