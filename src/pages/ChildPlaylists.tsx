@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { 
   App, Page, Navbar, Block, List, ListItem, Button, Popup, 
-  Input, Card, Toolbar 
+  Card, Toolbar 
 } from 'konsta/react'
 import { 
   Music, Play, Heart, Plus, ChevronRight, MoreVertical, 
@@ -379,12 +379,12 @@ export default function ChildPlaylists() {
               </div>
               
               <div>
-                <Input
+                <input
                   type="text"
                   placeholder="Nom de la playlist"
                   value={newPlaylistName}
-                  onInput={(e) => setNewPlaylistName(e.target.value)}
-                  className="w-full"
+                  onChange={(e) => setNewPlaylistName(e.target.value)}
+                  className="input w-full"
                   autoFocus
                 />
               </div>
