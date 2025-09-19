@@ -29,13 +29,8 @@ export default function PatouAdmin() {
     try {
       const r = await fetch(url, {
         headers: {
-          // 1) requis par la gateway Supabase Functions v1 (sinon 401)
-          "Authorization": `Bearer ${ANON_KEY}`,
-          // 2) requis par TON code de fonction (auth admin)
-          // 1) requis par la gateway Supabase Functions v1 (sinon 401)
-          "Authorization": `Bearer ${ANON_KEY}`,
-          // 2) requis par TON code de fonction (auth admin)
           "x-admin-token": ADMIN_TOKEN,
+          Authorization: `Bearer ${ANON_KEY}`, // requis par la gateway Supabase Functions
         }
       });
       if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
