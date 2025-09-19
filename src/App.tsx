@@ -42,19 +42,19 @@ export default function App() {
         <Route path="/admin/moderation" element={<AdminModeration />} />
         {/* Dev routes */}
         <Route path="/_dev/konsta" element={<KonstaTest />} />
-        {/* Enfant - routes groupées sous ChildLayout */}
+        
+        {/* Child login - outside layout */}
         <Route path="/child/login" element={<ChildLogin />} />
-        <Route path="/child/*" element={
-          <ChildLayout>
-            <Routes>
-              <Route path="/" element={<Child />} />
-              <Route path="/favorites" element={<ChildFavorites />} />
-              <Route path="/playlists" element={<ChildPlaylists />} />
-              <Route path="/playlists/:id" element={<ChildPlaylists />} />
-              <Route path="/search" element={<ChildSearch />} />
-            </Routes>
-          </ChildLayout>
-        } />
+        
+        {/* Child routes - all under ChildLayout */}
+        <Route path="/child" element={<ChildLayout />}>
+          <Route index element={<Child />} />
+          <Route path="favorites" element={<ChildFavorites />} />
+          <Route path="playlists" element={<ChildPlaylists />} />
+          <Route path="playlists/:id" element={<ChildPlaylists />} />
+          <Route path="search" element={<ChildSearch />} />
+        </Route>
+        
         {/* Player */}
         <Route path="/player" element={<Player />} />
       </Routes>
