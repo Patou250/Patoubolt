@@ -7,19 +7,17 @@ export default function Home() {
       {/* Hero Section */}
       <section className="py-16 md:py-24">
         <div className="max-w-3xl mx-auto px-4 md:px-8 text-center">
-          <div className="mb-8">
-            <img 
-              src="/Patou emeraude sans fond.png" 
-              alt="Patou Logo" 
-              className="h-20 w-auto mx-auto mb-6"
-            />
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Musique sécurisée pour toute la famille
-            </h1>
-            <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
-              Patou offre un environnement musical adapté aux enfants, avec contrôle parental avancé et contenus vérifiés.
-            </p>
-          </div>
+          <img 
+            src="/Patou emeraude sans fond.png" 
+            alt="Patou Logo" 
+            className="h-20 w-auto mx-auto mb-6"
+          />
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Musique sécurisée pour toute la famille
+          </h1>
+          <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
+            Patou offre un environnement musical adapté aux enfants, avec contrôle parental avancé et contenus vérifiés.
+          </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -84,27 +82,6 @@ export default function Home() {
                 Playlists éducatives et découvertes adaptées pour développer la curiosité musicale.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16">
-        <div className="max-w-3xl mx-auto px-4 md:px-8">
-          <div className="bg-gradient-to-r from-primary to-protect text-white rounded-2xl p-8 md:p-12 text-center shadow-xl">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Prêt à commencer l'aventure ?
-            </h2>
-            <p className="text-lg md:text-xl opacity-90 mb-8 leading-relaxed">
-              Rejoignez des milliers de familles qui font confiance à Patou pour une expérience musicale sécurisée.
-            </p>
-            <Link
-              to="/parent/signup"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-primary rounded-xl font-semibold hover:bg-gray-50 transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
-            >
-              Commencer gratuitement
-              <ArrowRight className="w-5 h-5" />
-            </Link>
           </div>
         </div>
       </section>
