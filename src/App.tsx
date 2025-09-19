@@ -19,6 +19,7 @@ import Player from './pages/Player'
 import ParentCallback from './pages/ParentCallback'
 import TestModeration from './pages/TestModeration'
 import AdminModeration from './pages/AdminModeration'
+import ChildFavorites from './pages/ChildFavorites'
 import KonstaTest from './pages/KonstaTest'
 
 export default function App() {
@@ -50,7 +51,7 @@ export default function App() {
               <ChildLayout>
                 <Routes>
                   <Route path="/" element={<Child />} />
-                  <Route path="/favorites" element={<div className="p-4"><h1 className="text-2xl font-bold">Favoris</h1><p>Page en construction...</p></div>} />
+                  <Route path="/favorites" element={<ChildFavorites />} />
                   <Route path="/playlists" element={<div className="p-4"><h1 className="text-2xl font-bold">Playlists</h1><p>Page en construction...</p></div>} />
                   <Route path="/search" element={<ChildSearch />} />
                 </Routes>
