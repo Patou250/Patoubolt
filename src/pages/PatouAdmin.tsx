@@ -29,8 +29,7 @@ export default function PatouAdmin() {
     try {
       const r = await fetch(url, {
         headers: {
-          "x-admin-token": ADMIN_TOKEN,
-          Authorization: `Bearer ${ANON_KEY}`, // requis par la gateway Supabase Functions
+          "x-admin-token": ADMIN_TOKEN, // ✅ seul header
         }
       });
       if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
