@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Music, Heart, Clock, ChevronRight } from 'lucide-react'
+import { App, Page, Navbar, Block, Card, Button, List, ListItem, Badge } from 'konsta/react'
+import { Music, Heart, Play, Pause, SkipBack, SkipForward } from 'lucide-react'
 import PlayerSdk from '../components/PlayerSdk'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
 
@@ -18,6 +19,13 @@ interface Track {
   ts: number
 }
 
+interface CurrentTrack {
+  id: string
+  name: string
+  artist: string
+  cover: string
+}
+
 interface Playlist {
   id: string
   title: string
@@ -28,7 +36,9 @@ interface Playlist {
 export default function Child() {
   const [child, setChild] = useState<ChildData | null>(null)
   const [accessToken, setAccessToken] = useState<string | null>(null)
-  const [playlists, setPlaylists] = useState<Playlist[]>([])
+  const [currentTrack, setCurrentTrack] = useState<CurrentTrack | null>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [weeklyPlaylists, setWeeklyPlaylists] = useState<Playlist[]>([])
   const [history, setHistory] = useState<Track[]>([])
 
   useEffect(() => {
@@ -55,43 +65,57 @@ export default function Child() {
       setAccessToken(tokens.access_token)
     }
 
-    // Charger les playlists
-    loadPlaylists()
+    // Charger les playlists de la semaine
+    loadWeeklyPlaylists()
     
     // Charger l'historique
     loadHistory()
+
+    // Simuler une piste en cours
+    setCurrentTrack({
+      id: '1',
+      name: 'Hakuna Matata',
+      artist: 'Le Roi Lion',
+      cover: 'https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=300'
+    })
   }, [])
 
-  const loadPlaylists = () => {
-    // Simuler des playlists
+  const loadWeeklyPlaylists = () => {
+    // Simuler des playlists de la semaine
     const mockPlaylists: Playlist[] = [
       {
-        id: 'favorites',
-        title: 'Mes Favoris ❤️',
+        id: 'weekly1',
+        title: 'Disney Hits',
         cover: 'https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=300',
-        type: 'favorites'
+        type: 'weekly'
       },
       {
-        id: 'weekly',
-        title: 'Playlist de la semaine 🎵',
+        id: 'weekly2',
+        title: 'Comptines Modernes',
         cover: 'https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=300',
         type: 'weekly'
       },
       {
-        id: 'custom1',
-        title: 'Mes Découvertes 🌟',
+        id: 'weekly3',
+        title: 'Musiques du Monde',
         cover: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=300',
-        type: 'custom'
+        type: 'weekly'
+      },
+      {
+        id: 'weekly4',
+        title: 'Relaxation',
+        cover: 'https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=300',
+        type: 'weekly'
       }
     ]
-    setPlaylists(mockPlaylists)
+    setWeeklyPlaylists(mockPlaylists)
   }
 
   const loadHistory = () => {
     const historyRaw = localStorage.getItem('patou_play_history')
     if (historyRaw) {
       const historyData = JSON.parse(historyRaw)
-      setHistory(historyData.slice(0, 10)) // Limiter à 10 éléments
+      setHistory(historyData.slice(0, 10))
     } else {
       // Historique factice pour la démo
       const mockHistory: Track[] = [
@@ -121,208 +145,213 @@ export default function Child() {
     }
   }
 
-  const formatTimeAgo = (timestamp: number) => {
-    const diff = Date.now() - timestamp
-    const minutes = Math.floor(diff / 60000)
-    const hours = Math.floor(minutes / 60)
-    const days = Math.floor(hours / 24)
-    
-    if (days > 0) return `Il y a ${days} jour${days > 1 ? 's' : ''}`
-    if (hours > 0) return `Il y a ${hours} heure${hours > 1 ? 's' : ''}`
-    if (minutes > 0) return `Il y a ${minutes} minute${minutes > 1 ? 's' : ''}`
-    return 'À l\'instant'
+  const handleTrackChange = (trackId: string) => {
+    // Callback du PlayerSdk
+    console.log('Track changed:', trackId)
+  }
+
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying)
+  }
+
+  const handleAddToFavorites = () => {
+    if (currentTrack) {
+      const favsRaw = localStorage.getItem('patou_favorites')
+      const favs = favsRaw ? JSON.parse(favsRaw) : {}
+      
+      favs[currentTrack.id] = {
+        trackId: currentTrack.id,
+        name: currentTrack.name,
+        artist: currentTrack.artist,
+        cover: currentTrack.cover,
+        ts: Date.now()
+      }
+      
+      localStorage.setItem('patou_favorites', JSON.stringify(favs))
+    }
+  }
+
+  const handlePlayPlaylist = (playlistId: string) => {
+    console.log('Playing playlist:', playlistId)
+    // Ici on pourrait démarrer la lecture de la playlist
+  }
+
+  const handlePlayTrack = (trackId: string) => {
+    console.log('Playing track:', trackId)
+    // Ici on pourrait démarrer la lecture du track
   }
 
   if (!child) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement...</p>
-        </div>
-      </div>
+      <App theme="ios">
+        <Page>
+          <Navbar title="Patou Enfant" />
+          <Block className="text-center">
+            <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-gray-600">Chargement...</p>
+          </Block>
+        </Page>
+      </App>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      <div className="md:ml-64">
-        <div className="p-4 pb-20 md:pb-8">
-      <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
+    <App theme="ios">
+      <Page>
+        <Navbar title="Patou Enfant" />
         
-        {/* Header avec salutation */}
-        <div className="text-center mb-4 md:mb-8 pt-4 md:pt-0">
-          <div className="text-6xl md:text-8xl mb-4">{child.emoji}</div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-            Bonjour {child.name} ! 👋
-          </h1>
-          <p className="text-gray-600 mt-2">Prêt pour une nouvelle aventure musicale ?</p>
-        </div>
-
-        {/* Section 1: PlayerSdk */}
-        <div className="flex justify-center mb-4 md:mb-8">
-          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Music className="w-6 h-6 text-awaken" />
-              <h2 className="text-xl font-bold text-gray-800">Lecteur Musical</h2>
-            </div>
-            {accessToken ? (
-              <PlayerSdk accessToken={accessToken} />
-            ) : (
-              <div className="text-center py-8">
-                <Music className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Lecteur indisponible</h3>
-                <p className="text-gray-600 mb-4">Connexion Spotify requise</p>
-                <Link 
-                  to="/parent/login" 
-                  className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-600 transition-colors"
-                >
-                  Demander à papa/maman
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Section 2: Playlists en carrousel */}
-        <div className="mb-4 md:mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <Heart className="w-6 h-6 text-share" />
-              Mes Playlists
-            </h2>
-            <Link 
-              to="/child/search" 
-              className="text-awaken hover:text-awaken-600 transition-colors flex items-center gap-1"
-            >
-              Voir tout
-              <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-          
-          <div className="overflow-x-auto scrollbar-hide">
-            <div className="flex gap-3 md:gap-4 pb-4" style={{ width: 'max-content' }}>
-              {playlists.map(playlist => (
-                <div 
-                  key={playlist.id}
-                  className="flex-shrink-0 w-40 md:w-48 bg-white rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 cursor-pointer"
-                >
+        <div className="space-y-4 p-4">
+          {/* Section 1: Continue (si piste en cours) */}
+          {currentTrack && (
+            <Block>
+              <Card className="p-4">
+                <div className="flex items-center gap-3">
                   <img 
-                    src={playlist.cover} 
-                    alt={playlist.title}
-                    className="w-full h-24 md:h-32 object-cover rounded-t-xl"
+                    src={currentTrack.cover} 
+                    alt={currentTrack.name}
+                    className="w-14 h-14 rounded-lg object-cover"
                   />
-                  <div className="p-3 md:p-4">
-                    <h3 className="font-semibold text-gray-900 text-xs md:text-sm mb-1 truncate">
-                      {playlist.title}
-                    </h3>
-                    <p className="text-xs text-gray-500 truncate">
-                      {playlist.type === 'favorites' && 'Tes chansons préférées'}
-                      {playlist.type === 'weekly' && 'Nouvelle sélection'}
-                      {playlist.type === 'custom' && 'Playlist personnalisée'}
-                    </p>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 text-sm">{currentTrack.name}</h3>
+                    <p className="text-gray-600 text-xs">{currentTrack.artist}</p>
                   </div>
+                  <Button 
+                    className="bg-primary text-white min-h-[48px] px-4"
+                    onClick={handlePlayPause}
+                  >
+                    <Play className="w-4 h-4 mr-1" />
+                    Reprendre
+                  </Button>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
+              </Card>
+            </Block>
+          )}
 
-        {/* Section 3: Historique d'écoute */}
-        <div>
-          <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <Clock className="w-6 h-6 text-awaken" />
-            Récemment écouté
-          </h2>
-          
-          {history.length > 0 ? (
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-200">
-                {history.map((track, index) => (
-                  <div 
-                    key={`${track.trackId}-${index}`}
-                    className="p-3 md:p-4 hover:bg-gray-50 transition-colors cursor-pointer flex items-center gap-3"
+          {/* Section 2: Lecteur */}
+          <Block>
+            <Card className="p-4">
+              {accessToken ? (
+                <PlayerSdk 
+                  accessToken={accessToken} 
+                  onTrackChange={handleTrackChange}
+                />
+              ) : (
+                <div className="text-center py-8">
+                  <Music className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">Lecteur indisponible</h3>
+                  <p className="text-gray-600 mb-4">Connexion Spotify requise</p>
+                  <Link to="/parent/login">
+                    <Button className="bg-primary text-white">
+                      Demander à papa/maman
+                    </Button>
+                  </Link>
+                </div>
+              )}
+              
+              {/* Boutons d'action sous le player */}
+              <div className="flex items-center justify-center gap-4 mt-4">
+                <Button 
+                  className="bg-share text-white min-h-[48px] min-w-[48px] rounded-full"
+                  onClick={handleAddToFavorites}
+                >
+                  <Heart className="w-5 h-5" />
+                </Button>
+                
+                <div className="flex items-center gap-2">
+                  <Button className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full">
+                    <SkipBack className="w-5 h-5" />
+                  </Button>
+                  <Button 
+                    className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full"
+                    onClick={handlePlayPause}
+                  >
+                    {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                  </Button>
+                  <Button className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full">
+                    <SkipForward className="w-5 h-5" />
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </Block>
+
+          {/* Section 3: Playlist de la semaine */}
+          <Block>
+            <div className="flex items-center gap-2 mb-4">
+              <h2 className="text-xl font-bold text-gray-700">Playlist de la semaine</h2>
+              <Badge className="bg-awaken text-gray-900">Semaine</Badge>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <div className="flex gap-3 pb-4 snap-x" style={{ width: 'max-content' }}>
+                {weeklyPlaylists.map(playlist => (
+                  <Card 
+                    key={playlist.id}
+                    className="flex-shrink-0 w-32 cursor-pointer snap-start"
+                    onClick={() => handlePlayPlaylist(playlist.id)}
                   >
                     <img 
-                      src={track.cover} 
-                      alt={track.name}
-                      className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover flex-shrink-0"
+                      src={playlist.cover} 
+                      alt={playlist.title}
+                      className="w-full h-24 object-cover rounded-t-lg"
                     />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-900 text-xs md:text-sm truncate">
-                        {track.name}
+                    <div className="p-2">
+                      <h3 className="font-semibold text-gray-900 text-xs truncate">
+                        {playlist.title}
                       </h3>
-                      <p className="text-xs text-gray-600 truncate">
-                        {track.artist}
-                      </p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {formatTimeAgo(track.ts)}
-                      </p>
                     </div>
-                    <Link
-                      to={`/player?trackId=${track.trackId}`}
-                      className="flex-shrink-0 p-1.5 md:p-2 text-awaken hover:bg-awaken-50 rounded-lg transition-colors"
-                    >
-                      <Music className="w-4 h-4" />
-                    </Link>
-                  </div>
+                  </Card>
                 ))}
               </div>
             </div>
-          ) : (
-            <div className="bg-white rounded-xl shadow-md p-6 md:p-8 text-center">
-              <Clock className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-2">Aucun historique</h3>
-              <p className="text-sm md:text-base text-gray-600 mb-4">
-                Commence à écouter de la musique pour voir ton historique ici
-              </p>
-              <Link 
-                to="/child/search" 
-                className="inline-block px-6 py-3 bg-awaken text-gray-900 rounded-lg hover:bg-awaken-600 transition-colors"
-              >
-                Découvrir de la musique
-              </Link>
-            </div>
-          )}
-        </div>
+          </Block>
 
-        {/* Actions rapides */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-6 md:mt-8">
-          <Link 
-            to="/child/search" 
-            className="bg-white rounded-xl shadow-md p-3 md:p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
-          >
-            <div className="text-3xl mb-2">🔍</div>
-            <span className="text-xs md:text-sm font-semibold text-gray-800">Rechercher</span>
-          </Link>
-          
-          <Link 
-            to="/child/favorites" 
-            className="bg-white rounded-xl shadow-md p-3 md:p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
-          >
-            <div className="text-3xl mb-2">❤️</div>
-            <span className="text-xs md:text-sm font-semibold text-gray-800">Favoris</span>
-          </Link>
-          
-          <Link 
-            to="/child/playlists" 
-            className="bg-white rounded-xl shadow-md p-3 md:p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
-          >
-            <div className="text-3xl mb-2">🎧</div>
-            <span className="text-xs md:text-sm font-semibold text-gray-800">Playlists</span>
-          </Link>
-          
-          <Link 
-            to="/child/history" 
-            className="bg-white rounded-xl shadow-md p-3 md:p-4 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
-          >
-            <div className="text-3xl mb-2">🕒</div>
-            <span className="text-xs md:text-sm font-semibold text-gray-800">Historique</span>
-          </Link>
+          {/* Section 4: Historique */}
+          <Block>
+            <h2 className="text-xl font-bold text-gray-700 mb-4">Récemment écouté</h2>
+            
+            {history.length > 0 ? (
+              <List strong inset>
+                {history.map((track, index) => (
+                  <ListItem
+                    key={`${track.trackId}-${index}`}
+                    title={track.name}
+                    subtitle={track.artist}
+                    media={
+                      <img 
+                        src={track.cover} 
+                        alt={track.name}
+                        className="w-12 h-12 rounded-lg object-cover"
+                      />
+                    }
+                    after={
+                      <Button 
+                        className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full"
+                        onClick={() => handlePlayTrack(track.trackId)}
+                      >
+                        <Play className="w-4 h-4" />
+                      </Button>
+                    }
+                  />
+                ))}
+              </List>
+            ) : (
+              <Card className="p-6 text-center">
+                <Music className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Aucun historique</h3>
+                <p className="text-gray-600 mb-4">
+                  Commence à écouter de la musique pour voir ton historique ici
+                </p>
+                <Link to="/child/search">
+                  <Button className="bg-awaken text-gray-900">
+                    Découvrir de la musique
+                  </Button>
+                </Link>
+              </Card>
+            )}
+          </Block>
         </div>
-      </div>
-        </div>
-      </div>
-    </div>
+      </Page>
+    </App>
   )
 }
