@@ -20,6 +20,7 @@ import ParentCallback from './pages/ParentCallback'
 import TestModeration from './pages/TestModeration'
 import AdminModeration from './pages/AdminModeration'
 import ChildFavorites from './pages/ChildFavorites'
+import ChildPlaylists from './pages/ChildPlaylists'
 import KonstaTest from './pages/KonstaTest'
 
 export default function App() {
@@ -52,7 +53,8 @@ export default function App() {
                 <Routes>
                   <Route path="/" element={<Child />} />
                   <Route path="/favorites" element={<ChildFavorites />} />
-                  <Route path="/playlists" element={<div className="p-4"><h1 className="text-2xl font-bold">Playlists</h1><p>Page en construction...</p></div>} />
+                  <Route path="/playlists" element={<ChildPlaylists />} />
+                  <Route path="/playlists/:id" element={<ChildPlaylists />} />
                   <Route path="/search" element={<ChildSearch />} />
                 </Routes>
               </ChildLayout>
