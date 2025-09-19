@@ -2,9 +2,12 @@
 import useSWR from 'swr';
 import { useMemo, useState } from 'react';
 
+const ADMIN_API_URL = process.env.NEXT_PUBLIC_ADMIN_API_URL || process.env.VITE_ADMIN_API_URL || 'https://umqzlqrgpxbdrnrmvjpe.supabase.co/functions/v1/admin-songs';
+const ADMIN_TOKEN = process.env.NEXT_PUBLIC_ADMIN_TOKEN || process.env.VITE_ADMIN_TOKEN || 'patou_admin_2025_secure_token_xyz789';
+
 const fetcher = (url: string) =>
-  fetch(`/api/admin/songs${url}`, { 
-    headers: { 'x-admin-token': (process.env.NEXT_PUBLIC_ADMIN_TOKEN as string) } 
+  fetch(`${ADMIN_API_URL}${url}`, { 
+    headers: { 'x-admin-token': ADMIN_TOKEN } 
   })
     .then(r => { if (!r.ok) throw new Error('Forbidden or error'); return r.json(); });
 
