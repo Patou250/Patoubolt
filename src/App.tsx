@@ -3,6 +3,7 @@ import AppShell from './components/AppShell'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Navigation from './components/Navigation' // ta nav mobile/desktop existante
+import ChildLayout from './layouts/ChildLayout'
 
 // …imports pages
 import Home from './pages/Home'
@@ -43,10 +44,18 @@ export default function App() {
             <Route path="/admin/moderation" element={<AdminModeration />} />
             <Route path="/konsta-test" element={<KonstaTest />} />
             <Route path="/konsta-test" element={<KonstaTest />} />
-            {/* Enfant */}
+            {/* Enfant - routes groupées sous ChildLayout */}
             <Route path="/child/login" element={<ChildLogin />} />
-            <Route path="/child" element={<Child />} />
-            <Route path="/child/search" element={<ChildSearch />} />
+            <Route path="/child/*" element={
+              <ChildLayout>
+                <Routes>
+                  <Route path="/" element={<Child />} />
+                  <Route path="/favorites" element={<div className="p-4"><h1 className="text-2xl font-bold">Favoris</h1><p>Page en construction...</p></div>} />
+                  <Route path="/playlists" element={<div className="p-4"><h1 className="text-2xl font-bold">Playlists</h1><p>Page en construction...</p></div>} />
+                  <Route path="/search" element={<ChildSearch />} />
+                </Routes>
+              </ChildLayout>
+            } />
             {/* Player */}
             <Route path="/player" element={<Player />} />
           </Routes>
