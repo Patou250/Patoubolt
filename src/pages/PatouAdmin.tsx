@@ -28,8 +28,7 @@ export default function PatouAdmin() {
     try {
       const r = await fetch(url, {
         headers: {
-          // On envoie le token dans Authorization: Bearer (la fonction accepte aussi x-admin-token)
-          "Authorization": `Bearer ${ADMIN_TOKEN}`,
+          "x-admin-token": ADMIN_TOKEN,
         }
       });
       if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);

@@ -1,7 +1,6 @@
 // Test de l'Edge Function admin-songs
 fetch('https://umqzlqrgpxbdrnrmvjpe.functions.supabase.co/admin-songs?status=allowed&page=1&pageSize=5', {
   headers: { 
-    'Authorization': 'Bearer patou_admin_2025_secure_token_xyz789',
     'x-admin-token': 'patou_admin_2025_secure_token_xyz789'
   }
 })
