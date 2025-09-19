@@ -71,10 +71,6 @@ export default function Home() {
               Énergie et découvertes musicales adaptées
             </p>
           </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-3">Éveiller</h3>
-          <p className="text-gray-700">
-            Énergie et découvertes musicales adaptées
-          </p>
         </div>
       </div>
 
@@ -142,7 +138,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-  )
-}
   )
 }
