@@ -28,39 +28,41 @@ export default function App() {
   return (
     <>
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        {/* Parent */}
-        <Route path="/parent/login" element={<ParentLogin />} />
-        <Route path="/parent/signup" element={<ParentSignup />} />
-        <Route path="/parent/dashboard" element={<ParentDashboard />} />
-        <Route path="/parent/children" element={<ParentChildren />} />
-        <Route path="/parent/curation" element={<ParentCuration />} />
-        <Route path="/parent/callback" element={<ParentCallback />} />
-        {/* Routes d'accès direct pour tests */}
-        <Route path="/direct/parent" element={<ParentDashboard />} />
-        <Route path="/direct/child" element={<Child />} />
-        {/* Routes de test et admin */}
-        <Route path="/test/moderation" element={<TestModeration />} />
-        <Route path="/admin/moderation" element={<AdminModeration />} />
-        {/* Dev routes */}
-        <Route path="/_dev/konsta" element={<KonstaTest />} />
-        
-        {/* Child login - outside layout */}
-        <Route path="/child/login" element={<ChildLogin />} />
-        
-        {/* Child routes - all under ChildLayout */}
-        <Route path="/child" element={<ChildLayout />}>
-          <Route index element={<Child />} />
-          <Route path="favorites" element={<ChildFavorites />} />
-          <Route path="playlists" element={<ChildPlaylists />} />
-          <Route path="playlists/:id" element={<ChildPlaylists />} />
-          <Route path="search" element={<ChildSearch />} />
-        </Route>
-        
-        {/* Player */}
-        <Route path="/player" element={<Player />} />
-      </Routes>
+      <AppShell>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          {/* Parent */}
+          <Route path="/parent/login" element={<ParentLogin />} />
+          <Route path="/parent/signup" element={<ParentSignup />} />
+          <Route path="/parent/dashboard" element={<ParentDashboard />} />
+          <Route path="/parent/children" element={<ParentChildren />} />
+          <Route path="/parent/curation" element={<ParentCuration />} />
+          <Route path="/parent/callback" element={<ParentCallback />} />
+          {/* Routes d'accès direct pour tests */}
+          <Route path="/direct/parent" element={<ParentDashboard />} />
+          <Route path="/direct/child" element={<Child />} />
+          {/* Routes de test et admin */}
+          <Route path="/test/moderation" element={<TestModeration />} />
+          <Route path="/admin/moderation" element={<AdminModeration />} />
+          {/* Dev routes */}
+          <Route path="/_dev/konsta" element={<KonstaTest />} />
+          
+          {/* Child login - outside layout */}
+          <Route path="/child/login" element={<ChildLogin />} />
+          
+          {/* Child routes - all under ChildLayout */}
+          <Route path="/child" element={<ChildLayout />}>
+            <Route index element={<Child />} />
+            <Route path="favorites" element={<ChildFavorites />} />
+            <Route path="playlists" element={<ChildPlaylists />} />
+            <Route path="playlists/:id" element={<ChildPlaylists />} />
+            <Route path="search" element={<ChildSearch />} />
+          </Route>
+          
+          {/* Player */}
+          <Route path="/player" element={<Player />} />
+        </Routes>
+      </AppShell>
       <Footer />
       
       {/* Bottom nav mobile pour les routes non-child */}
