@@ -95,7 +95,9 @@ export default function PatouAdmin() {
           onClick={async () => {
             const r = await fetch("https://umqzlqrgpxbdrnrmvjpe.functions.supabase.co/publish-weekly-playlists", {
               method: "POST",
-              headers: { "x-admin-token": import.meta.env.VITE_ADMIN_TOKEN }
+              headers: {
+                "x-admin-token": ADMIN_TOKEN, // ✅ seul header
+              }
             });
             const j = await r.json();
             alert(j.ok ? "Playlists publiées ✅" : "Erreur publish: " + JSON.stringify(j));
