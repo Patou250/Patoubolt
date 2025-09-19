@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { App, Page, Navbar, Block, Button, List, ListItem } from 'konsta/react'
 import { usePreviewGate } from '../hooks/usePreviewGate'
 import PreviewGate from '../components/PreviewGate'
 import Header from '../components/Header'
@@ -15,62 +16,52 @@ export default function Home() {
   }
 
   return (
-    <>
-      <Header />
-      
-      <main className="min-h-screen bg-gray-50">
-        <div className="container-patou py-16">
-          <div className="prose max-w-none prose-headings:tracking-tight prose-h1:text-primary prose-a:text-protect">
-            <h1>Bienvenue sur Patou</h1>
-            <p>Patou aide les familles à…</p>
-            <a href="/parent/login">Commencer</a>
+    <App theme="ios">
+      <Page>
+        <Navbar title="Patou - Test Konsta UI" />
+        
+        <Block>
+          <h2 className="text-2xl font-bold mb-4 text-primary">🎉 Konsta UI Integration Test</h2>
+          <p className="mb-4 text-gray-600">
+            Konsta UI est correctement intégré avec les couleurs Patou et la police Nunito !
+          </p>
+        </Block>
+
+        <Block>
+          <h3 className="text-lg font-semibold mb-3 text-protect">Test des couleurs Patou</h3>
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <Button className="bg-primary text-white">Primary #287233</Button>
+            <Button className="bg-protect text-white">Protect #017ba6</Button>
+            <Button className="bg-share text-white">Share #e2725b</Button>
+            <Button className="bg-awaken text-gray-900">Awaken #ffd447</Button>
           </div>
-              
-          {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="card card-pad text-center">
-              <div className="text-4xl mb-4">🛡️</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Sécurisé</h3>
-              <p className="text-gray-600">
-                Contenus filtrés et adaptés à l'âge de vos enfants pour une écoute en toute sérénité.
-              </p>
-            </div>
-            
-            <div className="card card-pad text-center">
-              <div className="text-4xl mb-4">🎯</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Personnalisé</h3>
-              <p className="text-gray-600">
-                Playlists adaptées aux goûts et à l'âge de chaque enfant, avec des découvertes musicales enrichissantes.
-              </p>
-            </div>
-            
-            <div className="card card-pad text-center">
-              <div className="text-4xl mb-4">👨‍👩‍👧‍👦</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Contrôle parental</h3>
-              <p className="text-gray-600">
-                Gérez les horaires d'écoute, les contenus accessibles et suivez l'activité musicale de vos enfants.
-              </p>
-            </div>
+        </Block>
+
+        <List>
+          <ListItem title="Police Nunito" subtitle="Font-family appliquée globalement" />
+          <ListItem title="Couleurs Patou" subtitle="Intégrées dans Tailwind config" />
+          <ListItem title="Konsta UI" subtitle="Composants iOS/Material Design" />
+        </List>
+
+        <Block>
+          <div className="bg-gradient-to-r from-primary to-protect text-white p-4 rounded-lg text-center mb-6">
+            <h4 className="font-bold">Gradient Patou</h4>
+            <p className="text-sm opacity-90">Primary → Protect</p>
           </div>
-          
-          {/* CTA Section */}
-          <div className="card card-pad bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Prêt à commencer l'aventure musicale ?
-              </h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Créez votre compte parent et configurez les profils de vos enfants en quelques minutes.
-              </p>
-              <Link to="/parent/signup" className="btn btn-primary">
-                Créer un compte gratuit
-              </Link>
-            </div>
+        </Block>
+
+        <Block>
+          <h3 className="text-lg font-semibold mb-3 text-share">Navigation Patou</h3>
+          <div className="space-y-2">
+            <Link to="/parent/login" className="block w-full">
+              <Button className="w-full bg-protect text-white">Espace Parent</Button>
+            </Link>
+            <Link to="/child/login" className="block w-full">
+              <Button className="w-full bg-awaken text-gray-900">Espace Enfant</Button>
+            </Link>
           </div>
-        </div>
-      </main>
-      
-      <Footer />
-    </>
+        </Block>
+      </Page>
+    </App>
   )
 }
