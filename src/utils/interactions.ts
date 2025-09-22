@@ -1,3 +1,5 @@
+import { patouDesignSystem } from './designSystem'
+
 // WeWeb Interaction Guidelines
 export type ElementType = 'card' | 'button' | 'icon'
 export type ButtonVariant = 'primary' | 'secondary' | 'default'
@@ -275,8 +277,15 @@ export const getComponentGuidelines = (
   componentType: 'card' | 'button' | 'input' | 'form' = 'card', 
   variant: string = 'default'
 ) => {
-  // Mock guidelines - replace with: formulas['8001aa8b-fd4a-4522-a6bf-67cbb73f5525']()
-  const uiGuidelines = {
+  // Get guidelines from initialized design system
+  const designSystem = patouDesignSystem.getUIGuidelines()
+  
+  if (designSystem?.components?.[componentType]) {
+    return designSystem.components[componentType][variant] || designSystem.components[componentType].default
+  }
+  
+  // Fallback to mock guidelines
+  const mockGuidelines = {
     components: {
       card: {
         default: {
@@ -387,8 +396,8 @@ export const getComponentGuidelines = (
     }
   }
   
-  if (uiGuidelines.components[componentType]) {
-    return uiGuidelines.components[componentType][variant] || uiGuidelines.components[componentType].default
+  if (mockGuidelines.components[componentType]) {
+    return mockGuidelines.components[componentType][variant] || mockGuidelines.components[componentType].default
   }
   
   return {}

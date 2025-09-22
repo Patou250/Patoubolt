@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import ChildLayout from './layouts/ChildLayout'
-import AppShell from './components/ui/AppShell'
-import Header from './components/ui/Header'
-import Footer from './components/ui/Footer'
+import DesignSystemProvider from './components/ui/DesignSystemProvider'
+import { usePreviewGate } from './hooks/usePreviewGate'
+import PreviewGate from './components/PreviewGate'
 
 // …imports pages
 import Home from './pages/Home'
@@ -27,10 +27,15 @@ import PatouAdmin from './pages/PatouAdmin'
 import KonstaTest from './pages/_dev/KonstaTest'
 
 export default function App() {
+  const { mustGate } = usePreviewGate()
+
+  if (mustGate) {
+    return <PreviewGate />
+  }
+
   return (
-    <>
-      <Header />
-      <AppShell>
+    <DesignSystemProvider>
+      <div className="min-h-screen bg-background-page">
         <Routes>
           <Route path="/" element={<Home />} />
           {/* Parent */}
@@ -65,13 +70,7 @@ export default function App() {
           {/* Player */}
           <Route path="/player" element={<Player />} />
         </Routes>
-      </AppShell>
-      <Footer />
-      
-      {/* Bottom nav mobile pour les routes non-child */}
-      <div className="md:hidden fixed bottom-0 inset-x-0 z-40">
-        <Navigation />
       </div>
-    </>
+    </DesignSystemProvider>
   )
 }
