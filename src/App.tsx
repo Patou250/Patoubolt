@@ -24,6 +24,7 @@ import AdminModeration from './pages/AdminModeration'
 import ChildFavorites from './pages/ChildFavorites'
 import ChildPlaylists from './pages/ChildPlaylists'
 import PatouAdmin from './pages/PatouAdmin'
+import ParentSettings from './pages/ParentSettings'
 
 // Import du composant de test pour les routes dev
 import KonstaTest from './pages/_dev/KonstaTest'

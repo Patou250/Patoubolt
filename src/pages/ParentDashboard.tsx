@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { 
   Music, Users, Settings, BarChart3, History, Shield, Clock, Calendar, List, Ban, Share2,
-  Plus, Edit2, LogOut, AlertCircle, Volume2, Play, Pause, SkipForward, SkipBack,
+  Plus, Edit2, LogOut, AlertCircle, Volume2, Play, Pause, SkipForward, SkipBack, X,
   Headphones, UserPlus, Timer, TrendingUp, Activity
 } from 'lucide-react'
 import { getParentSession, clearParentSession } from '../utils/auth'
@@ -19,6 +19,23 @@ interface SpotifyPlayerState {
   duration: number
 }
 
+interface Playlist {
+  id: string
+  name: string
+  description?: string
+  tracks: string[]
+  created_at: string
+}
+
+interface ExcludedTrack {
+  id: string
+  spotify_id: string
+  name: string
+  artist: string
+  excluded_at: string
+  reason?: string
+}
+
 export default function ParentDashboard() {
   useEffect(() => { console.log('🧭 ParentDashboard mounted') }, [])
   const [children, setChildren] = useState<Child[]>([])
@@ -33,6 +50,14 @@ export default function ParentDashboard() {
   })
   const [accessToken, setAccessToken] = useState<string | null>(null)
   const [deviceId, setDeviceId] = useState<string>('')
+  const [showCreatePlaylistModal, setShowCreatePlaylistModal] = useState(false)
+  const [showAssociateChildModal, setShowAssociateChildModal] = useState(false)
+  const [newPlaylistName, setNewPlaylistName] = useState('')
+  const [newPlaylistDescription, setNewPlaylistDescription] = useState('')
+  const [childIdentifier, setChildIdentifier] = useState('')
+  const [playlists, setPlaylists] = useState<Playlist[]>([])
+  const [excludedTracks, setExcludedTracks] = useState<ExcludedTrack[]>([])
+  const [currentTrackForAction, setCurrentTrackForAction] = useState<any>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -93,6 +118,8 @@ export default function ParentDashboard() {
       checkSpotifyConnection()
       loadChildren(session)
       initializeSpotifyPlayer()
+      loadPlaylists()
+      loadExcludedTracks()
     }
   }, [navigate])
 
@@ -218,6 +245,136 @@ export default function ParentDashboard() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const loadPlaylists = () => {
+    // Simuler le chargement des playlists parent depuis localStorage
+    const playlistsRaw = localStorage.getItem('patou_parent_playlists')
+    if (playlistsRaw) {
+      setPlaylists(JSON.parse(playlistsRaw))
+    } else {
+      // Playlists factices pour la démo
+      const mockPlaylists: Playlist[] = [
+        {
+          id: '1',
+          name: 'Playlist Familiale',
+          description: 'Musiques pour toute la famille',
+          tracks: ['track1', 'track2'],
+          created_at: new Date().toISOString()
+        }
+      ]
+      setPlaylists(mockPlaylists)
+    }
+  }
+
+  const loadExcludedTracks = () => {
+    // Simuler le chargement des exclusions depuis localStorage
+    const excludedRaw = localStorage.getItem('patou_excluded_tracks')
+    if (excludedRaw) {
+      setExcludedTracks(JSON.parse(excludedRaw))
+    } else {
+      // Exclusions factices pour la démo
+      const mockExcluded: ExcludedTrack[] = [
+        {
+          id: '1',
+          spotify_id: 'excluded1',
+          name: 'Chanson Exclue',
+          artist: 'Artiste Test',
+          excluded_at: new Date().toISOString(),
+          reason: 'Contenu inapproprié'
+        }
+      ]
+      setExcludedTracks(mockExcluded)
+    }
+  }
+
+  const handleCreatePlaylist = async () => {
+    if (!newPlaylistName.trim()) return
+
+    const newPlaylist: Playlist = {
+      id: Date.now().toString(),
+      name: newPlaylistName.trim(),
+      description: newPlaylistDescription.trim(),
+      tracks: [],
+      created_at: new Date().toISOString()
+    }
+
+    const updatedPlaylists = [...playlists, newPlaylist]
+    setPlaylists(updatedPlaylists)
+    localStorage.setItem('patou_parent_playlists', JSON.stringify(updatedPlaylists))
+
+    // TODO: Sauvegarder en base de données (Supabase)
+    console.log('✅ Nouvelle playlist créée:', newPlaylist)
+
+    // Reset form
+    setNewPlaylistName('')
+    setNewPlaylistDescription('')
+    setShowCreatePlaylistModal(false)
+  }
+
+  const handleAssociateChild = async () => {
+    if (!childIdentifier.trim()) return
+
+    try {
+      // Rechercher l'enfant par identifiant unique
+      const { data: childData, error } = await supabase
+        .from('children')
+        .select('*')
+        .eq('id', childIdentifier.trim())
+        .single()
+
+      if (error || !childData) {
+        alert('Enfant non trouvé avec cet identifiant')
+        return
+      }
+
+      // Vérifier que l'enfant n'est pas déjà associé
+      const isAlreadyAssociated = children.some(child => child.id === childData.id)
+      if (isAlreadyAssociated) {
+        alert('Cet enfant est déjà associé à votre compte')
+        return
+      }
+
+      // Ajouter l'enfant à la liste
+      setChildren([...children, childData])
+      console.log('✅ Enfant associé:', childData.name)
+
+      // Reset form
+      setChildIdentifier('')
+      setShowAssociateChildModal(false)
+    } catch (error) {
+      console.error('❌ Erreur association enfant:', error)
+      alert('Erreur lors de l\'association de l\'enfant')
+    }
+  }
+
+  const handleExcludeTrack = (track: any) => {
+    if (!track) return
+
+    const excludedTrack: ExcludedTrack = {
+      id: Date.now().toString(),
+      spotify_id: track.id,
+      name: track.name,
+      artist: track.artists?.map((a: any) => a.name).join(', ') || 'Artiste inconnu',
+      excluded_at: new Date().toISOString(),
+      reason: 'Exclu par le parent'
+    }
+
+    const updatedExcluded = [...excludedTracks, excludedTrack]
+    setExcludedTracks(updatedExcluded)
+    localStorage.setItem('patou_excluded_tracks', JSON.stringify(updatedExcluded))
+
+    console.log('❌ Titre exclu:', excludedTrack.name)
+    // TODO: Sync avec Supabase et retirer des playlists enfant
+  }
+
+  const handleReintegrateTrack = (excludedTrack: ExcludedTrack) => {
+    const updatedExcluded = excludedTracks.filter(track => track.id !== excludedTrack.id)
+    setExcludedTracks(updatedExcluded)
+    localStorage.setItem('patou_excluded_tracks', JSON.stringify(updatedExcluded))
+
+    console.log('✅ Titre réintégré:', excludedTrack.name)
+    // TODO: Sync avec Supabase et remettre dans les playlists enfant
   }
 
   const handleSpotifyControl = async (action: 'play' | 'pause' | 'next' | 'previous') => {
@@ -406,6 +563,20 @@ export default function ParentDashboard() {
                     <Plus size={16} />
                     Ajouter un enfant
                   </button>
+                  <button
+                    onClick={() => setShowAssociateChildModal(true)}
+                    className="weweb-btn-secondary"
+                  >
+                    <Users size={16} />
+                    Associer un enfant
+                  </button>
+                  <button
+                    onClick={() => setShowCreatePlaylistModal(true)}
+                    className="weweb-btn-secondary"
+                  >
+                    <Plus size={16} />
+                    Créer une playlist
+                  </button>
                 </div>
                 
               <div className="weweb-grid weweb-grid-3">
@@ -435,6 +606,13 @@ export default function ParentDashboard() {
                           title="Modifier"
                         >
                           <Edit2 size={16} />
+                        </button>
+                        <button
+                          onClick={() => navigate('/parent-settings')}
+                          className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                          title="Paramètres"
+                        >
+                          <Settings size={16} />
                         </button>
                       </div>
                     </div>
@@ -658,6 +836,20 @@ export default function ParentDashboard() {
                       <SkipForward className="w-5 h-5 md:w-6 md:h-6" />
                     </button>
                   </div>
+                  
+                  {/* Actions sur la piste courante */}
+                  {playerState.currentTrack && (
+                    <div className="mt-4 flex items-center justify-center gap-3">
+                      <button
+                        onClick={() => handleExcludeTrack(playerState.currentTrack)}
+                        className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-medium transition-colors flex items-center gap-2"
+                        title="Exclure cette chanson"
+                      >
+                        <Ban size={16} />
+                        Exclure
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -736,10 +928,149 @@ export default function ParentDashboard() {
                     </button>
                   </div>
                 </div>
+
+                <div className="bg-white rounded-xl p-4 md:p-6 shadow-md border border-gray-100">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Exclusions</h3>
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    {excludedTracks.length === 0 ? (
+                      <p className="text-sm text-gray-500">Aucune chanson exclue</p>
+                    ) : (
+                      excludedTracks.map(track => (
+                        <div key={track.id} className="flex items-center justify-between p-2 bg-red-50 rounded-lg">
+                          <div className="flex-1">
+                            <div className="font-medium text-sm text-gray-900">{track.name}</div>
+                            <div className="text-xs text-gray-600">{track.artist}</div>
+                          </div>
+                          <button
+                            onClick={() => handleReintegrateTrack(track)}
+                            className="px-2 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded text-xs font-medium transition-colors"
+                            title="Réintégrer cette chanson"
+                          >
+                            Réintégrer
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           )}
         </div>
+
+        {/* Modal Créer une playlist */}
+        {showCreatePlaylistModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl p-6 w-full max-w-md">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Créer une playlist</h3>
+                <button
+                  onClick={() => setShowCreatePlaylistModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nom de la playlist
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ma nouvelle playlist"
+                    value={newPlaylistName}
+                    onChange={(e) => setNewPlaylistName(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
+                    autoFocus
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description (optionnel)
+                  </label>
+                  <textarea
+                    placeholder="Description de la playlist..."
+                    value={newPlaylistDescription}
+                    onChange={(e) => setNewPlaylistDescription(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
+                    rows={3}
+                  />
+                </div>
+                
+                <div className="flex gap-3 pt-4">
+                  <button
+                    onClick={() => setShowCreatePlaylistModal(false)}
+                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={handleCreatePlaylist}
+                    disabled={!newPlaylistName.trim()}
+                    className="flex-1 px-4 py-2 bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+                  >
+                    Créer
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Associer un enfant */}
+        {showAssociateChildModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl p-6 w-full max-w-md">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Associer un enfant</h3>
+                <button
+                  onClick={() => setShowAssociateChildModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Identifiant unique de l'enfant
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="ID-ENFANT-XXXX"
+                    value={childIdentifier}
+                    onChange={(e) => setChildIdentifier(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
+                    autoFocus
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Demandez l'identifiant à l'autre parent ou trouvez-le dans les paramètres de l'enfant
+                  </p>
+                </div>
+                
+                <div className="flex gap-3 pt-4">
+                  <button
+                    onClick={() => setShowAssociateChildModal(false)}
+                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={handleAssociateChild}
+                    disabled={!childIdentifier.trim()}
+                    className="flex-1 px-4 py-2 bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+                  >
+                    Associer
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </AppLayout>
   )
