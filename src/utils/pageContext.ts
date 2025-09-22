@@ -331,6 +331,7 @@ export const usePageContext = () => {
 }
 
 // Initialize page context on route change
+function initializePageContext() {
   const uiGuidelines = formulas['8001aa8b-fd4a-4522-a6bf-67cbb73f5525']();
   const layoutSystem = formulas['bd43d893-9b5f-481a-96b4-537343442a45']();
   
