@@ -24,14 +24,20 @@ export function getSpotifyTokens(): SpotifyTokens | null {
     console.log('📦 Parsed tokens:', {
       hasAccessToken: !!tokens.access_token,
       hasRefreshToken: !!tokens.refresh_token,
-      expiresAt: tokens.expires_at,
-      isExpired: tokens.expires_at < Date.now()
+      expiresAt: tokens.expires_at ? new Date(tokens.expires_at).toISOString() : 'N/A',
+      isExpired: tokens.expires_at ? tokens.expires_at < Date.now() : 'Unknown'
     })
 
     // Check if tokens are expired
-    if (tokens.expires_at < Date.now()) {
-      console.log('⏰ Tokens expired, clearing')
-      clearSpotifyTokens()
+    if (tokens.expires_at && tokens.expires_at < Date.now()) {
+      console.log('⏰ Tokens expired, attempting refresh...')
+      // Try to refresh tokens
+      refreshSpotifyTokens().then(success => {
+        if (!success) {
+          console.log('❌ Token refresh failed, clearing tokens')
+          clearSpotifyTokens()
+        }
+      })
       return null
     }
 
@@ -50,7 +56,7 @@ export function setSpotifyTokens(tokens: Omit<SpotifyTokens, 'expires_at'>): voi
     
     const tokensWithExpiry: SpotifyTokens = {
       ...tokens,
-      expires_at: Date.now() + (tokens.expires_in * 1000)
+      expires_at: Date.now() + (tokens.expires_in * 1000) - 60000 // 1 minute buffer
     }
 
     console.log('🔧 Tokens to save:', {
@@ -69,6 +75,8 @@ export function setSpotifyTokens(tokens: Omit<SpotifyTokens, 'expires_at'>): voi
     if (!verification) {
       throw new Error('localStorage.setItem failed silently')
     }
+    
+    console.log('✅ Spotify tokens saved successfully')
   } catch (error) {
     console.error('❌ Error saving tokens:', error)
     throw error
@@ -80,7 +88,7 @@ export function clearSpotifyTokens(): void {
   localStorage.removeItem(TOKENS_KEY)
 }
 
-function isTokenValid(): boolean {
+export function isTokenValid(): boolean {
   const tokens = getSpotifyTokens()
   const isValid = tokens !== null
   console.log('🎯 Tokens valides?', isValid)
@@ -120,7 +128,6 @@ async function refreshSpotifyTokens(): Promise<boolean> {
 
     if (!response.ok) {
       console.error('❌ Erreur lors du rafraîchissement:', response.status)
-      clearSpotifyTokens()
       return false
     }
 
@@ -137,10 +144,10 @@ async function refreshSpotifyTokens(): Promise<boolean> {
     }
 
     setSpotifyTokens(updatedTokens)
+    console.log('✅ Tokens refreshed successfully')
     return true
   } catch (error) {
     console.error('❌ Erreur rafraîchissement tokens:', error)
-    clearSpotifyTokens()
     return false
   }
 }

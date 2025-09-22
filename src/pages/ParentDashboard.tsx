@@ -1,228 +1,90 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { 
-  Music, Users, Settings, Shield, LogOut, Plus, X
+  Music, Users, Settings, Shield, LogOut, Plus, Calendar, BarChart3
 } from 'lucide-react'
-import PatouCard, { CardPatterns } from '../components/ui/PatouCard'
-import PatouButton, { ButtonPatterns } from '../components/ui/PatouButton'
-import { useAuth } from '../contexts/AuthContext'
-import { getParentSession, clearParentSession } from '../utils/auth'
-import { getSpotifyTokens } from '../utils/spotify-tokens'
 import { supabase } from '../lib/supabase'
+import { getSpotifyTokens } from '../utils/spotify-tokens'
 import type { Child } from '../types/child'
-
-interface Playlist {
-  id: string
-  name: string
-  description?: string
-  tracks: string[]
-  created_at: string
-}
 
 export default function ParentDashboard() {
   const [children, setChildren] = useState<Child[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [spotifyConnected, setSpotifyConnected] = useState(false)
-  const [playlists, setPlaylists] = useState<Playlist[]>([])
+  const [user, setUser] = useState<any>(null)
   const navigate = useNavigate()
-  const { user, signOut } = useAuth()
 
   useEffect(() => {
-    console.log('🔄 ParentDashboard useEffect - checking auth...')
-    
-    // Si on accède via /direct/parent, créer une session factice
-    if (window.location.pathname === '/direct/parent') {
-      console.log('🧪 Direct access mode - creating fake session')
-      const fakeSession = {
-        parent: {
-          id: 'test-parent-id',
-          email: 'test@patou.app',
-          spotify_id: 'test-spotify-id'
-        },
-        timestamp: Date.now()
-      }
-      localStorage.setItem('patou_parent_session', JSON.stringify(fakeSession))
-      checkSpotifyConnection()
-      setIsLoading(false)
-      return
-    }
+    console.log('🔄 ParentDashboard loading...')
+    loadUserData()
+  }, [])
 
-    console.log('🔍 Checking for Spotify tokens...')
-    const tokens = getSpotifyTokens()
-    
-    // Si on a des tokens Spotify, créer une session
-    if (tokens) {
-      console.log('✅ Spotify tokens found, fetching user profile...')
-      fetch('https://api.spotify.com/v1/me', {
-        headers: { 'Authorization': `Bearer ${tokens.access_token}` }
-      })
-      .then(res => res.json())
-      .then(user => {
-        console.log('✅ Spotify user profile loaded:', user.email)
-        const parentSession = {
-          parent: {
-            id: user.id,
-            email: user.email,
-            spotify_id: user.id
-          },
-          timestamp: Date.now()
-        }
-        localStorage.setItem('patou_parent_session', JSON.stringify(parentSession))
-        checkSpotifyConnection()
-        loadChildren(parentSession) 
-      })
-      .catch(() => {
-        console.error('❌ Failed to load Spotify user profile')
-        navigate('/')
-      })
-      return
-    }
-    
-    // Vérifier s'il y a une session parent
-    console.log('🔍 Checking for parent session...')
-    const session = getParentSession()
-    if (!session && !tokens) {
-      console.log('❌ No session or tokens found, redirecting to login')
-      navigate('/login-parent')
-      return
-    }
-
-    if (session) {
-      console.log('✅ Parent session found:', session.parent.email)
-      checkSpotifyConnection()
-      loadChildren(session)
-      loadPlaylists()
-    }
-  }, [navigate])
-
-  const checkSpotifyConnection = () => {
-    const tokens = getSpotifyTokens()
-    setSpotifyConnected(!!tokens)
-  }
-
-  const loadChildren = async (session: any) => {
+  const loadUserData = async () => {
     try {
-      console.log('👶 Loading children for parent...')
-      const { data: { user }, error: userError } = await supabase.auth.getUser()
-      if (userError || !user) {
-        console.log('❌ No authenticated user found')
-        return
-      }
+      // Vérifier l'authentification Supabase
+      const { data: { user }, error } = await supabase.auth.getUser()
       
-      console.log('🔍 Checking for existing profile...')
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', user.id)
-        .single()
-
-      if (profileError) {
-        console.log('📝 Creating new profile...')
-        const { data: newProfile, error: createError } = await supabase
-          .from('profiles')
-          .insert({
-            id: user.id,
-            email: session.parent.email,
-            full_name: session.parent.display_name || session.parent.email
-          })
-          .select('id')
-          .single()
+      if (error || !user) {
+        console.log('❌ No authenticated user, checking session...')
         
-        if (createError) {
-          console.error('❌ Error creating profile:', createError)
+        // Fallback: vérifier session localStorage
+        const sessionRaw = localStorage.getItem('patou_parent_session')
+        if (!sessionRaw) {
+          console.log('❌ No session found, redirecting to login')
+          navigate('/parent/login')
           return
         }
         
-        console.log('📋 Loading children for new profile...')
-        const { data, error } = await supabase
-          .from('children')
-          .select('*')
-          .eq('parent_id', newProfile.id)
-          .order('created_at', { ascending: true })
-
-        if (error) throw error
-        console.log('✅ Children loaded:', data?.length || 0)
-        setChildren(data || [])
+        const session = JSON.parse(sessionRaw)
+        setUser(session.parent)
+        console.log('✅ Using session data:', session.parent.email)
       } else {
-        console.log('📋 Loading children for existing profile...')
-        const { data, error } = await supabase
-          .from('children')
-          .select('*')
-          .eq('parent_id', profile.id)
-          .order('created_at', { ascending: true })
+        setUser(user)
+        console.log('✅ Authenticated user:', user.email)
+      }
 
-        if (error) throw error
-        console.log('✅ Children loaded:', data?.length || 0)
-        setChildren(data || [])
+      // Vérifier connexion Spotify
+      const tokens = getSpotifyTokens()
+      setSpotifyConnected(!!tokens)
+      console.log('🎵 Spotify connected:', !!tokens)
+
+      // Charger les enfants
+      if (user) {
+        await loadChildren(user.id)
       }
     } catch (error) {
-      console.error('Failed to load children:', error)
+      console.error('❌ Error loading user data:', error)
+      navigate('/parent/login')
     } finally {
       setIsLoading(false)
     }
   }
 
-  const loadPlaylists = () => {
-    const playlistsRaw = localStorage.getItem('patou_parent_playlists')
-    if (playlistsRaw) {
-      setPlaylists(JSON.parse(playlistsRaw))
-    } else {
-      const mockPlaylists: Playlist[] = []
-      setPlaylists(mockPlaylists)
-    }
-  }
-
-  const handleCreatePlaylist = async () => {
-    if (!newPlaylistName.trim()) return
-
-    const newPlaylist: Playlist = {
-      id: Date.now().toString(),
-      name: newPlaylistName.trim(),
-      description: newPlaylistDescription.trim(),
-      tracks: [],
-      created_at: new Date().toISOString()
-    }
-
-    const updatedPlaylists = [...playlists, newPlaylist]
-    setPlaylists(updatedPlaylists)
-    localStorage.setItem('patou_parent_playlists', JSON.stringify(updatedPlaylists))
-
-    setNewPlaylistName('')
-    setNewPlaylistDescription('')
-    setShowCreatePlaylistModal(false)
-  }
-
-  const handleAssociateChild = async () => {
-    if (!childIdentifier.trim()) return
-
+  const loadChildren = async (userId: string) => {
     try {
-      const { data: childData, error } = await supabase
+      console.log('👶 Loading children for user:', userId)
+      
+      const { data, error } = await supabase
         .from('children')
         .select('*')
-        .eq('id', childIdentifier.trim())
-        .single()
+        .eq('parent_id', userId)
+        .order('created_at', { ascending: true })
 
-      if (error || !childData) {
-        alert('Enfant non trouvé avec cet identifiant')
+      if (error) {
+        console.error('❌ Error loading children:', error)
         return
       }
 
-      const isAlreadyAssociated = children.some(child => child.id === childData.id)
-      if (isAlreadyAssociated) {
-        alert('Cet enfant est déjà associé à votre compte')
-        return
-      }
-
-      setChildren([...children, childData])
-      setChildIdentifier('')
-      setShowAssociateChildModal(false)
+      console.log('✅ Children loaded:', data?.length || 0)
+      setChildren(data || [])
     } catch (error) {
-      alert('Erreur lors de l\'association de l\'enfant')
+      console.error('❌ Failed to load children:', error)
     }
   }
 
   const connectSpotify = () => {
-    console.log('🔗 Starting Spotify auth via Edge Function...')
+    console.log('🔗 Starting Spotify connection...')
+    
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
     const authUrl = `${supabaseUrl}/functions/v1/spotify-auth?action=login`
     
@@ -234,218 +96,265 @@ export default function ParentDashboard() {
         'Content-Type': 'application/json'
       }
     })
-    .then(res => res.json())
+    .then(res => {
+      console.log('📡 Auth response status:', res.status)
+      return res.json()
+    })
     .then(data => {
-      console.log('✅ Edge Function response:', data)
+      console.log('✅ Auth response:', data)
       if (data.authorize_url) {
         localStorage.setItem('spotify_auth_state', data.state)
-        console.log('🚀 Redirecting to Spotify:', data.authorize_url)
+        console.log('🚀 Redirecting to Spotify auth...')
         window.location.href = data.authorize_url
       } else {
         console.error('❌ No authorize_url in response:', data)
-        alert('Erreur: ' + (data.error || 'Réponse invalide'))
+        alert('Erreur de connexion Spotify: ' + (data.error || 'Réponse invalide'))
       }
     })
     .catch(error => {
-      console.error('❌ Edge Function error:', error)
-      alert('Erreur de connexion: ' + error.message)
+      console.error('❌ Spotify auth error:', error)
+      alert('Erreur de connexion Spotify: ' + error.message)
     })
   }
 
-  const handleSignOut = () => {
-    signOut()
-    navigate('/parent/login')
+  const handleSignOut = async () => {
+    console.log('👋 Parent logout')
+    
+    try {
+      await supabase.auth.signOut()
+      localStorage.removeItem('patou_parent_session')
+      localStorage.removeItem('spotify_tokens')
+      navigate('/parent/login')
+    } catch (error) {
+      console.error('❌ Logout error:', error)
+      // Force logout même en cas d'erreur
+      localStorage.clear()
+      navigate('/parent/login')
+    }
   }
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement du tableau de bord...</p>
+          <div className="animate-spin w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">Chargement du tableau de bord...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-background-page">
-      {/* Header - reproduction exacte WeWeb */}
-      <header className="glass-effect sticky top-0 z-50 border-b border-gray-200/50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-lg border-b border-gray-200/50 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src="/patou-logo.svg" alt="Patou" className="h-8 w-auto transition-transform duration-300 hover:scale-110" />
-              <h1 className="text-2xl font-bold text-gradient-patou">Tableau de bord</h1>
+              <img src="/patou-logo.svg" alt="Patou" className="h-8 w-auto" />
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                Tableau de bord
+              </h1>
             </div>
             
             <div className="flex items-center gap-4">
-              <PatouButton
-                variant="ghost"
+              <div className="text-sm text-gray-600">
+                {user?.email || 'Utilisateur'}
+              </div>
+              <button
                 onClick={handleSignOut}
-                icon={<LogOut className="w-4 h-4" />}
+                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-white/50 rounded-lg transition-all"
               >
+                <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline">Déconnexion</span>
-              </PatouButton>
+              </button>
             </div>
           </div>
         </div>
       </header>
 
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Connexion Spotify - reproduction exacte WeWeb */}
-        <PatouCard variant="bento" className="mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200" animation="slideUp">
+        {/* Connexion Spotify */}
+        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 mb-8 border border-white/20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center animate-bounce-gentle">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
                 <Music className="w-6 h-6 text-green-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">Connecter Spotify</h3>
+                <h3 className="text-lg font-bold text-gray-900">Connexion Spotify</h3>
                 <p className="text-sm text-gray-600">
-                  Accédez à votre bibliothèque musicale et créez des playlists personnalisées pour vos enfants
+                  {spotifyConnected 
+                    ? 'Spotify est connecté - vos enfants peuvent écouter de la musique'
+                    : 'Connectez Spotify pour permettre à vos enfants d\'écouter de la musique'
+                  }
                 </p>
               </div>
             </div>
             {!spotifyConnected ? (
-              <PatouButton
-                variant="primary"
+              <button
                 onClick={connectSpotify}
+                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold px-6 py-3 rounded-xl transition-all transform hover:scale-105 shadow-lg"
               >
-                Connecter
-              </PatouButton>
+                Connecter Spotify
+              </button>
             ) : (
-              <div className="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium animate-pulse">
-                Connecté
+              <div className="px-6 py-3 bg-green-100 text-green-700 rounded-xl font-semibold">
+                ✅ Connecté
               </div>
             )}
           </div>
-        </PatouCard>
+        </div>
 
-        {/* 3 sections principales - reproduction exacte WeWeb */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        {/* Navigation principale */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Enfants */}
-          <CardPatterns.Feature
-            icon={<Users className="w-6 h-6 text-protect" />}
-            title="Enfants"
-            description="Gérez les profils de vos enfants et leurs préférences musicales"
-            action={
-              <PatouButton
-                variant="outline"
-                onClick={() => navigate('/parent/children')}
-                className="w-full"
-              >
-                Voir les profils
-              </PatouButton>
-            }
-          />
+          <Link
+            to="/parent/children"
+            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-white/20 hover:scale-105 transition-all group"
+          >
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <Users className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Enfants</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Gérez les profils de vos enfants
+              </p>
+              <div className="text-2xl font-bold text-blue-600">{children.length}</div>
+            </div>
+          </Link>
 
-          {/* Playlists enfants */}
-          <CardPatterns.Feature
-            icon={<Music className="w-6 h-6 text-share" />}
-            title="Playlists enfants"
-            description="Explorez et gérez les playlists adaptées à vos enfants"
-            action={
-              <PatouButton
-                variant="outline"
-                onClick={() => navigate('/parent/curation')}
-                className="w-full"
-              >
-                Voir les playlists
-              </PatouButton>
-            }
-          />
+          {/* Playlists */}
+          <Link
+            to="/parent/curation"
+            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-white/20 hover:scale-105 transition-all group"
+          >
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <Calendar className="w-8 h-8 text-purple-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Curation</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Playlists hebdomadaires
+              </p>
+              <div className="text-2xl font-bold text-purple-600">3</div>
+            </div>
+          </Link>
 
-          {/* Règles & Filtres */}
-          <CardPatterns.Feature
-            icon={<Shield className="w-6 h-6 text-awaken-dark" />}
-            title="Règles & Filtres"
-            description="Configurez les filtres de contrôle et les règles d'écoute"
-            action={
-              <>
-                <div className="mb-4">
-                  <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-gray-600">Niveau de vigilance</span>
-                    <span className="text-awaken-dark font-medium">80%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-awaken h-2 rounded-full transition-all" style={{ width: '80%' }}></div>
+          {/* Paramètres */}
+          <Link
+            to="/parent/settings"
+            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-white/20 hover:scale-105 transition-all group"
+          >
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <Settings className="w-8 h-8 text-orange-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Paramètres</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Contrôles parentaux
+              </p>
+              <div className="text-2xl font-bold text-orange-600">⚙️</div>
+            </div>
+          </Link>
+
+          {/* Insights */}
+          <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-white/20 hover:scale-105 transition-all group cursor-pointer">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <BarChart3 className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Insights</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Statistiques d'écoute
+              </p>
+              <div className="text-2xl font-bold text-green-600">📊</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section enfants */}
+        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-white/20 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-900">👨‍👩‍👧‍👦 Vos enfants</h2>
+            <Link
+              to="/parent/children"
+              className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Ajouter un enfant
+            </Link>
+          </div>
+
+          {children.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">👶</div>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">Aucun enfant configuré</h3>
+              <p className="text-gray-600 mb-6">
+                Ajoutez le profil de votre premier enfant pour commencer
+              </p>
+              <Link
+                to="/parent/children"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold transition-colors"
+              >
+                <Plus className="w-5 h-5" />
+                Ajouter mon premier enfant
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {children.map(child => (
+                <div key={child.id} className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="text-3xl">{child.emoji}</div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">{child.name}</h3>
+                        <p className="text-sm text-gray-600">
+                          Créé le {new Date(child.created_at).toLocaleDateString('fr-FR')}
+                        </p>
+                      </div>
+                    </div>
+                    <Link
+                      to="/parent/children"
+                      className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors"
+                    >
+                      Gérer
+                    </Link>
                   </div>
                 </div>
-                <PatouButton
-                  variant="outline"
-                  onClick={() => navigate('/parent/settings')}
-                  className="w-full"
-                >
-                  Configurer
-                </PatouButton>
-              </>
-            }
-          />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Stats rapides */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 animate-slide-up" style={{ animationDelay: '0.4s' }}>
-          <CardPatterns.Stats
-            icon={<Users className="w-6 h-6 text-protect" />}
-            label="Enfants"
-            value={children.length}
-            trend="neutral"
-          />
-          <CardPatterns.Stats
-            icon={<Music className="w-6 h-6 text-share" />}
-            label="Playlists"
-            value={playlists.length}
-            trend="up"
-          />
-          <CardPatterns.Stats
-            icon={<Shield className="w-6 h-6 text-awaken-dark" />}
-            label="Pistes vérifiées"
-            value="1,247"
-            trend="up"
-          />
-          <CardPatterns.Stats
-            icon={<Music className="w-6 h-6 text-primary" />}
-            label="Heures d'écoute"
-            value="42h"
-            trend="neutral"
-          />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-white/80 backdrop-blur-lg rounded-xl shadow-lg p-4 text-center border border-white/20">
+            <Users className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-gray-900">{children.length}</div>
+            <div className="text-sm text-gray-600">Enfants</div>
+          </div>
+          
+          <div className="bg-white/80 backdrop-blur-lg rounded-xl shadow-lg p-4 text-center border border-white/20">
+            <Music className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-gray-900">3</div>
+            <div className="text-sm text-gray-600">Playlists</div>
+          </div>
+          
+          <div className="bg-white/80 backdrop-blur-lg rounded-xl shadow-lg p-4 text-center border border-white/20">
+            <Shield className="w-8 h-8 text-green-500 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-gray-900">1,247</div>
+            <div className="text-sm text-gray-600">Pistes vérifiées</div>
+          </div>
+          
+          <div className="bg-white/80 backdrop-blur-lg rounded-xl shadow-lg p-4 text-center border border-white/20">
+            <BarChart3 className="w-8 h-8 text-orange-500 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-gray-900">42h</div>
+            <div className="text-sm text-gray-600">Heures d'écoute</div>
+          </div>
         </div>
-
-        {/* Enfants récents */}
-        {children.length > 0 && (
-          <PatouCard className="mb-8" animation="slideUp" animationDelay="0.6s">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Enfants récents</h2>
-              <PatouButton
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/parent/children')}
-              >
-                Voir tout
-              </PatouButton>
-            </div>
-            <div className="space-y-3">
-              {children.slice(0, 3).map((child) => (
-                <CardPatterns.Child
-                  key={child.id}
-                  emoji={child.emoji}
-                  name={child.name}
-                  stats={`Créé le ${new Date(child.created_at).toLocaleDateString('fr-FR')}`}
-                  actions={
-                    <PatouButton
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => navigate('/parent/children')}
-                    >
-                      Gérer
-                    </PatouButton>
-                  }
-                />
-              ))}
-            </div>
-          </PatouCard>
-        )}
       </div>
     </div>
   )
