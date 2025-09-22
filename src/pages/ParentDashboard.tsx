@@ -204,9 +204,11 @@ export default function ParentDashboard() {
   }
 
   const connectSpotify = () => {
-    // Utiliser l'Edge Function pour l'auth Spotify
+    console.log('🔗 Démarrage auth Spotify via Edge Function...')
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
     const authUrl = `${supabaseUrl}/functions/v1/spotify-auth?action=login`
+    
+    console.log('📡 URL Edge Function:', authUrl)
     
     fetch(authUrl, {
       headers: {
@@ -216,15 +218,19 @@ export default function ParentDashboard() {
     })
     .then(res => res.json())
     .then(data => {
+      console.log('✅ Réponse Edge Function:', data)
       if (data.authorize_url) {
         localStorage.setItem('spotify_auth_state', data.state)
+        console.log('🚀 Redirection vers Spotify:', data.authorize_url)
         window.location.href = data.authorize_url
       } else {
-        console.error('No authorize_url in response:', data)
+        console.error('❌ Pas d\'authorize_url dans la réponse:', data)
+        alert('Erreur: ' + (data.error || 'Réponse invalide'))
       }
     })
     .catch(error => {
-      console.error('Error starting Spotify auth:', error)
+      console.error('❌ Erreur Edge Function:', error)
+      alert('Erreur de connexion: ' + error.message)
     })
   }
 

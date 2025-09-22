@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-admin-token',
 };
@@ -12,6 +12,8 @@ const SPOTIFY_CLIENT_SECRET = Deno.env.get('SPOTIFY_CLIENT_SECRET');
 const SPOTIFY_REDIRECT_URI = Deno.env.get('SPOTIFY_REDIRECT_URI') || 'https://patou.app/parent/callback';
 
 serve(async (req) => {
+  console.log('🔍 Spotify auth request:', req.method, req.url)
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { 
       status: 200, 
@@ -22,7 +24,12 @@ serve(async (req) => {
   try {
     const url = new URL(req.url);
     const action = url.searchParams.get('action') || 'login';
-    const redirectOrigin = url.searchParams.get('redirect_origin');
+    
+    console.log('🎯 Action demandée:', action)
+    
+    if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
+      throw new Error('Spotify credentials not configured')
+    }
 
     // Validate admin token for admin actions
     const adminToken = req.headers.get('x-admin-token');
@@ -40,22 +47,26 @@ serve(async (req) => {
 
     switch (action) {
       case 'login': {
-        // Use fixed redirect URI that matches Spotify app configuration
-        const finalRedirectUri = SPOTIFY_REDIRECT_URI;
+        // Déterminer l'URI de redirection basée sur l'origine
+        const origin = req.headers.get('origin') || 'https://lovable.patou.app'
+        const finalRedirectUri = `${origin}/parent/callback`
+        
+        console.log('🔗 Redirect URI:', finalRedirectUri)
         
         const scopes = [
           'user-read-private',
           'user-read-email',
           'playlist-read-private',
           'playlist-read-collaborative',
-          'playlist-modify-public',
-          'playlist-modify-private',
+          'user-library-read',
           'streaming',
           'user-read-playback-state',
           'user-modify-playback-state'
         ].join(' ');
 
         const state = crypto.randomUUID();
+        
+        console.log('🎲 State généré:', state)
         
         const authUrl = `https://accounts.spotify.com/authorize?` +
           `client_id=${SPOTIFY_CLIENT_ID}&` +
@@ -64,6 +75,8 @@ serve(async (req) => {
           `scope=${encodeURIComponent(scopes)}&` +
           `state=${state}&` +
           `show_dialog=true`;
+        
+        console.log('✅ URL générée:', authUrl)
 
         return new Response(
           JSON.stringify({ 
@@ -81,12 +94,17 @@ serve(async (req) => {
         const body = await req.json();
         const { code, state } = body;
         
+        console.log('🔄 Callback reçu:', { hasCode: !!code, hasState: !!state })
+        
         if (!code) {
           throw new Error('Authorization code is required');
         }
 
-        // Use same fixed redirect URI as in login
-        const finalRedirectUri = SPOTIFY_REDIRECT_URI;
+        // Utiliser la même logique que login pour l'URI
+        const origin = req.headers.get('origin') || 'https://lovable.patou.app'
+        const finalRedirectUri = `${origin}/parent/callback`
+        
+        console.log('🔗 Callback redirect URI:', finalRedirectUri)
 
         // Exchange code for tokens
         const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
@@ -104,10 +122,12 @@ serve(async (req) => {
 
         if (!tokenResponse.ok) {
           const errorText = await tokenResponse.text();
+          console.error('❌ Erreur token exchange:', errorText)
           throw new Error(`Spotify token exchange failed: ${tokenResponse.status} ${errorText}`);
         }
 
         const tokens = await tokenResponse.json();
+        console.log('✅ Tokens reçus')
 
         // Get user profile
         const userResponse = await fetch('https://api.spotify.com/v1/me', {
@@ -121,6 +141,7 @@ serve(async (req) => {
         }
 
         const user = await userResponse.json();
+        console.log('✅ Profil utilisateur récupéré')
 
         return new Response(
           JSON.stringify({

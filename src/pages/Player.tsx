@@ -24,7 +24,7 @@ export default function Player() {
   }, [])
 
   const handleAuth = () => {
-    // Utiliser l'Edge Function pour l'auth Spotify
+    console.log('🔗 Auth Spotify depuis Player...')
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
     const authUrl = `${supabaseUrl}/functions/v1/spotify-auth?action=login`
     
@@ -39,10 +39,14 @@ export default function Player() {
       if (data.authorize_url) {
         localStorage.setItem('spotify_auth_state', data.state)
         window.location.href = data.authorize_url
+      } else {
+        console.error('❌ Erreur auth response:', data)
+        alert('Erreur: ' + (data.error || 'Réponse invalide'))
       }
     })
     .catch(error => {
       console.error('Error starting Spotify auth:', error)
+      alert('Erreur de connexion: ' + error.message)
     })
   }
 
