@@ -143,9 +143,6 @@ export default function ParentLogin({ onSubmit }: ParentLoginProps) {
           </div>
         </div>
       </div>
-    </div>
-  )
-}
       <div className="w-full max-w-md">
         {/* Header avec logo centré */}
         <div className="text-center mb-8">
