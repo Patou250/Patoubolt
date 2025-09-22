@@ -97,17 +97,21 @@ const PlayerSdk = React.forwardRef<any, Props>(({ accessToken, onTrackChange, tr
 
   // -------- Load SDK once
   useEffect(() => {
+    console.log('🎵 PlayerSdk mounting with token:', !!accessToken)
     if (document.getElementById('spotify-sdk')) return
     const script = document.createElement('script')
     script.id = 'spotify-sdk'
     script.src = 'https://sdk.scdn.co/spotify-player.js'
     script.async = true
     document.body.appendChild(script)
+    console.log('📦 Spotify SDK script loaded')
   }, [])
 
   // -------- Init player
   useEffect(() => {
+    console.log('🔧 Initializing Spotify Player...')
     window.onSpotifyWebPlaybackSDKReady = () => {
+      console.log('✅ Spotify SDK ready, creating player instance...')
       const player = new window.Spotify.Player({
         name: 'Patou Player',
         getOAuthToken: cb => cb(accessToken),
@@ -117,26 +121,33 @@ const PlayerSdk = React.forwardRef<any, Props>(({ accessToken, onTrackChange, tr
       playerRef.current = player
 
       player.addListener('ready', async ({ device_id }: { device_id: string }) => {
+        console.log('🎵 Player ready with device ID:', device_id)
         setDeviceId(device_id)
         setIsReady(true)
         setError(null)
         
         // Transfer playback to this device so /play will target it
         try {
+          console.log('🔄 Activating device for playback...')
           await fetch('https://api.spotify.com/v1/me/player', {
             method: 'PUT',
             headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ device_ids: [device_id], play: false })
           })
           console.log('✅ Device activé:', device_id)
-        } catch {}
+        } catch (error) {
+          console.error('❌ Device activation failed:', error)
+        }
         
         // Auto-start avec une piste par défaut
         if (trackId) {
+          console.log('🎵 Auto-starting with provided track:', trackId)
           await startPlayback([`spotify:track:${trackId}`])
         } else if (initialUris?.length) {
+          console.log('🎵 Auto-starting with initial URIs:', initialUris.length)
           await startPlayback(initialUris)
         } else {
+          console.log('🎵 Auto-starting with default track')
           // Démarrer avec une piste Disney kid-friendly par défaut
           await startPlayback(['spotify:track:3n3Ppam7vgaVa1iaRUc9Lp']) // "Hakuna Matata"
         }

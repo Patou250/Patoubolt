@@ -48,6 +48,7 @@ export default function PatouPlayer({ className = '', onTrackChange }: PatouPlay
     if (!currentTrack) return
     
     try {
+      console.log('❤️ Adding to favorites:', currentTrack.name)
       const favsRaw = localStorage.getItem('patou_favorites')
       const favs = favsRaw ? JSON.parse(favsRaw) : {}
       
@@ -67,6 +68,7 @@ export default function PatouPlayer({ className = '', onTrackChange }: PatouPlay
   }
 
   const startDefaultPlayback = async () => {
+    console.log('🎵 Starting default playback...')
     // Démarrer avec une piste kid-friendly par défaut
     await playTrack('spotify:track:3n3Ppam7vgaVa1iaRUc9Lp') // "Hakuna Matata"
   }

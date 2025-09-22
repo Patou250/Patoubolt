@@ -14,9 +14,12 @@ const startApp = async () => {
   
   try {
     // Initialize WeWeb design system
+    console.log('🎨 Initializing design system...')
     await initializeDesignSystem()
+    console.log('✅ Design system initialized')
     
     // Render React app
+    console.log('⚛️ Rendering React application...')
     ReactDOM.createRoot(document.getElementById('root')!).render(
       <React.StrictMode>
         <Router>
@@ -30,6 +33,7 @@ const startApp = async () => {
     console.error('❌ Failed to start application:', error)
     
     // Render app anyway with fallback design system
+    console.log('🔄 Rendering with fallback design system...')
     ReactDOM.createRoot(document.getElementById('root')!).render(
       <React.StrictMode>
         <Router>

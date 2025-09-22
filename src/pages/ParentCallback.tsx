@@ -99,6 +99,17 @@ export default function ParentCallback() {
         localStorage.setItem('spotify_tokens', JSON.stringify(tokenData))
         console.log('💾 Tokens sauvegardés')
 
+        // Create parent session with Spotify data
+        const parentSession = {
+          parent: {
+            id: user.id,
+            email: user.email,
+            spotify_id: user.id
+          },
+          timestamp: Date.now()
+        }
+        localStorage.setItem('patou_parent_session', JSON.stringify(parentSession))
+        
         // Récupérer les infos utilisateur Spotify
         setStatus('Récupération du profil...')
         const userResponse = await fetch('https://api.spotify.com/v1/me', {
@@ -131,7 +142,7 @@ export default function ParentCallback() {
 
         setStatus('Connexion réussie!')
         setTimeout(() => {
-          navigate('/dashboard-parent')
+          navigate('/parent/dashboard')
         }, 1000)
 
       } catch (error) {

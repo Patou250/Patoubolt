@@ -69,12 +69,18 @@ export default function App() {
 
   // Auth handlers
   const handleParentLogin = async (email: string, password: string) => {
+    console.log('🔐 Parent login attempt for:', email)
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) throw error
+    if (error) {
+      console.error('❌ Login error:', error)
+      throw error
+    }
+    console.log('✅ Login successful')
     navigate('/parent/dashboard')
   }
 
   const handleParentSignup = async (data: any) => {
+    console.log('📝 Parent signup attempt for:', data.email)
     const { error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
@@ -88,7 +94,11 @@ export default function App() {
         }
       }
     })
-    if (error) throw error
+    if (error) {
+      console.error('❌ Signup error:', error)
+      throw error
+    }
+    console.log('✅ Signup successful')
     navigate('/parent/login')
   }
 
@@ -181,7 +191,6 @@ export default function App() {
 
             {/* Child login (no layout) */}
             <Route path="/child/login" element={<ChildLogin />} />
-            <Route path="/login-enfant" element={<ChildLogin />} />
             
             {/* Protected child routes with ChildLayout */}
             <Route path="/child" element={

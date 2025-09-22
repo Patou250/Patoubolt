@@ -44,6 +44,7 @@ export default function ChildPlaylists() {
   }, [id])
 
   const loadPlaylists = () => {
+    console.log('📋 Loading playlists...')
     // Simuler le chargement des playlists depuis localStorage ou Supabase
     const mockPlaylists: Playlist[] = [
       {
@@ -66,10 +67,12 @@ export default function ChildPlaylists() {
       }
     ]
     setPlaylists(mockPlaylists)
+    console.log('✅ Playlists loaded:', mockPlaylists.length)
     setLoading(false)
   }
 
   const loadPlaylistDetail = (playlistId: string) => {
+    console.log('📋 Loading playlist detail for:', playlistId)
     // Simuler le chargement du détail d'une playlist
     const mockPlaylist: Playlist = {
       id: playlistId,
@@ -104,12 +107,14 @@ export default function ChildPlaylists() {
 
     setCurrentPlaylist(mockPlaylist)
     setPlaylistTracks(mockTracks)
+    console.log('✅ Playlist detail loaded:', mockTracks.length, 'tracks')
     setLoading(false)
   }
 
   const handleCreatePlaylist = () => {
     if (!newPlaylistName.trim()) return
 
+    console.log('📝 Creating new playlist:', newPlaylistName)
     const newPlaylist: Playlist = {
       id: Date.now().toString(),
       name: newPlaylistName.trim(),
@@ -122,29 +127,29 @@ export default function ChildPlaylists() {
     setShowNewPlaylistModal(false)
 
     // TODO: Sauvegarder en base de données (Supabase)
-    console.log('Nouvelle playlist créée:', newPlaylist)
+    console.log('✅ New playlist created:', newPlaylist.name)
   }
 
   const handlePlayPlaylist = () => {
     if (currentPlaylist) {
-      console.log('Lecture playlist:', currentPlaylist.id)
+      console.log('▶️ Playing playlist:', currentPlaylist.name)
       // TODO: Envoyer au PlayerSdk
     }
   }
 
   const handlePlayTrack = (trackId: string) => {
-    console.log('Lecture piste:', trackId)
+    console.log('▶️ Playing track:', trackId)
     // TODO: Envoyer au PlayerSdk
   }
 
   const handleToggleFavorite = (trackId: string) => {
-    console.log('Toggle favori:', trackId)
+    console.log('❤️ Toggle favorite:', trackId)
     // TODO: Gérer les favoris
   }
 
   const handleShufflePlaylist = () => {
     if (currentPlaylist) {
-      console.log('Lecture aléatoire playlist:', currentPlaylist.id)
+      console.log('🔀 Shuffle playlist:', currentPlaylist.name)
       // TODO: Mélanger et envoyer au PlayerSdk
     }
   }

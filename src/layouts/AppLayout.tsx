@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Users, Settings, BarChart3, Shield, Calendar, Music, Heart, Search } from 'lucide-react'
+import { Home, Users, Settings, BarChart3, Shield, Calendar, Music, Heart, Search, List } from 'lucide-react'
 import { getLayoutGuidelines } from '../utils/interactions'
 
 interface AppLayoutProps {

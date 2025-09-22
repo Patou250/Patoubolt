@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { setParentSession } from '../utils/auth'
 
 export default function ParentSignup() {
   const [firstName, setFirstName] = useState('')
@@ -12,6 +13,7 @@ export default function ParentSignup() {
   const [msg, setMsg] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const signup = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,6 +55,30 @@ export default function ParentSignup() {
 
       if (data.user) {
         setMsg('✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.')
+        
+        // Auto-login after successful signup
+        const { error: loginError } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        })
+        
+        if (!loginError) {
+          // Create parent session
+          const parentSession = {
+            parent: {
+              id: data.user.id,
+              email: data.user.email || email,
+              spotify_id: data.user.id
+            },
+            timestamp: Date.now()
+          }
+          setParentSession(parentSession)
+          
+          // Redirect to dashboard
+          setTimeout(() => {
+            navigate('/parent/dashboard')
+          }, 1500)
+        }
         
         // Reset form
         setFirstName('')

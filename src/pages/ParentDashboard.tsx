@@ -28,8 +28,11 @@ export default function ParentDashboard() {
   const { user, signOut } = useAuth()
 
   useEffect(() => {
+    console.log('🔄 ParentDashboard useEffect - checking auth...')
+    
     // Si on accède via /direct/parent, créer une session factice
     if (window.location.pathname === '/direct/parent') {
+      console.log('🧪 Direct access mode - creating fake session')
       const fakeSession = {
         parent: {
           id: 'test-parent-id',
@@ -44,15 +47,18 @@ export default function ParentDashboard() {
       return
     }
 
+    console.log('🔍 Checking for Spotify tokens...')
     const tokens = getSpotifyTokens()
     
     // Si on a des tokens Spotify, créer une session
     if (tokens) {
+      console.log('✅ Spotify tokens found, fetching user profile...')
       fetch('https://api.spotify.com/v1/me', {
         headers: { 'Authorization': `Bearer ${tokens.access_token}` }
       })
       .then(res => res.json())
       .then(user => {
+        console.log('✅ Spotify user profile loaded:', user.email)
         const parentSession = {
           parent: {
             id: user.id,
@@ -66,19 +72,23 @@ export default function ParentDashboard() {
         loadChildren(parentSession) 
       })
       .catch(() => {
+        console.error('❌ Failed to load Spotify user profile')
         navigate('/')
       })
       return
     }
     
     // Vérifier s'il y a une session parent
+    console.log('🔍 Checking for parent session...')
     const session = getParentSession()
     if (!session && !tokens) {
+      console.log('❌ No session or tokens found, redirecting to login')
       navigate('/login-parent')
       return
     }
 
     if (session) {
+      console.log('✅ Parent session found:', session.parent.email)
       checkSpotifyConnection()
       loadChildren(session)
       loadPlaylists()
@@ -92,11 +102,14 @@ export default function ParentDashboard() {
 
   const loadChildren = async (session: any) => {
     try {
+      console.log('👶 Loading children for parent...')
       const { data: { user }, error: userError } = await supabase.auth.getUser()
       if (userError || !user) {
+        console.log('❌ No authenticated user found')
         return
       }
       
+      console.log('🔍 Checking for existing profile...')
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('id')
@@ -104,6 +117,7 @@ export default function ParentDashboard() {
         .single()
 
       if (profileError) {
+        console.log('📝 Creating new profile...')
         const { data: newProfile, error: createError } = await supabase
           .from('profiles')
           .insert({
@@ -115,9 +129,11 @@ export default function ParentDashboard() {
           .single()
         
         if (createError) {
+          console.error('❌ Error creating profile:', createError)
           return
         }
         
+        console.log('📋 Loading children for new profile...')
         const { data, error } = await supabase
           .from('children')
           .select('*')
@@ -125,8 +141,10 @@ export default function ParentDashboard() {
           .order('created_at', { ascending: true })
 
         if (error) throw error
+        console.log('✅ Children loaded:', data?.length || 0)
         setChildren(data || [])
       } else {
+        console.log('📋 Loading children for existing profile...')
         const { data, error } = await supabase
           .from('children')
           .select('*')
@@ -134,6 +152,7 @@ export default function ParentDashboard() {
           .order('created_at', { ascending: true })
 
         if (error) throw error
+        console.log('✅ Children loaded:', data?.length || 0)
         setChildren(data || [])
       }
     } catch (error) {
@@ -203,11 +222,11 @@ export default function ParentDashboard() {
   }
 
   const connectSpotify = () => {
-    console.log('🔗 Démarrage auth Spotify via Edge Function...')
+    console.log('🔗 Starting Spotify auth via Edge Function...')
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
     const authUrl = `${supabaseUrl}/functions/v1/spotify-auth?action=login`
     
-    console.log('📡 URL Edge Function:', authUrl)
+    console.log('📡 Edge Function URL:', authUrl)
     
     fetch(authUrl, {
       headers: {
@@ -217,18 +236,18 @@ export default function ParentDashboard() {
     })
     .then(res => res.json())
     .then(data => {
-      console.log('✅ Réponse Edge Function:', data)
+      console.log('✅ Edge Function response:', data)
       if (data.authorize_url) {
         localStorage.setItem('spotify_auth_state', data.state)
-        console.log('🚀 Redirection vers Spotify:', data.authorize_url)
+        console.log('🚀 Redirecting to Spotify:', data.authorize_url)
         window.location.href = data.authorize_url
       } else {
-        console.error('❌ Pas d\'authorize_url dans la réponse:', data)
+        console.error('❌ No authorize_url in response:', data)
         alert('Erreur: ' + (data.error || 'Réponse invalide'))
       }
     })
     .catch(error => {
-      console.error('❌ Erreur Edge Function:', error)
+      console.error('❌ Edge Function error:', error)
       alert('Erreur de connexion: ' + error.message)
     })
   }

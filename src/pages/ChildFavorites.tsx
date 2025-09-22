@@ -21,14 +21,17 @@ export default function ChildFavorites() {
 
   const loadFavorites = () => {
     try {
+      console.log('❤️ Loading favorites from localStorage...')
       const favsRaw = localStorage.getItem('patou_favorites')
       if (favsRaw) {
         const favsData = JSON.parse(favsRaw)
         const favsList = Object.values(favsData) as FavoriteTrack[]
         // Trier par date d'ajout (plus récent en premier)
         favsList.sort((a, b) => b.ts - a.ts)
+        console.log('✅ Favorites loaded:', favsList.length)
         setFavorites(favsList)
       } else {
+        console.log('📝 No favorites found, using mock data')
         // Favoris factices pour la démo
         const mockFavorites: FavoriteTrack[] = [
           {
@@ -64,21 +67,24 @@ export default function ChildFavorites() {
   }
 
   const handlePlayTrack = (trackId: string) => {
-    console.log('Playing track:', trackId)
+    console.log('▶️ Playing track from favorites:', trackId)
     // Ici on pourrait envoyer la piste au PlayerSdk
     // Par exemple via un context ou un service global
   }
 
   const handleToggleFavorite = (trackId: string) => {
     try {
+      console.log('❤️ Toggling favorite for track:', trackId)
       const favsRaw = localStorage.getItem('patou_favorites')
       const favs = favsRaw ? JSON.parse(favsRaw) : {}
       
       if (favs[trackId]) {
         // Retirer des favoris
+        console.log('➖ Removing from favorites')
         delete favs[trackId]
       } else {
         // Ajouter aux favoris (ne devrait pas arriver ici mais au cas où)
+        console.log('➕ Adding to favorites')
         const track = favorites.find(f => f.trackId === trackId)
         if (track) {
           favs[trackId] = track
@@ -86,6 +92,7 @@ export default function ChildFavorites() {
       }
       
       localStorage.setItem('patou_favorites', JSON.stringify(favs))
+      console.log('✅ Favorites updated')
       loadFavorites() // Recharger la liste
     } catch (error) {
       console.error('Erreur toggle favori:', error)
@@ -96,7 +103,7 @@ export default function ChildFavorites() {
     if (favorites.length > 0) {
       // Mélanger et jouer tous les favoris
       const shuffled = [...favorites].sort(() => Math.random() - 0.5)
-      console.log('Shuffle play:', shuffled.map(f => f.trackId))
+      console.log('🔀 Shuffle play favorites:', shuffled.length, 'tracks')
       // Ici on pourrait envoyer la playlist mélangée au PlayerSdk
     }
   }

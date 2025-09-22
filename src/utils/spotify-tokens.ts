@@ -13,15 +13,15 @@ const TOKENS_KEY = 'spotify_tokens'
 export function getSpotifyTokens(): SpotifyTokens | null {
   try {
     const stored = localStorage.getItem(TOKENS_KEY)
-    console.log('🔍 Tokens bruts dans localStorage:', stored)
+    console.log('🔍 Checking Spotify tokens in localStorage:', !!stored)
     
     if (!stored) {
-      console.log('❌ Aucun token trouvé')
+      console.log('❌ No Spotify tokens found')
       return null
     }
 
     const tokens = JSON.parse(stored) as SpotifyTokens
-    console.log('📦 Tokens parsés:', {
+    console.log('📦 Parsed tokens:', {
       hasAccessToken: !!tokens.access_token,
       hasRefreshToken: !!tokens.refresh_token,
       expiresAt: tokens.expires_at,
@@ -30,15 +30,15 @@ export function getSpotifyTokens(): SpotifyTokens | null {
 
     // Check if tokens are expired
     if (tokens.expires_at < Date.now()) {
-      console.log('⏰ Tokens expirés')
+      console.log('⏰ Tokens expired, clearing')
       clearSpotifyTokens()
       return null
     }
 
-    console.log('✅ Tokens valides trouvés')
+    console.log('✅ Valid tokens found')
     return tokens
   } catch (error) {
-    console.error('❌ Erreur parsing tokens:', error)
+    console.error('❌ Error parsing tokens:', error)
     clearSpotifyTokens()
     return null
   }
@@ -46,14 +46,14 @@ export function getSpotifyTokens(): SpotifyTokens | null {
 
 export function setSpotifyTokens(tokens: Omit<SpotifyTokens, 'expires_at'>): void {
   try {
-    console.log('💾 Sauvegarde des tokens Spotify...')
+    console.log('💾 Saving Spotify tokens...')
     
     const tokensWithExpiry: SpotifyTokens = {
       ...tokens,
       expires_at: Date.now() + (tokens.expires_in * 1000)
     }
 
-    console.log('🔧 Tokens à sauvegarder:', {
+    console.log('🔧 Tokens to save:', {
       hasAccessToken: !!tokensWithExpiry.access_token,
       hasRefreshToken: !!tokensWithExpiry.refresh_token,
       expiresIn: tokens.expires_in,
@@ -64,19 +64,19 @@ export function setSpotifyTokens(tokens: Omit<SpotifyTokens, 'expires_at'>): voi
     
     // Vérification immédiate
     const verification = localStorage.getItem(TOKENS_KEY)
-    console.log('✅ Vérification sauvegarde:', !!verification)
+    console.log('✅ Save verification:', !!verification)
     
     if (!verification) {
-      throw new Error('localStorage.setItem a échoué silencieusement')
+      throw new Error('localStorage.setItem failed silently')
     }
   } catch (error) {
-    console.error('❌ Erreur sauvegarde tokens:', error)
+    console.error('❌ Error saving tokens:', error)
     throw error
   }
 }
 
 export function clearSpotifyTokens(): void {
-  console.log('🧹 Nettoyage des tokens Spotify')
+  console.log('🧹 Clearing Spotify tokens')
   localStorage.removeItem(TOKENS_KEY)
 }
 

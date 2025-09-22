@@ -40,11 +40,14 @@ export default function SpotifySearch({
     setError(null)
     
     try {
+      console.log('🔍 Starting Spotify search for:', searchQuery)
       const tokens = getSpotifyTokens()
       if (!tokens) {
+        console.error('❌ No Spotify tokens available')
         throw new Error('Connexion Spotify requise')
       }
 
+      console.log('📡 Making Spotify API request...')
       const response = await fetch(
         `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=track&limit=20`,
         {
@@ -54,16 +57,22 @@ export default function SpotifySearch({
         }
       )
 
+      console.log('📡 Spotify API response:', response.status, response.ok)
+      
       if (!response.ok) {
         if (response.status === 401) {
+          console.error('❌ Spotify token expired')
           throw new Error('Token Spotify expiré')
         }
+        console.error('❌ Spotify API error:', response.status)
         throw new Error('Erreur de recherche Spotify')
       }
 
       const data = await response.json()
+      console.log('✅ Search results:', data.tracks?.items?.length || 0, 'tracks')
       setResults(data.tracks.items || [])
     } catch (err) {
+      console.error('❌ Search error:', err)
       setError(err instanceof Error ? err.message : 'Erreur de recherche')
       setResults([])
     } finally {
@@ -83,12 +92,16 @@ export default function SpotifySearch({
   }
 
   const handleTrackAction = (track: Track, action: 'play' | 'playlist' | 'favorite') => {
+    console.log('🎵 Track action:', action, 'for track:', track.name)
+    
     switch (action) {
       case 'play':
         onTrackSelect?.(track)
+        console.log('▶️ Playing track:', track.name)
         break
       case 'playlist':
         onAddToPlaylist?.(track)
+        console.log('📝 Adding to playlist:', track.name)
         break
       case 'favorite':
         onAddToFavorites?.(track)

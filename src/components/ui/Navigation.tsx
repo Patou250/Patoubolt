@@ -8,6 +8,12 @@ export default function Navigation() {
   const isParentSpace = location.pathname.startsWith('/parent') || location.pathname.startsWith('/dashboard')
   const isChildSpace = location.pathname.startsWith('/child')
 
+  console.log('🧭 Navigation context:', { 
+    pathname: location.pathname, 
+    isParentSpace, 
+    isChildSpace 
+  })
+
   const parentNavItems = [
     { path: '/parent/dashboard', icon: Home, label: 'Dashboard' },
     { path: '/parent/children', icon: Users, label: 'Enfants' },
@@ -32,6 +38,8 @@ export default function Navigation() {
           const Icon = item.icon
           const isActive = location.pathname === item.path || 
                           (item.path === '/child' && location.pathname === '/child')
+          
+          console.log('🔗 Nav item:', item.path, 'active:', isActive)
           
           return (
             <Link

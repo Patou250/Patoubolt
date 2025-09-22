@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { setParentSession } from '../utils/auth'
 
 export default function ParentLogin() {
   const [email, setEmail] = useState('')
@@ -26,7 +27,22 @@ export default function ParentLogin() {
       setLoading(false)
       return 
     }
-    navigate('/dashboard-parent')
+    
+    // Create parent session after successful login
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      const parentSession = {
+        parent: {
+          id: user.id,
+          email: user.email || email,
+          spotify_id: user.user_metadata?.spotify_id || user.id
+        },
+        timestamp: Date.now()
+      }
+      setParentSession(parentSession)
+    }
+    
+    navigate('/parent/dashboard')
   }
 
   return (

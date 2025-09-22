@@ -60,7 +60,7 @@ export default function ChildLogin() {
         emoji: data.emoji
       }
       
-      localStorage.setItem('patou_child', JSON.stringify(childSession))
+      localStorage.setItem('patou_child_session', JSON.stringify(childSession))
       navigate('/child')
     } catch (error) {
       console.error('❌ Erreur inattendue:', error)

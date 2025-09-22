@@ -37,7 +37,7 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
       navigate('/parent/login')
     } else if (role === 'child') {
       // Check child session
-      const childSession = localStorage.getItem('patou_child')
+      const childSession = localStorage.getItem('patou_child_session') || localStorage.getItem('patou_child')
       if (childSession) {
         setIsAuthenticated(true)
         return

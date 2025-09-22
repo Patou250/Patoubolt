@@ -53,9 +53,10 @@ function setParentSession(session: ParentSession): void {
   }
 }
 
+export { setParentSession }
 export function getParentSession(): ParentSession | null {
   try {
-    const stored = localStorage.getItem('patou_parent_session')
+    const stored = localStorage.getItem(PARENT_SESSION_KEY)
     if (!stored) return null
     
     const session = JSON.parse(stored)
@@ -74,7 +75,7 @@ export function getParentSession(): ParentSession | null {
 }
 
 export function clearParentSession(): void {
-  localStorage.removeItem('patou_parent_session')
+  localStorage.removeItem(PARENT_SESSION_KEY)
   // Les tokens Spotify restent pour les enfants
   console.log('Parent session cleared, Spotify tokens preserved')
 }

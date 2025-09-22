@@ -28,6 +28,7 @@ export default function ParentChildren() {
 
   const loadData = async () => {
     try {
+      console.log('👶 Loading children data...')
       const { data: { user } } = await supabase.auth.getUser()
       const uid = user?.id || ''
       setUserId(uid)
@@ -37,7 +38,7 @@ export default function ParentChildren() {
         return
       }
 
-      console.log('🔍 Loading children for user:', uid)
+      console.log('🔍 Loading children for user ID:', uid)
       
       // Try to load children using the existing schema
       const { data: rows, error } = await supabase
@@ -100,6 +101,7 @@ export default function ParentChildren() {
       // Simple hash for PIN (in production, use proper hashing)
       const pinHash = btoa(pin)
 
+      console.log('📝 Inserting child into database...')
       const { data, error } = await supabase
         .from('children')
         .insert({
@@ -146,6 +148,7 @@ export default function ParentChildren() {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cet enfant ?')) return
 
     try {
+      console.log('🗑️ Deleting child:', id)
       const { error } = await supabase
         .from('children')
         .delete()
@@ -157,6 +160,7 @@ export default function ParentChildren() {
         return
       }
 
+      console.log('✅ Child deleted successfully')
       setList(list.filter(x => x.id !== id))
       setMsg('Enfant supprimé')
     } catch (error) {

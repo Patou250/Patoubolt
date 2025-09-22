@@ -57,9 +57,12 @@ export default function Child() {
       localStorage.setItem('patou_child', JSON.stringify(fakeChild))
     } else {
       // Récupérer les données enfant depuis localStorage
-      const childData = localStorage.getItem('patou_child')
+      const childData = localStorage.getItem('patou_child_session') || localStorage.getItem('patou_child')
       if (childData) {
         setChild(JSON.parse(childData))
+      } else {
+        // Redirect to login if no session
+        navigate('/child/login')
       }
     }
 

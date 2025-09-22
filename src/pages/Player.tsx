@@ -12,19 +12,22 @@ export default function Player() {
   const trackId = params.get('trackId') || undefined
 
   useEffect(() => {
+    console.log('🔄 Player page loading, checking tokens...')
     // Check for tokens in localStorage first
     const tokens = getSpotifyTokens()
     if (tokens) {
+      console.log('✅ Spotify tokens found')
       setToken(tokens.access_token)
       setIsLoading(false)
     } else {
+      console.log('❌ No Spotify tokens found')
       setErr('Authentification Spotify requise')
       setIsLoading(false)
     }
   }, [])
 
   const handleAuth = () => {
-    console.log('🔗 Auth Spotify depuis Player...')
+    console.log('🔗 Starting Spotify auth from Player...')
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
     const authUrl = `${supabaseUrl}/functions/v1/spotify-auth?action=login`
     

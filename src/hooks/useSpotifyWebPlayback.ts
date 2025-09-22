@@ -87,15 +87,19 @@ export function useSpotifyWebPlayback() {
 
   // Initialize player
   useEffect(() => {
+    console.log('🎵 Initializing Spotify Web Playback SDK...')
     const tokens = getSpotifyTokens()
     if (!tokens) {
+      console.error('❌ No Spotify tokens available for playback')
       setError('Connexion Spotify requise')
       return
     }
 
+    console.log('✅ Spotify tokens found, setting up player...')
     accessTokenRef.current = tokens.access_token
 
     window.onSpotifyWebPlaybackSDKReady = () => {
+      console.log('🎵 Spotify SDK ready, creating player...')
       const spotifyPlayer = new window.Spotify.Player({
         name: 'Patou Player',
         getOAuthToken: (cb) => cb(accessTokenRef.current),
@@ -113,6 +117,7 @@ export function useSpotifyWebPlayback() {
         
         // Transfer playback to this device
         try {
+          console.log('🔄 Transferring playback to device...')
           await fetch('https://api.spotify.com/v1/me/player', {
             method: 'PUT',
             headers: { 
@@ -216,11 +221,13 @@ export function useSpotifyWebPlayback() {
   // Player control methods
   const playTrack = useCallback(async (spotifyUri: string) => {
     if (!deviceId || !accessTokenRef.current) {
+      console.error('❌ Player not ready - deviceId:', !!deviceId, 'token:', !!accessTokenRef.current)
       setError('Lecteur non prêt')
       return
     }
 
     try {
+      console.log('🎵 Playing track:', spotifyUri)
       const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
         headers: {
@@ -233,6 +240,8 @@ export function useSpotifyWebPlayback() {
       })
 
       if (!response.ok) {
+        const errorText = await response.text()
+        console.error('❌ Spotify Play API error:', response.status, errorText)
         throw new Error(`Erreur lecture: ${response.status}`)
       }
 
