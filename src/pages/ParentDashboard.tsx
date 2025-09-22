@@ -10,6 +10,7 @@ import { getSpotifyTokens } from '../utils/spotify-tokens'
 import { supabase } from '../lib/supabase'
 import type { Child } from '../types/child'
 import styles from './ParentDashboard.module.css'
+import AppLayout from '../layouts/AppLayout'
 
 interface SpotifyPlayerState {
   isPlaying: boolean
@@ -314,40 +315,34 @@ export default function ParentDashboard() {
   }
 
   return (
-    <div className={styles.dashboard}>
+    <AppLayout userType="parent">
+      <div className="space-y-8">
 
-      {/* Navigation Tabs */}
-      <nav className={styles.tabs}>
-        {tabs.map(tab => {
-          const Icon = tab.icon
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`${styles.tab} ${activeTab === tab.id ? styles.active : ''}`}
-            >
-              <Icon size={16} />
-              {tab.label}
-            </button>
-          )
-        })}
-      </nav>
+        {/* Header avec titre et actions */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-text-primary">Dashboard Parent</h1>
+            <p className="text-text-secondary mt-1">Gérez l'expérience musicale de vos enfants</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+              spotifyConnected 
+                ? 'bg-green-100 text-green-700' 
+                : 'bg-red-100 text-red-700'
+            }`}>
+              {spotifyConnected ? 'Spotify connecté' : 'Spotify déconnecté'}
+            </div>
+          </div>
+        </div>
 
-      {/* Content */}
-      <main className="flex-1 w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
-        <div className={styles.tabContent}>
+        <div className="space-y-8">
           {activeTab === 'overview' && (
             <div>
-              <div className={styles.tabHeader}>
-                <h2>Vue d'ensemble</h2>
-              </div>
-
               {/* Fonctionnalités Parent */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
+              <div className="weweb-grid weweb-grid-3 mb-8">
                 <button
                   onClick={() => navigate('/parent/rules')}
-                  className="bg-white rounded-xl shadow-md p-4 md:p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100 group"
+                  className="patou-card-feature text-left group"
                 >
                   <Shield className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
                   <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Règles</h3>
@@ -356,7 +351,7 @@ export default function ParentDashboard() {
                 
                 <button
                   onClick={() => navigate('/parent/curation')}
-                  className="bg-white rounded-xl shadow-md p-4 md:p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100 group"
+                  className="patou-card-feature text-left group"
                 >
                   <Calendar className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
                   <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Curation</h3>
@@ -365,7 +360,7 @@ export default function ParentDashboard() {
                 
                 <button
                   onClick={() => navigate('/parent/insights')}
-                  className="bg-white rounded-xl shadow-md p-4 md:p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100 group"
+                  className="patou-card-feature text-left group"
                 >
                   <BarChart3 className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
                   <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Insights</h3>
@@ -374,7 +369,7 @@ export default function ParentDashboard() {
                 
                 <button
                   onClick={() => navigate('/parent/history')}
-                  className="bg-white rounded-xl shadow-md p-4 md:p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100 group"
+                  className="patou-card-feature text-left group"
                 >
                   <History className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
                   <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Historique</h3>
@@ -383,7 +378,7 @@ export default function ParentDashboard() {
                 
                 <button
                   onClick={() => navigate('/parent/exclusions')}
-                  className="bg-white rounded-xl shadow-md p-4 md:p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100 group"
+                  className="patou-card-feature text-left group"
                 >
                   <Ban className="w-6 h-6 md:w-8 md:h-8 mb-3 text-red-500 group-hover:scale-110 transition-transform" />
                   <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Exclusions</h3>
@@ -392,7 +387,7 @@ export default function ParentDashboard() {
                 
                 <button
                   onClick={() => navigate('/parent/shared-playlists')}
-                  className="bg-white rounded-xl shadow-md p-4 md:p-6 text-left transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-100 group"
+                  className="patou-card-feature text-left group"
                 >
                   <Share2 className="w-6 h-6 md:w-8 md:h-8 mb-3 text-share group-hover:scale-110 transition-transform" />
                   <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Playlists communes</h3>
@@ -406,16 +401,16 @@ export default function ParentDashboard() {
                   <h3 className="text-lg md:text-xl font-bold text-gray-900">Enfants configurés</h3>
                   <button
                     onClick={() => navigate('/parent/children')}
-                    className={styles.primaryButton}
+                    className="weweb-btn-primary"
                   >
                     <Plus size={16} />
                     Ajouter un enfant
                   </button>
                 </div>
                 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+              <div className="weweb-grid weweb-grid-3">
                 {children.map(child => (
-                  <div key={child.id} className="bg-white rounded-xl p-4 md:p-6 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 border border-gray-100">
+                  <div key={child.id} className="patou-card">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="text-2xl md:text-3xl">{child.emoji}</div>
@@ -453,7 +448,7 @@ export default function ParentDashboard() {
                     <p className="text-sm md:text-base text-gray-600 mb-6">Commencez par créer le profil de votre premier enfant</p>
                     <button
                       onClick={() => navigate('/parent/children')}
-                      className={styles.primaryButton}
+                       className="weweb-btn-primary"
                     >
                       <Plus size={16} />
                       Créer un profil enfant
@@ -464,7 +459,7 @@ export default function ParentDashboard() {
               </div>
               
               {/* Status Spotify */}
-              <div className="mt-8 bg-white rounded-xl p-4 md:p-6 shadow-md border border-gray-100">
+              <div className="mt-8 patou-card">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Music className="w-6 h-6 text-primary" />
@@ -487,7 +482,7 @@ export default function ParentDashboard() {
                   <div className="mt-4">
                     <button
                       onClick={connectSpotify}
-                      className="px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                       className="weweb-btn-primary"
                     >
                       <Music size={16} />
                       Connecter Spotify
@@ -745,9 +740,7 @@ export default function ParentDashboard() {
             </div>
           )}
         </div>
-        </div>
-      </main>
-      
-    </div>
+      </div>
+    </AppLayout>
   )
 }

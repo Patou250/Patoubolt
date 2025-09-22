@@ -6,26 +6,42 @@ interface PublicLayoutProps {
 
 export default function PublicLayout({ children }: PublicLayoutProps) {
   return (
-    <div className="min-h-screen bg-bgPage text-textMain">
-      {/* Header sticky */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-gray-200">
-        <div className="mx-auto max-w-6xl px-4 md:px-8 h-16 flex items-center justify-between">
+    <div className="min-h-screen bg-background-page text-text-primary">
+      {/* Header WeWeb Pattern - Fixed */}
+      <header className="weweb-header-public">
+        <div className="weweb-container">
           {/* Logo gauche */}
           <Link to="/" className="flex items-center">
             <img src="/patou-logo.svg" alt="Patou" className="h-8" />
           </Link>
 
+          {/* Navigation desktop */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Link
+              to="/parent/login"
+              className="text-text-secondary hover:text-text-primary transition-colors duration-300"
+            >
+              Espace parent
+            </Link>
+            <Link
+              to="/child/login"
+              className="text-text-secondary hover:text-text-primary transition-colors duration-300"
+            >
+              Espace enfant
+            </Link>
+          </nav>
+
           {/* Boutons droite */}
           <div className="flex items-center gap-3">
             <Link
               to="/parent/login"
-              className="px-4 py-2 border border-protect text-protect rounded-lg font-medium hover:bg-protect/5 transition-colors"
+              className="weweb-btn-secondary hidden sm:inline-flex"
             >
               Se connecter
             </Link>
             <Link
               to="/parent/signup"
-              className="px-4 py-2 bg-primary text-white rounded-lg font-medium hover:brightness-95 transition-all"
+              className="weweb-btn-primary"
             >
               Créer un compte
             </Link>
@@ -33,17 +49,32 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
         </div>
       </header>
 
-      {/* Main content */}
-      <main className="mx-auto max-w-6xl px-4 md:px-8">
-        {children}
+      {/* Main content avec margin-top pour header fixe */}
+      <main className="weweb-content-public">
+        <div className="weweb-container">
+          {children}
+        </div>
       </main>
 
-      {/* Footer simple */}
-      <footer className="mt-auto py-8 border-t border-gray-200 bg-white/50">
-        <div className="mx-auto max-w-6xl px-4 md:px-8 text-center">
-          <p className="text-sm text-textMuted">
-            © 2025 Patou — Protéger • Partager • Éveiller
-          </p>
+      {/* Footer WeWeb Pattern */}
+      <footer className="weweb-footer-public">
+        <div className="weweb-container">
+          <div className="text-center">
+            <p className="text-sm text-text-secondary">
+              © 2025 Patou — Protéger • Partager • Éveiller
+            </p>
+            <div className="flex justify-center gap-6 mt-4 text-sm">
+              <Link to="/privacy" className="text-text-secondary hover:text-primary transition-colors">
+                Confidentialité
+              </Link>
+              <Link to="/terms" className="text-text-secondary hover:text-primary transition-colors">
+                CGU
+              </Link>
+              <Link to="/contact" className="text-text-secondary hover:text-primary transition-colors">
+                Contact
+              </Link>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

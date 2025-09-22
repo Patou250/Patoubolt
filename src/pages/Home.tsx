@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { ShieldCheck, Users, SunMedium } from 'lucide-react'
+import PublicLayout from '../layouts/PublicLayout'
 
 export default function Home() {
   return (
-    <div className="py-10 md:py-16">
+    <PublicLayout>
       {/* HERO */}
       <section className="text-center">
         <img src="/patou-logo.svg" alt="Patou" className="mx-auto h-20 md:h-24" />
@@ -17,13 +18,13 @@ export default function Home() {
         <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             to="/parent/signup"
-            className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-white font-semibold hover:brightness-95"
+            className="weweb-btn-primary"
           >
             Créer un compte gratuit
           </Link>
           <Link
             to="/child"
-            className="inline-flex items-center justify-center rounded-lg bg-protect px-6 py-3 text-white font-semibold hover:brightness-95"
+            className="weweb-btn-secondary"
           >
             Espace enfant
           </Link>
@@ -32,7 +33,7 @@ export default function Home() {
 
       {/* FEATURES */}
       <section className="mt-12 md:mt-16">
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="weweb-grid weweb-grid-3">
           <div className="patou-card-feature patou-animate-slide-up">
             <Feature color="protect" Icon={ShieldCheck} title="Protéger"
               text="Filtres d'âge, outils parent, contenus vérifiés — sérénité totale." />
@@ -57,17 +58,17 @@ export default function Home() {
               <p className="mt-2 text-white/90">Créez votre compte parent et ajoutez vos enfants en 2 minutes.</p>
             </div>
             <div className="flex gap-3">
-              <Link to="/parent/signup" className="rounded-lg bg-white px-5 py-3 font-semibold text-primary hover:bg-white/90">
+              <Link to="/parent/signup" className="rounded-lg bg-white px-5 py-3 font-semibold text-primary hover:bg-white/90 transition-all duration-300">
                 Créer mon compte
               </Link>
-              <Link to="/parent/login" className="rounded-lg bg-white/10 px-5 py-3 font-semibold text-white hover:bg-white/20">
+              <Link to="/parent/login" className="rounded-lg bg-white/10 px-5 py-3 font-semibold text-white hover:bg-white/20 transition-all duration-300">
                 J'ai déjà un compte
               </Link>
             </div>
           </div>
         </div>
       </section>
-    </div>
+    </PublicLayout>
   )
 }
 
