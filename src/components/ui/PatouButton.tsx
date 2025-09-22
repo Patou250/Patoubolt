@@ -1,4 +1,5 @@
 import React from 'react'
+import { generateInteractionStyles, ButtonVariant } from '../../utils/interactions'
 
 interface PatouButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
@@ -16,6 +17,7 @@ export default function PatouButton({
   className = '',
   ...props 
 }: PatouButtonProps) {
+  const interactionStyles = generateInteractionStyles('button', variant as ButtonVariant)
   const baseClasses = 'btn'
   const variantClasses = {
     primary: 'btn--primary',
@@ -34,6 +36,7 @@ export default function PatouButton({
   return (
     <button 
       className={classes}
+      style={interactionStyles}
       disabled={disabled || loading}
       {...props}
     >

@@ -1,4 +1,5 @@
 import React from 'react'
+import { generateInteractionStyles } from '../../utils/interactions'
 
 interface PatouCardProps {
   children: React.ReactNode
@@ -13,6 +14,7 @@ export default function PatouCard({
   className = '', 
   onClick 
 }: PatouCardProps) {
+  const interactionStyles = generateInteractionStyles('card')
   const baseClasses = 'patou-card'
   const variantClasses = {
     default: '',
@@ -26,6 +28,7 @@ export default function PatouCard({
     return (
       <div 
         className={`${classes} cursor-pointer`} 
+        style={interactionStyles}
         onClick={onClick}
         role="button"
         tabIndex={0}
@@ -42,7 +45,7 @@ export default function PatouCard({
   }
   
   return (
-    <div className={classes}>
+    <div className={classes} style={interactionStyles}>
       {children}
     </div>
   )

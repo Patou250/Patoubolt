@@ -218,7 +218,7 @@ body {
 .btn--primary:hover {
   filter: brightness(0.95);
   transform: translateY(-2px) scale(1.01);
-  transition: all var(--animation-duration-fast) var(--animation-easing-default);
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
   background: #236029;
 }
 
@@ -235,7 +235,7 @@ body {
 
 .btn--secondary:hover {
   transform: translateY(-1px);
-  transition: all var(--animation-duration-fast) var(--animation-easing-default);
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
   background: #0369a1;
 }
 
@@ -314,7 +314,7 @@ body {
 
 .patou-icon:hover {
   transform: scale(1.05);
-  transition: transform var(--animation-duration-fast) var(--animation-easing-default);
+  transition: color 0.3s ease;
 }
 
 /* WeWeb Animation Patterns */
@@ -367,8 +367,8 @@ body {
 
 .patou-card:hover {
   transform: translateY(-4px) scale(1.01);
-  box-shadow: var(--patou-shadow-elevated);
-  transition: all var(--animation-duration-fast) var(--animation-easing-default);
+  box-shadow: 0 8px 24px rgba(52, 211, 153, 0.12);
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .patou-card-feature {
@@ -382,8 +382,8 @@ body {
 
 .patou-card-feature:hover {
   transform: translateY(-4px) scale(1.01);
-  box-shadow: var(--patou-shadow-elevated);
-  transition: all var(--animation-duration-fast) var(--animation-easing-default);
+  box-shadow: 0 8px 24px rgba(52, 211, 153, 0.12);
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Container principal */
