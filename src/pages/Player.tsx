@@ -24,32 +24,26 @@ export default function Player() {
   }, [])
 
   const handleAuth = () => {
-    // Direct Spotify OAuth flow
-    const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID
-    const redirectUri = `${window.location.origin}/parent/callback`
+    // Utiliser l'Edge Function pour l'auth Spotify
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+    const authUrl = `${supabaseUrl}/functions/v1/spotify-auth?action=login`
     
-    const scopes = [
-      'user-read-private',
-      'user-read-email',
-      'playlist-read-private',
-      'playlist-read-collaborative',
-      'streaming',
-      'user-read-playback-state',
-      'user-modify-playback-state'
-    ].join(' ')
-
-    const state = Math.random().toString(36).substring(7)
-    localStorage.setItem('spotify_auth_state', state)
-
-    const authUrl = `https://accounts.spotify.com/authorize?` +
-      `client_id=${clientId}&` +
-      `response_type=code&` +
-      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
-      `scope=${encodeURIComponent(scopes)}&` +
-      `show_dialog=true&` +
-      `state=${state}`
-
-    window.location.href = authUrl
+    fetch(authUrl, {
+      headers: {
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.authorize_url) {
+        localStorage.setItem('spotify_auth_state', data.state)
+        window.location.href = data.authorize_url
+      }
+    })
+    .catch(error => {
+      console.error('Error starting Spotify auth:', error)
+    })
   }
 
   if (isLoading) {

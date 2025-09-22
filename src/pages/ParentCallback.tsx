@@ -52,26 +52,19 @@ export default function ParentCallback() {
         setStatus('Échange des tokens...')
         console.log('🔄 Échange du code pour les tokens')
 
-        // Variables d'environnement
-        const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID
-        const clientSecret = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET
-        const redirectUri = import.meta.env.VITE_REDIRECT_URI || `${window.location.origin}/parent/callback`
-
-        if (!clientId || !clientSecret) {
-          throw new Error('Configuration Spotify manquante')
-        }
-
-        // Échange du code pour les tokens directement avec l'API Spotify
-        const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
+        // Utiliser l'Edge Function pour l'échange de tokens
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+        const callbackUrl = `${supabaseUrl}/functions/v1/spotify-auth?action=callback`
+        
+        const tokenResponse = await fetch(callbackUrl, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json'
           },
-          body: new URLSearchParams({
-            grant_type: 'authorization_code',
+          body: JSON.stringify({
             code: code,
-            redirect_uri: redirectUri
+            state: state
           })
         })
 
