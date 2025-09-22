@@ -1,9 +1,9 @@
+/* Import Nunito font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import Nunito font from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap');
 
 /* TipTap-style base layer with Patou palette */
 @layer base {
