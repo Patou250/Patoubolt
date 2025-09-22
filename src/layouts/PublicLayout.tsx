@@ -1,106 +1,47 @@
-import { Link } from 'react-router-dom'
-import { getLayoutGuidelines } from '../utils/interactions'
+import { useNavigate } from 'react-router-dom'
+import HeaderPublic from '../components/ui/HeaderPublic'
 
 interface PublicLayoutProps {
   children: React.ReactNode
 }
 
 export default function PublicLayout({ children }: PublicLayoutProps) {
-  const layoutGuidelines = getLayoutGuidelines('public', 'desktop')
+  const navigate = useNavigate()
+  
+  const handleLogin = () => navigate('/parent/login')
+  const handleSignup = () => navigate('/parent/signup')
+  const handleChildSpace = () => navigate('/child/login')
+  const handleParentSpace = () => navigate('/parent/login')
   
   return (
-    <div className="min-h-screen bg-background-page text-text-primary" data-layout="public">
-      {/* Header WeWeb Pattern - Fixed */}
-      <header 
-        className="weweb-header-public"
-        data-component="header"
-        style={{
-          height: layoutGuidelines.header?.height,
-          padding: layoutGuidelines.header?.padding,
-          position: layoutGuidelines.header?.position as any,
-          backgroundColor: layoutGuidelines.header?.backgroundColor,
-          borderBottom: layoutGuidelines.header?.borderBottom,
-          boxShadow: layoutGuidelines.header?.boxShadow,
-          backdropFilter: layoutGuidelines.header?.backdropFilter
-        }}
-      >
-        <div className="weweb-container">
-          {/* Logo gauche */}
-          <Link to="/" className="flex items-center">
-            <img src="/patou-logo.svg" alt="Patou" className="h-8" />
-          </Link>
-
-          {/* Navigation desktop */}
-          <nav className="hidden md:flex items-center gap-6">
-            <Link
-              to="/dashboard-parent"
-              className="text-text-secondary hover:text-text-primary transition-colors duration-300"
-            >
-              Espace parent
-            </Link>
-            <Link
-              to="/login-enfant"
-              className="text-text-secondary hover:text-text-primary transition-colors duration-300"
-            >
-              Espace enfant
-            </Link>
-          </nav>
-
-          {/* Boutons droite */}
-          <div className="flex items-center gap-3">
-            <Link
-              to="/login-parent"
-              className="weweb-btn-secondary hidden sm:inline-flex"
-            >
-              Se connecter
-            </Link>
-            <Link
-              to="/signup-parent"
-              className="weweb-btn-primary"
-            >
-              Créer un compte
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Main content avec margin-top pour header fixe */}
-      <main 
-        className="weweb-content-public"
-        style={{
-          marginTop: layoutGuidelines.header?.height,
-          padding: `${layoutGuidelines.content?.padding?.split(' ')[0] || '48px'} 0`
-        }}
-      >
-        <div className="weweb-container">
-          {children}
-        </div>
+    <div className="min-h-screen bg-gray-50" data-layout="public">
+      <HeaderPublic 
+        onLogin={handleLogin}
+        onSignup={handleSignup}
+        onChildSpace={handleChildSpace}
+        onParentSpace={handleParentSpace}
+      />
+      
+      <main>
+        {children}
       </main>
 
-      {/* Footer WeWeb Pattern */}
-      <footer 
-        className="weweb-footer-public"
-        style={{
-          padding: layoutGuidelines.footer?.padding,
-          borderTop: layoutGuidelines.footer?.borderTop
-        }}
-      >
-        <div className="weweb-container">
-          <div className="text-center">
-            <p className="text-sm text-text-secondary">
-              © 2025 Patou — Protéger • Partager • Éveiller
-            </p>
-            <div className="flex justify-center gap-6 mt-4 text-sm">
-              <Link to="/privacy" className="text-text-secondary hover:text-primary transition-colors">
-                Confidentialité
-              </Link>
-              <Link to="/terms" className="text-text-secondary hover:text-primary transition-colors">
-                CGU
-              </Link>
-              <Link to="/contact" className="text-text-secondary hover:text-primary transition-colors">
-                Contact
-              </Link>
-            </div>
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-200 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-sm text-gray-500">
+            © 2025 Patou — Protéger • Partager • Éveiller
+          </p>
+          <div className="flex justify-center gap-6 mt-4 text-sm">
+            <a href="/privacy" className="text-gray-500 hover:text-green-600 transition-colors">
+              Confidentialité
+            </a>
+            <a href="/terms" className="text-gray-500 hover:text-green-600 transition-colors">
+              CGU
+            </a>
+            <a href="/contact" className="text-gray-500 hover:text-green-600 transition-colors">
+              Contact
+            </a>
           </div>
         </div>
       </footer>

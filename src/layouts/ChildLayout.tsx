@@ -1,9 +1,12 @@
-import React from 'react'
-import { useLocation, Outlet } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { App, Page, Tabbar, TabbarLink } from 'konsta/react'
 import { Music, Heart, List, Search } from 'lucide-react'
 
-export default function ChildLayout() {
+interface ChildLayoutProps {
+  children: React.ReactNode
+}
+
+export default function ChildLayout({ children }: ChildLayoutProps) {
   const location = useLocation()
   
   const tabs = [
@@ -49,7 +52,7 @@ export default function ChildLayout() {
         <div className="flex justify-center min-h-screen">
           {/* Main content wrapper */}
           <div className="w-full max-w-[420px] md:max-w-[480px] min-h-screen pb-16 md:pb-0">
-            <Outlet />
+            {children}
           </div>
         </div>
         
