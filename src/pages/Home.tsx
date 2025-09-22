@@ -3,6 +3,7 @@ import { ShieldCheck, Users, SunMedium } from 'lucide-react'
 import PublicLayout from '../layouts/PublicLayout'
 import { GridPatterns } from '../components/ui/ResponsiveGrid'
 import LazyImage from '../components/ui/LazyImage'
+import PatouCard from '../components/ui/PatouCard'
 
 export default function Home() {
   return (
@@ -42,18 +43,18 @@ export default function Home() {
       {/* FEATURES */}
       <section className="mt-12 md:mt-16">
         <GridPatterns.Features>
-          <div className="patou-card-feature patou-animate-slide-up">
+          <PatouCard variant="feature" animation="slideUp" animationDelay="0ms">
             <Feature color="protect" Icon={ShieldCheck} title="Protéger"
               text="Filtres d'âge, outils parent, contenus vérifiés — sérénité totale." />
-          </div>
-          <div className="patou-card-feature patou-animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          </PatouCard>
+          <PatouCard variant="feature" animation="slideUp" animationDelay="100ms">
             <Feature color="share" Icon={Users} title="Partager"
               text="Playlists familiales, favoris communs, découvertes ensemble." />
-          </div>
-          <div className="patou-card-feature patou-animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          </PatouCard>
+          <PatouCard variant="feature" animation="slideUp" animationDelay="200ms">
             <Feature color="awaken" Icon={SunMedium} title="Éveiller"
               text="Découvertes adaptées, curiosité musicale, énergie positive." />
-          </div>
+          </PatouCard>
         </GridPatterns.Features>
       </section>
 

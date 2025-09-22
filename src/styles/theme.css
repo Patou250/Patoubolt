@@ -353,6 +353,13 @@ body {
 .patou-animate-slide-up { animation: patou-slide-up var(--animation-duration-slow) var(--animation-easing-default) both; }
 .patou-animate-scale-in { animation: patou-scale-in var(--animation-duration-slow) var(--animation-easing-default) both; }
 
+/* Animation delay utilities */
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+
 /* Cards Patou */
 .patou-card {
   background: var(--color-white);

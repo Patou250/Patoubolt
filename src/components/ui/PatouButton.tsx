@@ -1,11 +1,13 @@
 import React from 'react'
-import { generateInteractionStyles, getComponentGuidelines, ButtonVariant } from '../../utils/interactions'
+import { generateInteractionStyles, getComponentGuidelines, generateAnimationStyles, ButtonVariant } from '../../utils/interactions'
 
 interface PatouButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
   children: React.ReactNode
   loading?: boolean
+  animation?: 'fadeIn' | 'slideUp' | 'scaleIn'
+  animationDelay?: string
 }
 
 export default function PatouButton({ 
@@ -15,10 +17,14 @@ export default function PatouButton({
   loading = false,
   disabled,
   className = '',
+  animation,
+  animationDelay = '0ms',
   ...props 
 }: PatouButtonProps) {
   const interactionStyles = generateInteractionStyles('button', variant as ButtonVariant)
   const componentGuidelines = getComponentGuidelines('button', variant)
+  const animationStyles = animation ? generateAnimationStyles(animation, animationDelay) : {}
+  
   const baseClasses = 'btn'
   const variantClasses = {
     primary: 'btn--primary',
@@ -31,13 +37,15 @@ export default function PatouButton({
     md: '',
     lg: 'btn--large'
   }
+  const animationClass = animation ? `patou-animate-${animation}` : ''
   
-  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`
+  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${animationClass} ${className}`
+  const combinedStyles = { ...componentGuidelines, ...interactionStyles, ...animationStyles }
   
   return (
     <button 
       className={classes}
-      style={{ ...componentGuidelines, ...interactionStyles }}
+      style={combinedStyles}
       disabled={disabled || loading}
       {...props}
     >

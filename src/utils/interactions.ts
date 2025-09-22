@@ -146,6 +146,53 @@ export const generateHoverStyles = (
   return ''
 }
 
+// Animation Guidelines Function
+export function getAnimationGuidelines(animationType = 'fadeIn', delay = '0ms') {
+  const uiGuidelines = formulas['8001aa8b-fd4a-4522-a6bf-67cbb73f5525']();
+  const animation = uiGuidelines.animations.patterns[animationType];
+  
+  if (!animation) return {};
+  
+  return {
+    animationKeyframes: animation.keyframes,
+    animationDuration: animation.duration,
+    animationTimingFunction: animation.timingFunction,
+    animationFillMode: animation.fillMode,
+    animationDelay: delay,
+    animationIterationCount: '1'
+  };
+}
+
+// Convert animation guidelines to CSS styles
+export const generateAnimationStyles = (
+  animationType: 'fadeIn' | 'slideUp' | 'scaleIn' = 'fadeIn',
+  delay: string = '0ms'
+): React.CSSProperties => {
+  const guidelines = getAnimationGuidelines(animationType, delay)
+  
+  if (!guidelines.animationKeyframes) return {}
+  
+  return {
+    animationDuration: guidelines.animationDuration,
+    animationTimingFunction: guidelines.animationTimingFunction,
+    animationFillMode: guidelines.animationFillMode,
+    animationDelay: guidelines.animationDelay,
+    animationIterationCount: guidelines.animationIterationCount,
+    animationName: animationType // CSS class will handle keyframes
+  }
+}
+
+// Generate CSS animation classes
+export const generateAnimationClasses = (
+  animationType: 'fadeIn' | 'slideUp' | 'scaleIn' = 'fadeIn',
+  delay: string = '0ms'
+): string => {
+  const baseClass = `patou-animate-${animationType}`
+  const delayClass = delay !== '0ms' ? ` animation-delay-${delay.replace('ms', '')}` : ''
+  
+  return `${baseClass}${delayClass}`
+}
+
 // WeWeb Component Guidelines
 export const getComponentGuidelines = (
   componentType: 'card' | 'button' | 'input' | 'form' = 'card', 
