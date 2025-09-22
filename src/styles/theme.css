@@ -56,9 +56,21 @@
   --patou-radius: 16px;
   --patou-radius-sm: 8px;
   --patou-radius-lg: 24px;
-  --patou-shadow: 0 4px 16px rgba(40, 114, 51, 0.08);
-  --patou-shadow-hover: 0 8px 24px rgba(40, 114, 51, 0.12);
+  --patou-shadow-soft: 0 4px 16px rgba(40, 114, 51, 0.08);
+  --patou-shadow-elevated: 0 8px 24px rgba(40, 114, 51, 0.12);
   --patou-shadow-header: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  /* WeWeb Animation System */
+  --animation-duration-fast: 0.12s;
+  --animation-duration-normal: 0.3s;
+  --animation-duration-slow: 0.5s;
+  --animation-easing-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Interactive States */
+  --focus-outline: 2px solid var(--color-primary);
+  --focus-outline-offset: 2px;
+  --min-touch-target: 48px;
 
   /* Espacement harmonieux */
   --spacing-xs: 8px;
@@ -204,20 +216,26 @@ body {
 }
 
 .btn--primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--patou-shadow-hover);
+  filter: brightness(0.95);
+  transform: translateY(-2px) scale(1.01);
+  transition: all var(--animation-duration-fast) var(--animation-easing-default);
   background: #236029;
+}
+
+.btn--primary:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
 }
 
 .btn--secondary {
   background: var(--color-protect);
   color: var(--color-white);
-  box-shadow: var(--patou-shadow);
+  box-shadow: var(--patou-shadow-soft);
 }
 
 .btn--secondary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--patou-shadow-hover);
+  transform: translateY(-1px);
+  transition: all var(--animation-duration-fast) var(--animation-easing-default);
   background: #0369a1;
 }
 
@@ -249,11 +267,13 @@ body {
   background: transparent;
   color: var(--color-primary);
   border: 2px solid var(--color-primary);
+  transition: all var(--animation-duration-normal) var(--animation-easing-default);
 }
 
 .btn--outline:hover {
   background: var(--color-primary);
   color: var(--color-white);
+  transform: translateY(-1px);
 }
 
 .btn--large {
@@ -262,21 +282,108 @@ body {
   border-radius: var(--patou-radius-lg);
 }
 
+/* WeWeb Form Components */
+.patou-input {
+  height: var(--min-touch-target);
+  padding: var(--spacing-sm);
+  border-radius: var(--patou-radius-sm);
+  border: 1px solid #e5e7eb;
+  background: var(--color-white);
+  transition: all var(--animation-duration-normal) var(--animation-easing-default);
+  font-family: inherit;
+  font-size: var(--font-size-base);
+}
+
+.patou-input:focus {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+  border-color: var(--color-primary);
+}
+
+.patou-label {
+  margin-bottom: var(--spacing-xs);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  display: block;
+}
+
+/* WeWeb Icon Interactions */
+.patou-icon {
+  transition: color var(--animation-duration-normal) ease;
+}
+
+.patou-icon:hover {
+  transform: scale(1.05);
+  transition: transform var(--animation-duration-fast) var(--animation-easing-default);
+}
+
+/* WeWeb Animation Patterns */
+@keyframes patou-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes patou-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes patou-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.patou-animate-fade-in { animation: patou-fade-in var(--animation-duration-normal) var(--animation-easing-default) both; }
+.patou-animate-slide-up { animation: patou-slide-up var(--animation-duration-slow) var(--animation-easing-default) both; }
+.patou-animate-scale-in { animation: patou-scale-in var(--animation-duration-slow) var(--animation-easing-default) both; }
+
 /* Cards Patou */
 .patou-card {
   background: var(--color-white);
   border-radius: var(--patou-radius);
   padding: var(--spacing-lg);
-  box-shadow: var(--patou-shadow);
-  transition: all var(--transition-normal);
+  box-shadow: var(--patou-shadow-soft);
+  transition: all var(--animation-duration-normal) var(--animation-easing-default);
   border: 1px solid rgba(40, 114, 51, 0.08);
   position: relative;
   overflow: hidden;
 }
 
 .patou-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--patou-shadow-hover);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: var(--patou-shadow-elevated);
+  transition: all var(--animation-duration-fast) var(--animation-easing-default);
+}
+
+.patou-card-feature {
+  background: var(--color-white);
+  border-radius: var(--patou-radius);
+  padding: var(--spacing-xl);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: all var(--animation-duration-normal) var(--animation-easing-default);
+  border: 1px solid rgba(40, 114, 51, 0.08);
+}
+
+.patou-card-feature:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: var(--patou-shadow-elevated);
+  transition: all var(--animation-duration-fast) var(--animation-easing-default);
 }
 
 /* Container principal */
@@ -336,8 +443,17 @@ body {
 /* Focus states */
 .btn:focus-visible,
 .patou-card:focus-visible {
-  outline: 3px solid var(--color-awaken);
-  outline-offset: 2px;
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* Accessibility - Minimum touch targets */
+.btn,
+.patou-input,
+button,
+[role="button"] {
+  min-height: var(--min-touch-target);
+  min-width: var(--min-touch-target);
 }
 
 /* Animations */

@@ -33,12 +33,18 @@ export default function Home() {
       {/* FEATURES */}
       <section className="mt-12 md:mt-16">
         <div className="grid gap-6 md:grid-cols-3">
-          <Feature color="protect" Icon={ShieldCheck} title="Protéger"
-            text="Filtres d'âge, outils parent, contenus vérifiés — sérénité totale." />
-          <Feature color="share" Icon={Users} title="Partager"
-            text="Playlists familiales, favoris communs, découvertes ensemble." />
-          <Feature color="awaken" Icon={SunMedium} title="Éveiller"
-            text="Découvertes adaptées, curiosité musicale, énergie positive." />
+          <div className="patou-card-feature patou-animate-slide-up">
+            <Feature color="protect" Icon={ShieldCheck} title="Protéger"
+              text="Filtres d'âge, outils parent, contenus vérifiés — sérénité totale." />
+          </div>
+          <div className="patou-card-feature patou-animate-slide-up" style={{ animationDelay: '0.1s' }}>
+            <Feature color="share" Icon={Users} title="Partager"
+              text="Playlists familiales, favoris communs, découvertes ensemble." />
+          </div>
+          <div className="patou-card-feature patou-animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            <Feature color="awaken" Icon={SunMedium} title="Éveiller"
+              text="Découvertes adaptées, curiosité musicale, énergie positive." />
+          </div>
         </div>
       </section>
 
@@ -74,12 +80,12 @@ function Feature({
     awaken: 'bg-awaken/30 text-gray-900',
   } as const
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-      <div className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg ${map[color]}`}>
+    <>
+      <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg ${map[color]} patou-icon`}>
         <Icon className="h-5 w-5" />
       </div>
       <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
       <p className="mt-1.5 text-gray-600">{text}</p>
-    </div>
+    </>
   )
 }
