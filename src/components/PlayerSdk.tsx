@@ -35,7 +35,7 @@ declare global {
   }
 }
 
-const PlayerSdk = React.forwardRef<any, Props>(({ accessToken, onTrackChange, trackId, initialUris }, ref) => {
+const PlayerSdk = React.forwardRef<any, Props>(({ accessToken, onTrackChange, trackId, initialUris }: Props, ref) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null)
   const [position, setPosition] = useState(0)

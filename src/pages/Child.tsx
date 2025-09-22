@@ -437,6 +437,14 @@ export default function Child() {
           <ActionsGroup>
             <div className="p-6 text-center">
               <div className="text-4xl mb-4">🎵</div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Connexion Spotify requise</h3>
+              <p className="text-gray-600 mb-4">Tu dois demander à tes parents de connecter Spotify.</p>
+              <ActionsButton onClick={() => setShowSpotifyAlert(false)}>
+                J'ai compris
+              </ActionsButton>
+            </div>
+          </ActionsGroup>
+        </Actions>
       </Page>
     </App>
   )
