@@ -335,3 +335,6 @@ const PlayerSdk = React.forwardRef<any, Props>(({ accessToken, onTrackChange, tr
       )}
     </div>
   )
+})
+
+export default PlayerSdk
