@@ -6,6 +6,8 @@ import AppLayout from './layouts/AppLayout'
 import ChildLayout from './layouts/ChildLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import DesignSystemProvider from './components/ui/DesignSystemProvider'
+import { AuthProvider } from './contexts/AuthContext'
+import { ToastContainer } from './hooks/useToast'
 import { usePreviewGate } from './hooks/usePreviewGate'
 import PreviewGate from './components/PreviewGate'
 import { initializePageContext } from './utils/pageContext'
@@ -91,150 +93,155 @@ export default function App() {
   }
 
   return (
-    <DesignSystemProvider>
-      <div className="min-h-screen">
-        <Routes>
-          {/* Public routes with PublicLayout */}
-          <Route path="/" element={
-            <PublicLayout>
-              <Home 
-                onLogin={handleLogin}
-                onSignup={handleSignup}
-                onChildSpace={handleChildSpace}
-                onParentSpace={handleParentSpace}
-              />
-            </PublicLayout>
-          } />
-          
-          <Route path="/parent/login" element={
-            <PublicLayout>
-              <ParentLogin onSubmit={handleParentLogin} />
-            </PublicLayout>
-          } />
-          
-          <Route path="/parent/signup" element={
-            <PublicLayout>
-              <ParentSignup onSubmit={handleParentSignup} />
-            </PublicLayout>
-          } />
+    <AuthProvider>
+      <DesignSystemProvider>
+        <div className="min-h-screen">
+          <Routes>
+            {/* Public routes with PublicLayout */}
+            <Route path="/" element={
+              <PublicLayout>
+                <Home 
+                  onLogin={handleLogin}
+                  onSignup={handleSignup}
+                  onChildSpace={handleChildSpace}
+                  onParentSpace={handleParentSpace}
+                />
+              </PublicLayout>
+            } />
+            
+            <Route path="/parent/login" element={
+              <PublicLayout>
+                <ParentLogin onSubmit={handleParentLogin} />
+              </PublicLayout>
+            } />
+            
+            <Route path="/parent/signup" element={
+              <PublicLayout>
+                <ParentSignup onSubmit={handleParentSignup} />
+              </PublicLayout>
+            } />
 
-          {/* Legacy public routes */}
-          <Route path="/login-parent" element={
-            <PublicLayout>
-              <ParentLogin onSubmit={handleParentLogin} />
-            </PublicLayout>
-          } />
-          
-          <Route path="/signup-parent" element={
-            <PublicLayout>
-              <ParentSignup onSubmit={handleParentSignup} />
-            </PublicLayout>
-          } />
+            {/* Legacy public routes */}
+            <Route path="/login-parent" element={
+              <PublicLayout>
+                <ParentLogin onSubmit={handleParentLogin} />
+              </PublicLayout>
+            } />
+            
+            <Route path="/signup-parent" element={
+              <PublicLayout>
+                <ParentSignup onSubmit={handleParentSignup} />
+              </PublicLayout>
+            } />
 
-          {/* Protected parent routes with AppLayout */}
-          <Route path="/parent/dashboard" element={
-            <ProtectedRoute role="parent">
-              <AppLayout userType="parent">
-                <ParentDashboard />
-              </AppLayout>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/parent/children" element={
-            <ProtectedRoute role="parent">
-              <AppLayout userType="parent">
-                <ParentChildren />
-              </AppLayout>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/parent/curation" element={
-            <ProtectedRoute role="parent">
-              <AppLayout userType="parent">
-                <ParentCuration />
-              </AppLayout>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/parent/settings" element={
-            <ProtectedRoute role="parent">
-              <AppLayout userType="parent">
-                <ParentSettings />
-              </AppLayout>
-            </ProtectedRoute>
-          } />
+            {/* Protected parent routes with AppLayout */}
+            <Route path="/parent/dashboard" element={
+              <ProtectedRoute role="parent">
+                <AppLayout userType="parent">
+                  <ParentDashboard />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/parent/children" element={
+              <ProtectedRoute role="parent">
+                <AppLayout userType="parent">
+                  <ParentChildren />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/parent/curation" element={
+              <ProtectedRoute role="parent">
+                <AppLayout userType="parent">
+                  <ParentCuration />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/parent/settings" element={
+              <ProtectedRoute role="parent">
+                <AppLayout userType="parent">
+                  <ParentSettings />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
 
-          {/* Legacy parent routes */}
-          <Route path="/dashboard-parent" element={
-            <ProtectedRoute role="parent">
-              <AppLayout userType="parent">
-                <ParentDashboard />
-              </AppLayout>
-            </ProtectedRoute>
-          } />
+            {/* Legacy parent routes */}
+            <Route path="/dashboard-parent" element={
+              <ProtectedRoute role="parent">
+                <AppLayout userType="parent">
+                  <ParentDashboard />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
 
-          {/* Parent callback (no layout needed) */}
-          <Route path="/parent/callback" element={<ParentCallback />} />
+            {/* Parent callback (no layout needed) */}
+            <Route path="/parent/callback" element={<ParentCallback />} />
 
-          {/* Child login (no layout) */}
-          <Route path="/child/login" element={<ChildLogin />} />
-          <Route path="/login-enfant" element={<ChildLogin />} />
-          
-          {/* Protected child routes with ChildLayout */}
-          <Route path="/child" element={
-            <ProtectedRoute role="child">
-              <ChildLayout>
-                <Child />
-              </ChildLayout>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/child/favorites" element={
-            <ProtectedRoute role="child">
-              <ChildLayout>
-                <ChildFavorites />
-              </ChildLayout>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/child/playlists" element={
-            <ProtectedRoute role="child">
-              <ChildLayout>
-                <ChildPlaylists />
-              </ChildLayout>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/child/playlists/:id" element={
-            <ProtectedRoute role="child">
-              <ChildLayout>
-                <ChildPlaylists />
-              </ChildLayout>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/child/search" element={
-            <ProtectedRoute role="child">
-              <ChildLayout>
-                <ChildSearch />
-              </ChildLayout>
-            </ProtectedRoute>
-          } />
+            {/* Child login (no layout) */}
+            <Route path="/child/login" element={<ChildLogin />} />
+            <Route path="/login-enfant" element={<ChildLogin />} />
+            
+            {/* Protected child routes with ChildLayout */}
+            <Route path="/child" element={
+              <ProtectedRoute role="child">
+                <ChildLayout>
+                  <Child />
+                </ChildLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/child/favorites" element={
+              <ProtectedRoute role="child">
+                <ChildLayout>
+                  <ChildFavorites />
+                </ChildLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/child/playlists" element={
+              <ProtectedRoute role="child">
+                <ChildLayout>
+                  <ChildPlaylists />
+                </ChildLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/child/playlists/:id" element={
+              <ProtectedRoute role="child">
+                <ChildLayout>
+                  <ChildPlaylists />
+                </ChildLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/child/search" element={
+              <ProtectedRoute role="child">
+                <ChildLayout>
+                  <ChildSearch />
+                </ChildLayout>
+              </ProtectedRoute>
+            } />
 
-          {/* Direct access routes for testing */}
-          <Route path="/direct/parent" element={<ParentDashboard />} />
-          <Route path="/direct/child" element={<Child />} />
+            {/* Direct access routes for testing */}
+            <Route path="/direct/parent" element={<ParentDashboard />} />
+            <Route path="/direct/child" element={<Child />} />
+            
+            {/* Other routes */}
+            <Route path="/player" element={<Player />} />
+            <Route path="/test/moderation" element={<TestModeration />} />
+            <Route path="/admin/moderation" element={<AdminModeration />} />
+            <Route path="/patou-admin" element={<PatouAdmin />} />
+            
+            {/* Dev routes */}
+            <Route path="/_dev/konsta" element={<KonstaTest />} />
+          </Routes>
           
-          {/* Other routes */}
-          <Route path="/player" element={<Player />} />
-          <Route path="/test/moderation" element={<TestModeration />} />
-          <Route path="/admin/moderation" element={<AdminModeration />} />
-          <Route path="/patou-admin" element={<PatouAdmin />} />
-          
-          {/* Dev routes */}
-          <Route path="/_dev/konsta" element={<KonstaTest />} />
-        </Routes>
-      </div>
-    </DesignSystemProvider>
+          {/* Toast notifications */}
+          <ToastContainer />
+        </div>
+      </DesignSystemProvider>
+    </AuthProvider>
   )
 }

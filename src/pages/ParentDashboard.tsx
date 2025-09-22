@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { 
   Music, Users, Settings, Shield, LogOut, Plus, X
 } from 'lucide-react'
+import PatouCard, { CardPatterns } from '../components/ui/PatouCard'
+import PatouButton, { ButtonPatterns } from '../components/ui/PatouButton'
+import { useAuth } from '../contexts/AuthContext'
 import { getParentSession, clearParentSession } from '../utils/auth'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
 import { supabase } from '../lib/supabase'
@@ -20,13 +23,9 @@ export default function ParentDashboard() {
   const [children, setChildren] = useState<Child[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [spotifyConnected, setSpotifyConnected] = useState(false)
-  const [showCreatePlaylistModal, setShowCreatePlaylistModal] = useState(false)
-  const [showAssociateChildModal, setShowAssociateChildModal] = useState(false)
-  const [newPlaylistName, setNewPlaylistName] = useState('')
-  const [newPlaylistDescription, setNewPlaylistDescription] = useState('')
-  const [childIdentifier, setChildIdentifier] = useState('')
   const [playlists, setPlaylists] = useState<Playlist[]>([])
   const navigate = useNavigate()
+  const { user, signOut } = useAuth()
 
   useEffect(() => {
     // Si on accède via /direct/parent, créer une session factice
@@ -235,8 +234,8 @@ export default function ParentDashboard() {
   }
 
   const handleSignOut = () => {
-    clearParentSession()
-    navigate('/login-parent')
+    signOut()
+    navigate('/parent/login')
   }
 
   if (isLoading) {
@@ -251,24 +250,24 @@ export default function ParentDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background-page">
       {/* Header - reproduction exacte WeWeb */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="glass-effect sticky top-0 z-50 border-b border-gray-200/50">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src="/patou-logo.svg" alt="Patou" className="h-8 w-auto" />
-              <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
+              <img src="/patou-logo.svg" alt="Patou" className="h-8 w-auto transition-transform duration-300 hover:scale-110" />
+              <h1 className="text-2xl font-bold text-gradient-patou">Tableau de bord</h1>
             </div>
             
             <div className="flex items-center gap-4">
-              <button
+              <PatouButton
+                variant="ghost"
                 onClick={handleSignOut}
-                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+                icon={<LogOut className="w-4 h-4" />}
               >
-                <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline">Déconnexion</span>
-              </button>
+              </PatouButton>
             </div>
           </div>
         </div>
@@ -276,10 +275,10 @@ export default function ParentDashboard() {
 
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Connexion Spotify - reproduction exacte WeWeb */}
-        <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
+        <PatouCard variant="bento" className="mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200" animation="slideUp">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center animate-bounce-gentle">
                 <Music className="w-6 h-6 text-green-600" />
               </div>
               <div>
@@ -290,201 +289,145 @@ export default function ParentDashboard() {
               </div>
             </div>
             {!spotifyConnected ? (
-              <button
+              <PatouButton
+                variant="primary"
                 onClick={connectSpotify}
-                className="px-6 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-primary-600 transition-colors"
               >
                 Connecter
-              </button>
+              </PatouButton>
             ) : (
-              <div className="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium">
+              <div className="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium animate-pulse">
                 Connecté
               </div>
             )}
           </div>
-        </div>
+        </PatouCard>
 
         {/* 3 sections principales - reproduction exacte WeWeb */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-slide-up" style={{ animationDelay: '0.2s' }}>
           {/* Enfants */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                <Users className="w-5 h-5 text-gray-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900">Enfants</h3>
-            </div>
-            <p className="text-sm text-gray-600 mb-4">
-              Gérez les profils de vos enfants et leurs préférences musicales
-            </p>
-            <button
-              onClick={() => navigate('/parent/children')}
-              className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
-            >
-              Voir les profils
-            </button>
-          </div>
+          <CardPatterns.Feature
+            icon={<Users className="w-6 h-6 text-protect" />}
+            title="Enfants"
+            description="Gérez les profils de vos enfants et leurs préférences musicales"
+            action={
+              <PatouButton
+                variant="outline"
+                onClick={() => navigate('/parent/children')}
+                className="w-full"
+              >
+                Voir les profils
+              </PatouButton>
+            }
+          />
 
           {/* Playlists enfants */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
-                <Music className="w-5 h-5 text-pink-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900">Playlists enfants</h3>
-            </div>
-            <p className="text-sm text-gray-600 mb-4">
-              Explorez et gérez les playlists adaptées à vos enfants
-            </p>
-            <button
-              onClick={() => navigate('/parent/curation')}
-              className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
-            >
-              Voir les playlists
-            </button>
-          </div>
+          <CardPatterns.Feature
+            icon={<Music className="w-6 h-6 text-share" />}
+            title="Playlists enfants"
+            description="Explorez et gérez les playlists adaptées à vos enfants"
+            action={
+              <PatouButton
+                variant="outline"
+                onClick={() => navigate('/parent/curation')}
+                className="w-full"
+              >
+                Voir les playlists
+              </PatouButton>
+            }
+          />
 
           {/* Règles & Filtres */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <Shield className="w-5 h-5 text-blue-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900">Règles & Filtres</h3>
-            </div>
-            <p className="text-sm text-gray-600 mb-4">
-              Configurez les filtres de contrôle et les règles d'écoute
-            </p>
-            <div className="mb-4">
-              <div className="text-xs text-gray-500 mb-1">Niveau de vigilance</div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-blue-500 h-2 rounded-full" style={{ width: '80%' }}></div>
-              </div>
-              <div className="text-xs text-gray-500 mt-1">80%</div>
-            </div>
-            <button
-              onClick={() => navigate('/parent-settings')}
-              className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
-            >
-              Configurer
-            </button>
-          </div>
+          <CardPatterns.Feature
+            icon={<Shield className="w-6 h-6 text-awaken-dark" />}
+            title="Règles & Filtres"
+            description="Configurez les filtres de contrôle et les règles d'écoute"
+            action={
+              <>
+                <div className="mb-4">
+                  <div className="flex items-center justify-between text-sm mb-2">
+                    <span className="text-gray-600">Niveau de vigilance</span>
+                    <span className="text-awaken-dark font-medium">80%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="bg-awaken h-2 rounded-full transition-all" style={{ width: '80%' }}></div>
+                  </div>
+                </div>
+                <PatouButton
+                  variant="outline"
+                  onClick={() => navigate('/parent/settings')}
+                  className="w-full"
+                >
+                  Configurer
+                </PatouButton>
+              </>
+            }
+          />
         </div>
+
+        {/* Stats rapides */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+          <CardPatterns.Stats
+            icon={<Users className="w-6 h-6 text-protect" />}
+            label="Enfants"
+            value={children.length}
+            trend="neutral"
+          />
+          <CardPatterns.Stats
+            icon={<Music className="w-6 h-6 text-share" />}
+            label="Playlists"
+            value={playlists.length}
+            trend="up"
+          />
+          <CardPatterns.Stats
+            icon={<Shield className="w-6 h-6 text-awaken-dark" />}
+            label="Pistes vérifiées"
+            value="1,247"
+            trend="up"
+          />
+          <CardPatterns.Stats
+            icon={<Music className="w-6 h-6 text-primary" />}
+            label="Heures d'écoute"
+            value="42h"
+            trend="neutral"
+          />
+        </div>
+
+        {/* Enfants récents */}
+        {children.length > 0 && (
+          <PatouCard className="mb-8" animation="slideUp" animationDelay="0.6s">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900">Enfants récents</h2>
+              <PatouButton
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/parent/children')}
+              >
+                Voir tout
+              </PatouButton>
+            </div>
+            <div className="space-y-3">
+              {children.slice(0, 3).map((child) => (
+                <CardPatterns.Child
+                  key={child.id}
+                  emoji={child.emoji}
+                  name={child.name}
+                  stats={`Créé le ${new Date(child.created_at).toLocaleDateString('fr-FR')}`}
+                  actions={
+                    <PatouButton
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => navigate('/parent/children')}
+                    >
+                      Gérer
+                    </PatouButton>
+                  }
+                />
+              ))}
+            </div>
+          </PatouCard>
+        )}
       </div>
-
-      {/* Modal Créer une playlist */}
-      {showCreatePlaylistModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Créer une playlist</h3>
-              <button
-                onClick={() => setShowCreatePlaylistModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nom de la playlist
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ma nouvelle playlist"
-                  value={newPlaylistName}
-                  onChange={(e) => setNewPlaylistName(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
-                  autoFocus
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description (optionnel)
-                </label>
-                <textarea
-                  placeholder="Description de la playlist..."
-                  value={newPlaylistDescription}
-                  onChange={(e) => setNewPlaylistDescription(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
-                  rows={3}
-                />
-              </div>
-              
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => setShowCreatePlaylistModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Annuler
-                </button>
-                <button
-                  onClick={handleCreatePlaylist}
-                  disabled={!newPlaylistName.trim()}
-                  className="flex-1 px-4 py-2 bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
-                >
-                  Créer
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal Associer un enfant */}
-      {showAssociateChildModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Associer un enfant</h3>
-              <button
-                onClick={() => setShowAssociateChildModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Identifiant unique de l'enfant
-                </label>
-                <input
-                  type="text"
-                  placeholder="ID-ENFANT-XXXX"
-                  value={childIdentifier}
-                  onChange={(e) => setChildIdentifier(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
-                  autoFocus
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Demandez l'identifiant à l'autre parent ou trouvez-le dans les paramètres de l'enfant
-                </p>
-              </div>
-              
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => setShowAssociateChildModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Annuler
-                </button>
-                <button
-                  onClick={handleAssociateChild}
-                  disabled={!childIdentifier.trim()}
-                  className="flex-1 px-4 py-2 bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
-                >
-                  Associer
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

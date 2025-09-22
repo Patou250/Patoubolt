@@ -4,7 +4,7 @@ import { Home, Users, Music, Settings, BarChart3, Heart, Search, Calendar } from
 export default function Navigation() {
   const location = useLocation()
 
-  // Déterminer le type d'utilisateur basé sur le path
+  // Déterminer le contexte utilisateur
   const isParentSpace = location.pathname.startsWith('/parent') || location.pathname.startsWith('/dashboard')
   const isChildSpace = location.pathname.startsWith('/child')
 

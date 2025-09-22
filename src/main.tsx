@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App.tsx'
 import { initializeDesignSystem } from './utils/designSystem'
 import './index.css'
+import './styles/lovable-design-system.css'
 import './styles/theme.css'
 import './styles/app.css'
 

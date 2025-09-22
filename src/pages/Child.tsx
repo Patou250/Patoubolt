@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { App, Page, Navbar, Block, Card, Button, List, ListItem, Badge, Actions, ActionsGroup, ActionsButton } from 'konsta/react'
 import { Music, Heart, Play, Pause, SkipBack, SkipForward } from 'lucide-react'
-import PlayerSdk from '../components/PlayerSdk'
+import PatouPlayer from '../components/ui/PatouPlayer'
+import SpotifySearch from '../components/ui/SpotifySearch'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
 
 interface ChildData {
@@ -304,15 +305,13 @@ export default function Child() {
 
           {/* Section 2: Lecteur */}
           <Block>
-            <Card className="p-4">
+            <Card className="p-0 overflow-hidden">
               {accessToken ? (
-                <PlayerSdk 
-                  accessToken={accessToken} 
+                <PatouPlayer 
                   onTrackChange={handleTrackChange}
-                  onPlayerReady={setPlayerSdkRef}
                 />
               ) : (
-                <div className="text-center py-8">
+                <div className="text-center py-8 p-4">
                   <Music className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">Lecteur indisponible</h3>
                   <p className="text-gray-600 mb-4">Connexion Spotify requise</p>
@@ -324,39 +323,26 @@ export default function Child() {
                   </Button>
                 </div>
               )}
-              
-              {/* Boutons d'action sous le player */}
-              <div className="flex items-center justify-center gap-4 mt-4">
-                <Button 
-                  className="bg-share text-white min-h-[48px] min-w-[48px] rounded-full"
-                  onClick={handleAddToFavorites}
-                >
-                  <Heart className="w-5 h-5" />
-                </Button>
-                
-                <div className="flex items-center gap-2">
-                  <Button 
-                    className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full"
-                    onClick={handlePrevious}
-                  >
-                    <SkipBack className="w-5 h-5" />
-                  </Button>
-                  <Button 
-                    className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full"
-                    onClick={handlePlayPause}
-                  >
-                    {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                  </Button>
-                  <Button 
-                    className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full"
-                    onClick={handleNext}
-                  >
-                    <SkipForward className="w-5 h-5" />
-                  </Button>
-                </div>
-              </div>
             </Card>
           </Block>
+
+          {/* Section Recherche rapide */}
+          {accessToken && (
+            <Block>
+              <h2 className="text-xl font-bold text-gray-700 mb-4">Recherche rapide</h2>
+              <Card className="p-4">
+                <SpotifySearch
+                  onTrackSelect={(track) => {
+                    console.log('Playing track:', track.name)
+                    // Ici on pourrait envoyer au PatouPlayer
+                  }}
+                  onAddToFavorites={(track) => {
+                    console.log('Added to favorites:', track.name)
+                  }}
+                />
+              </Card>
+            </Block>
+          )}
 
           {/* Section 3: Playlist de la semaine */}
           <Block>

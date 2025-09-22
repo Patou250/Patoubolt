@@ -4,6 +4,7 @@ import {
   Actions, ActionsGroup, ActionsButton, Card
 } from 'konsta/react'
 import { Play, Heart, Plus, Music, Search } from 'lucide-react'
+import SpotifySearch from '../components/ui/SpotifySearch'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
 
 type Track = {
@@ -20,11 +21,7 @@ type Playlist = {
 }
 
 export default function ChildSearch() {
-  const [query, setQuery] = useState('')
-  const [results, setResults] = useState<Track[]>([])
   const [playlists, setPlaylists] = useState<Playlist[]>([])
-  const [err, setErr] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
   const [showActions, setShowActions] = useState(false)
   const [selectedTrack, setSelectedTrack] = useState<Track | null>(null)
   const [spotifyConnected, setSpotifyConnected] = useState(true)
@@ -37,42 +34,6 @@ export default function ChildSearch() {
       { id: '3', name: 'Musiques de films' }
     ]
     setPlaylists(mockPlaylists)
-  }
-
-  const doSearch = async () => {
-    if (!query.trim()) return
-    
-    setErr(null)
-    setLoading(true)
-    
-    try {
-      const tokens = getSpotifyTokens()
-      if (!tokens) {
-        setSpotifyConnected(false)
-        throw new Error('Connexion Spotify requise')
-      }
-
-      const res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=20`, {
-        headers: { Authorization: `Bearer ${tokens.access_token}` }
-      })
-      
-      if (!res.ok) {
-        if (res.status === 401 || res.status === 502) {
-          setSpotifyConnected(false)
-          throw new Error('Connexion Spotify expirée')
-        }
-        throw new Error('Erreur de recherche')
-      }
-      
-      const data = await res.json()
-      setResults(data.tracks.items || [])
-      setSpotifyConnected(true)
-    } catch (e: any) {
-      setErr(e.message)
-      setResults([])
-    } finally {
-      setLoading(false)
-    }
   }
 
   const handlePlayTrack = async (track: Track) => {
@@ -154,18 +115,6 @@ export default function ChildSearch() {
         <Navbar title="Recherche" />
         
         <div className="space-y-4 p-4">
-          {/* Barre de recherche */}
-          <Block>
-            <Searchbar
-              placeholder="Chanson, artiste…"
-              value={query}
-              onInput={(e) => setQuery(e.target.value)}
-              onSubmit={doSearch}
-              onSearchbarSearch={doSearch}
-              disabled={loading}
-            />
-          </Block>
-
           {/* État non connecté */}
           {!spotifyConnected && (
             <Block>
@@ -184,93 +133,16 @@ export default function ChildSearch() {
             </Block>
           )}
 
-          {/* Message d'erreur */}
-          {err && spotifyConnected && (
+          {/* Recherche Spotify intégrée */}
+          {spotifyConnected && (
             <Block>
-              <Card className="p-4 bg-red-50 border border-red-200">
-                <p className="text-red-700 text-sm">{err}</p>
+              <Card className="p-4">
+                <SpotifySearch
+                  onTrackSelect={(track) => handlePlayTrack(track)}
+                  onAddToPlaylist={(track) => handleAddToPlaylist(track)}
+                  onAddToFavorites={(track) => handleToggleFavorite(track)}
+                />
               </Card>
-            </Block>
-          )}
-
-          {/* Loading */}
-          {loading && (
-            <Block className="text-center py-8">
-              <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-              <p className="text-gray-600">Recherche en cours...</p>
-            </Block>
-          )}
-
-          {/* Résultats */}
-          {results.length > 0 && (
-            <Block>
-              <h2 className="text-xl font-bold text-gray-700 mb-4">
-                {results.length} résultat{results.length > 1 ? 's' : ''}
-              </h2>
-              
-              <List mediaList>
-                {results.map(track => (
-                  <ListItem
-                    key={track.id}
-                    title={track.name}
-                    text={track.artists.map(a => a.name).join(', ')}
-                    media={
-                      <img
-                        src={track.album.images?.[0]?.url || 'https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=100'}
-                        alt={track.album.name}
-                        className="w-12 h-12 rounded-lg object-cover"
-                      />
-                    }
-                    after={
-                      <div className="flex items-center gap-2">
-                        <Button 
-                          className="bg-share text-white min-h-[48px] min-w-[48px] rounded-full"
-                          onClick={() => handleToggleFavorite(track)}
-                          title="Ajouter aux favoris"
-                        >
-                          <Heart className="w-4 h-4" />
-                        </Button>
-                        <Button 
-                          className="bg-gray-100 text-gray-700 min-h-[48px] min-w-[48px] rounded-full"
-                          onClick={() => handleAddToPlaylist(track)}
-                          title="Ajouter à une playlist"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full"
-                          onClick={() => handlePlayTrack(track)}
-                          title="Écouter"
-                        >
-                          <Play className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    }
-                  />
-                ))}
-              </List>
-            </Block>
-          )}
-
-          {/* Empty state - aucun résultat */}
-          {!loading && query && results.length === 0 && !err && spotifyConnected && (
-            <Block className="text-center py-12">
-              <div className="text-6xl mb-4">🤔</div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Aucun résultat</h3>
-              <p className="text-gray-600">
-                Essaie avec d'autres mots-clés pour "{query}"
-              </p>
-            </Block>
-          )}
-
-          {/* Empty state - query vide */}
-          {!query && results.length === 0 && !loading && spotifyConnected && (
-            <Block className="text-center py-12">
-              <div className="text-6xl mb-4">🎵</div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Prêt à découvrir ?</h3>
-              <p className="text-gray-600">
-                Tape le nom d'une chanson ou d'un artiste pour commencer
-              </p>
             </Block>
           )}
         </div>

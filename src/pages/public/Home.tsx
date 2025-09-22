@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Shield, Users, Music, Check } from 'lucide-react'
+import PatouCard, { CardPatterns } from '../../components/ui/PatouCard'
+import PatouButton, { ButtonPatterns } from '../../components/ui/PatouButton'
 
 interface HomeProps {
   onLogin?: () => void
@@ -10,13 +12,13 @@ interface HomeProps {
 
 export default function Home({ onLogin, onSignup, onChildSpace, onParentSpace }: HomeProps) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-subtle">
       {/* Hero Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-white">
+      <section className="py-16 md:py-24 animate-fade-in">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Colonne gauche - Texte */}
-            <div className="text-center lg:text-left">
+            <div className="text-center lg:text-left animate-slide-up">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                 Musique en famille,<br />
                 en toute sécurité
@@ -29,11 +31,11 @@ export default function Home({ onLogin, onSignup, onChildSpace, onParentSpace }:
 
               {/* Badges sécurité */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-center lg:justify-start">
-                <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full">
+                <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full animate-slide-left" style={{ animationDelay: '0.2s' }}>
                   <Check className="w-4 h-4 text-green-600" />
                   <span className="text-sm font-medium text-green-700">100% sécurisé</span>
                 </div>
-                <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full">
+                <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full animate-slide-left" style={{ animationDelay: '0.4s' }}>
                   <Check className="w-4 h-4 text-green-600" />
                   <span className="text-sm font-medium text-green-700">Contrôle parental + sans publicité</span>
                 </div>
@@ -41,36 +43,43 @@ export default function Home({ onLogin, onSignup, onChildSpace, onParentSpace }:
 
               {/* Boutons principaux */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button
+                <ButtonPatterns.CTA
                   onClick={onSignup || (() => window.location.href = '/parent/signup')}
-                  className="inline-flex items-center justify-center px-8 py-4 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors shadow-lg"
+                  animation="slideUp"
+                  animationDelay="0.6s"
                 >
                   Créer mon compte gratuit
-                </button>
+                </ButtonPatterns.CTA>
                 
-                <button
+                <PatouButton
+                  variant="secondary"
+                  size="lg"
                   onClick={onChildSpace || (() => window.location.href = '/child/login')}
-                  className="inline-flex items-center justify-center px-8 py-4 bg-blue-100 text-blue-700 font-semibold rounded-full hover:bg-blue-200 transition-colors"
+                  animation="slideUp"
+                  animationDelay="0.8s"
                 >
                   Espace enfant
-                </button>
+                </PatouButton>
                 
-                <button
+                <PatouButton
+                  variant="outline"
+                  size="lg"
                   onClick={onLogin || (() => window.location.href = '/parent/login')}
-                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-full hover:bg-gray-50 transition-colors"
+                  animation="slideUp"
+                  animationDelay="1s"
                 >
                   Se connecter
-                </button>
+                </PatouButton>
               </div>
             </div>
 
             {/* Colonne droite - Image */}
-            <div className="flex justify-center lg:justify-end">
-              <img 
-                src="https://images.pexels.com/photos/3985062/pexels-photo-3985062.jpeg?auto=compress&cs=tinysrgb&w=600" 
-                alt="Famille écoutant de la musique ensemble"
-                className="rounded-2xl shadow-2xl max-w-md w-full"
-              />
+            <div className="flex justify-center lg:justify-end animate-scale-in" style={{ animationDelay: '0.4s' }}>
+              <PatouCard variant="bento" className="bg-gradient-patou text-white text-center animate-pulse-glow">
+                <div className="text-6xl mb-4 animate-bounce-gentle">🎵</div>
+                <h3 className="text-xl font-semibold mb-2">Musique sécurisée</h3>
+                <p className="opacity-90">Contenu vérifié et adapté à chaque âge</p>
+              </PatouCard>
             </div>
           </div>
         </div>
@@ -96,35 +105,38 @@ export default function Home({ onLogin, onSignup, onChildSpace, onParentSpace }:
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-8 h-8 text-gray-600" />
-              </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Sécurité garantie</h4>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Filtrage automatique des contenus inappropriés. Contrôle parental avancé.
-              </p>
-            </div>
+            <CardPatterns.Feature
+              icon={<Shield className="w-8 h-8 text-protect" />}
+              title="Sécurité garantie"
+              description="Filtrage automatique des contenus inappropriés. Contrôle parental avancé."
+              action={
+                <span className="inline-block bg-protect text-white px-3 py-1 rounded-full text-sm font-medium">
+                  100% Sûr
+                </span>
+              }
+            />
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-blue-600" />
-              </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Moments partagés</h4>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Créez des moments musicaux en famille. Partagez vos découvertes et souvenirs musicaux.
-              </p>
-            </div>
+            <CardPatterns.Feature
+              icon={<Users className="w-8 h-8 text-share" />}
+              title="Moments partagés"
+              description="Créez des moments musicaux en famille. Partagez vos découvertes et souvenirs musicaux."
+              action={
+                <span className="inline-block bg-share text-white px-3 py-1 rounded-full text-sm font-medium">
+                  Ensemble
+                </span>
+              }
+            />
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Music className="w-8 h-8 text-yellow-600" />
-              </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Éveil musical</h4>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Des recommandations adaptées à l'âge pour développer la curiosité musicale.
-              </p>
-            </div>
+            <CardPatterns.Feature
+              icon={<Music className="w-8 h-8 text-awaken-dark" />}
+              title="Éveil musical"
+              description="Des recommandations adaptées à l'âge pour développer la curiosité musicale."
+              action={
+                <span className="inline-block bg-awaken text-awaken-dark px-3 py-1 rounded-full text-sm font-medium">
+                  Créatif
+                </span>
+              }
+            />
           </div>
         </div>
       </section>
@@ -132,53 +144,112 @@ export default function Home({ onLogin, onSignup, onChildSpace, onParentSpace }:
       {/* Les piliers de Patou */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Les piliers de Patou
-          </h2>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gradient-patou mb-8">Les piliers de Patou</h2>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Protection garantie - bleu */}
-            <div className="bg-blue-50 rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Shield className="w-8 h-8 text-blue-600" />
+            {/* Protection garantie */}
+            <PatouCard variant="feature" className="text-center group bg-protect-bg border-protect/20" animation="slideUp" animationDelay="0.2s">
+              <div className="p-4 rounded-full bg-protect/10 w-fit mx-auto mb-6 group-hover:bg-protect/20 transition-colors">
+                <Shield className="w-8 h-8 text-protect group-hover:scale-110 transition-transform" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Protection garantie</h3>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Protection garantie</h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 Un environnement sécurisé 100% adapté aux enfants. Filtrage automatique des contenus inappropriés.
               </p>
-              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
+              <span className="inline-block bg-protect text-white px-3 py-1 rounded-full text-sm font-medium">
                 Sûr
-              </div>
-            </div>
+              </span>
+            </PatouCard>
             
-            {/* Partage en famille - rose */}
-            <div className="bg-pink-50 rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Users className="w-8 h-8 text-pink-600" />
+            {/* Partage en famille */}
+            <PatouCard variant="feature" className="text-center group bg-share-bg border-share/20" animation="slideUp" animationDelay="0.4s">
+              <div className="p-4 rounded-full bg-share/10 w-fit mx-auto mb-6 group-hover:bg-share/20 transition-colors">
+                <Users className="w-8 h-8 text-share group-hover:scale-110 transition-transform" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Partage en famille</h3>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Partage en famille</h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 Créez des moments musicaux en famille. Partagez vos découvertes et souvenirs via liens.
               </p>
-              <div className="inline-flex items-center px-4 py-2 bg-pink-100 text-pink-700 rounded-full text-sm font-semibold">
+              <span className="inline-block bg-share text-white px-3 py-1 rounded-full text-sm font-medium">
                 Social
-              </div>
-            </div>
+              </span>
+            </PatouCard>
             
-            {/* Éveil musical - jaune */}
-            <div className="bg-yellow-50 rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Music className="w-8 h-8 text-yellow-600" />
+            {/* Éveil musical */}
+            <PatouCard variant="feature" className="text-center group bg-awaken-bg border-awaken/20" animation="slideUp" animationDelay="0.6s">
+              <div className="p-4 rounded-full bg-awaken/20 w-fit mx-auto mb-6 group-hover:bg-awaken/30 transition-colors">
+                <Music className="w-8 h-8 text-awaken-dark group-hover:scale-110 transition-transform" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Éveil musical et créativité</h3>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Éveil musical et créativité</h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 Développez la curiosité musicale de vos enfants avec des contenus adaptés à leur âge.
               </p>
-              <div className="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-700 rounded-full text-sm font-semibold">
+              <span className="inline-block bg-awaken text-awaken-dark px-3 py-1 rounded-full text-sm font-medium">
                 Créatif
+              </span>
+            </PatouCard>
+          </div>
+        </div>
+      </section>
+
+      {/* Section Player Preview */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Lecteur Musical Sécurisé</h2>
+            <p className="text-gray-600">Interface simple et sécurisée pour vos enfants</p>
+          </div>
+          
+          {/* Mock Player */}
+          <PatouCard variant="bento" className="max-w-2xl mx-auto bg-gradient-to-br from-gray-900 to-black text-white">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 bg-gradient-patou rounded-lg flex items-center justify-center text-2xl animate-float">
+                🎵
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-lg">Chanson pour enfants</h4>
+                <p className="text-gray-300">Artiste kid-friendly</p>
+                <p className="text-gray-400 text-sm">Album Disney</p>
+              </div>
+              <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                <Shield className="w-5 h-5 text-protect" />
+              </button>
+            </div>
+
+            {/* Progress bar */}
+            <div className="mb-6">
+              <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                <span>1:30</span>
+                <div className="flex-1 bg-gray-700 rounded-full h-2">
+                  <div className="bg-gradient-primary h-2 rounded-full transition-all" style={{ width: '45%' }}></div>
+                </div>
+                <span>3:20</span>
               </div>
             </div>
-          </div>
+
+            {/* Controls */}
+            <div className="flex items-center justify-center gap-6">
+              <button className="text-gray-400 hover:text-white transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.334 4z" />
+                </svg>
+              </button>
+              
+              <button className="bg-gradient-primary hover:opacity-90 text-white rounded-full p-4 transition-all transform hover:scale-105">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H15" />
+                </svg>
+              </button>
+              
+              <button className="text-gray-400 hover:text-white transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 4a1 1 0 011-1h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H15a1 1 0 011 1v11a1 1 0 01-1 1H6a1 1 0 01-1-1V4z" />
+                </svg>
+              </button>
+            </div>
+          </PatouCard>
         </div>
       </section>
 
@@ -230,22 +301,23 @@ export default function Home({ onLogin, onSignup, onChildSpace, onParentSpace }:
       </section>
 
       {/* CTA final */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gradient-patou text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-2xl p-8 md:p-12 shadow-xl">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              Prêt à offrir une expérience musicale sécurisée ?
-            </h2>
-            <p className="text-lg mb-8 opacity-90">
-              Rejoignez les familles qui font confiance à Patou pour protéger et éveiller leurs enfants.
-            </p>
-            <button
-              onClick={onSignup || (() => window.location.href = '/parent/signup')}
-              className="inline-flex items-center justify-center px-8 py-4 bg-white text-green-600 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-lg"
-            >
-              Rejoindre la bêta gratuitement
-            </button>
-          </div>
+          <h2 className="text-3xl font-bold mb-4">
+            Rejoignez les familles qui font confiance à Patou
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            Offrez à vos enfants une expérience musicale adaptée à leur âge, sans contenus inappropriés.
+          </p>
+          <PatouButton
+            variant="secondary"
+            size="xl"
+            onClick={onSignup || (() => window.location.href = '/parent/signup')}
+            className="bg-white text-primary hover:bg-gray-100"
+            animation="scaleIn"
+          >
+            Créer mon compte
+          </PatouButton>
         </div>
       </section>
     </div>
