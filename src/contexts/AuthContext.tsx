@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { User, Session } from '@supabase/supabase-js'
+import type { User, AuthSession } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 
 interface AuthContextType {
   user: User | null
-  session: Session | null
+  session: AuthSession | null
   loading: boolean
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<{ error: any }>
   signIn: (email: string, password: string) => Promise<{ error: any }>
@@ -15,7 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
+  const [session, setSession] = useState<AuthSession | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
