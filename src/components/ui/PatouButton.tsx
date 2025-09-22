@@ -45,6 +45,7 @@ export default function PatouButton({
   return (
     <button 
       className={classes}
+      data-component="button"
       style={combinedStyles}
       disabled={disabled || loading}
       {...props}

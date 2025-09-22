@@ -36,7 +36,8 @@ export default function PatouCard({
   if (onClick) {
     return (
       <div 
-        className={`${classes} cursor-pointer`} 
+        className={`${classes} cursor-pointer`}
+        data-component="card"
         style={combinedStyles}
         onClick={onClick}
         role="button"
@@ -54,7 +55,7 @@ export default function PatouCard({
   }
   
   return (
-    <div className={classes} style={combinedStyles}>
+    <div className={classes} style={combinedStyles} data-component="card">
       {children}
     </div>
   )

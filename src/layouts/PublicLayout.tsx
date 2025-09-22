@@ -9,10 +9,11 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
   const layoutGuidelines = getLayoutGuidelines('public', 'desktop')
   
   return (
-    <div className="min-h-screen bg-background-page text-text-primary">
+    <div className="min-h-screen bg-background-page text-text-primary" data-layout="public">
       {/* Header WeWeb Pattern - Fixed */}
       <header 
         className="weweb-header-public"
+        data-component="header"
         style={{
           height: layoutGuidelines.header?.height,
           padding: layoutGuidelines.header?.padding,

@@ -36,10 +36,11 @@ export default function AppLayout({ children, userType = 'parent' }: AppLayoutPr
   }
 
   return (
-    <div className="weweb-app-layout">
+    <div className="weweb-app-layout" data-layout="app" data-user-type={userType}>
       {/* Sidebar Desktop WeWeb Pattern */}
       <aside 
         className="weweb-sidebar-app"
+        data-component="sidebar"
         style={{
           width: layoutGuidelines.sidebar?.width,
           padding: layoutGuidelines.sidebar?.padding,

@@ -1,9 +1,12 @@
 import { Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import ChildLayout from './layouts/ChildLayout'
 import DesignSystemProvider from './components/ui/DesignSystemProvider'
 import { usePreviewGate } from './hooks/usePreviewGate'
 import PreviewGate from './components/PreviewGate'
+import { initializePageContext } from './utils/pageContext'
 
 // …imports pages
 import Home from './pages/Home'
@@ -28,6 +31,20 @@ import KonstaTest from './pages/_dev/KonstaTest'
 
 export default function App() {
   const { mustGate } = usePreviewGate()
+  const location = useLocation()
+
+  // Apply page-specific styles on route change
+  useEffect(() => {
+    const applyPageStyles = async () => {
+      try {
+        await initializePageContext(location.pathname)
+      } catch (error) {
+        console.error('❌ Error applying page styles:', error)
+      }
+    }
+
+    applyPageStyles()
+  }, [location.pathname])
 
   if (mustGate) {
     return <PreviewGate />

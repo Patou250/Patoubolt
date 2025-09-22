@@ -70,6 +70,10 @@ class PatouDesignSystem {
         }
       }))
       
+      // Initialize page context after design system is ready
+      const { initializePageContext } = await import('./pageContext')
+      await initializePageContext(window.location.pathname)
+      
     } catch (error) {
       console.error('❌ Failed to initialize Design System:', error)
       // Fallback to default tokens
