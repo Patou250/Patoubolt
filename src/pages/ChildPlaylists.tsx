@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { 
   App, Page, Navbar, Block, List, ListItem, Button, Popup, 
-  Card, Toolbar 
+  Card, Toolbar, Actions, ActionsGroup, ActionsButton
 } from 'konsta/react'
 import { 
   Music, Play, Heart, Plus, ChevronRight, MoreVertical, 
@@ -340,57 +340,41 @@ export default function ChildPlaylists() {
           )}
         </div>
 
-        {/* Modal nouvelle playlist */}
-        <Popup 
-          opened={showNewPlaylistModal} 
-          onBackdropClick={() => setShowNewPlaylistModal(false)}
-        >
-          <Page>
-            <Navbar 
-              title="Nouvelle playlist"
-              left={
-                <Button 
-                  className="text-gray-600"
-                  onClick={() => setShowNewPlaylistModal(false)}
-                >
-                  Annuler
-                </Button>
-              }
-              right={
-                <Button 
-                  className="text-awaken font-semibold"
-                  onClick={handleCreatePlaylist}
-                  disabled={!newPlaylistName.trim()}
-                >
-                  Créer
-                </Button>
-              }
-            />
-            
-            <Block className="space-y-6 p-4">
-              <div className="text-center">
-                <div className="text-4xl mb-4">🎵</div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  Créer une playlist
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Donnez un nom à votre nouvelle playlist
-                </p>
-              </div>
+        {/* Modal nouvelle playlist avec Actions */}
+        <Actions opened={showNewPlaylistModal} onBackdropClick={() => setShowNewPlaylistModal(false)}>
+          <ActionsGroup>
+            <div className="p-6 text-center border-b border-gray-200">
+              <div className="text-4xl mb-4">🎵</div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                Créer une playlist
+              </h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Donnez un nom à votre nouvelle playlist
+              </p>
               
-              <div>
-                <input
-                  type="text"
-                  placeholder="Nom de la playlist"
-                  value={newPlaylistName}
-                  onChange={(e) => setNewPlaylistName(e.target.value)}
-                  className="input w-full"
-                  autoFocus
-                />
-              </div>
-            </Block>
-          </Page>
-        </Popup>
+              <input
+                type="text"
+                placeholder="Nom de la playlist"
+                value={newPlaylistName}
+                onChange={(e) => setNewPlaylistName(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
+                autoFocus
+              />
+            </div>
+            
+            <ActionsButton 
+              onClick={handleCreatePlaylist}
+              disabled={!newPlaylistName.trim()}
+            >
+              Créer la playlist
+            </ActionsButton>
+          </ActionsGroup>
+          <ActionsGroup>
+            <ActionsButton onClick={() => setShowNewPlaylistModal(false)}>
+              Annuler
+            </ActionsButton>
+          </ActionsGroup>
+        </Actions>
       </Page>
     </App>
   )

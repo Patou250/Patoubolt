@@ -41,53 +41,26 @@ export default function Home({ onLogin, onSignup, onChildSpace, onParentSpace }:
 
               {/* Boutons principaux */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                {onSignup ? (
-                  <button
-                    onClick={onSignup}
-                    className="inline-flex items-center justify-center px-8 py-4 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors shadow-lg"
-                  >
-                    Créer mon compte gratuit
-                  </button>
-                ) : (
-                  <Link
-                    to="/parent/signup"
-                    className="inline-flex items-center justify-center px-8 py-4 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors shadow-lg"
-                  >
-                    Créer mon compte gratuit
-                  </Link>
-                )}
+                <button
+                  onClick={onSignup || (() => window.location.href = '/parent/signup')}
+                  className="inline-flex items-center justify-center px-8 py-4 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors shadow-lg"
+                >
+                  Créer mon compte gratuit
+                </button>
                 
-                {onChildSpace ? (
-                  <button
-                    onClick={onChildSpace}
-                    className="inline-flex items-center justify-center px-8 py-4 bg-blue-100 text-blue-700 font-semibold rounded-full hover:bg-blue-200 transition-colors"
-                  >
-                    Espace enfant
-                  </button>
-                ) : (
-                  <Link
-                    to="/child/login"
-                    className="inline-flex items-center justify-center px-8 py-4 bg-blue-100 text-blue-700 font-semibold rounded-full hover:bg-blue-200 transition-colors"
-                  >
-                    Espace enfant
-                  </Link>
-                )}
+                <button
+                  onClick={onChildSpace || (() => window.location.href = '/child/login')}
+                  className="inline-flex items-center justify-center px-8 py-4 bg-blue-100 text-blue-700 font-semibold rounded-full hover:bg-blue-200 transition-colors"
+                >
+                  Espace enfant
+                </button>
                 
-                {onLogin ? (
-                  <button
-                    onClick={onLogin}
-                    className="inline-flex items-center justify-center px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-full hover:bg-gray-50 transition-colors"
-                  >
-                    Se connecter
-                  </button>
-                ) : (
-                  <Link
-                    to="/parent/login"
-                    className="inline-flex items-center justify-center px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-full hover:bg-gray-50 transition-colors"
-                  >
-                    Se connecter
-                  </Link>
-                )}
+                <button
+                  onClick={onLogin || (() => window.location.href = '/parent/login')}
+                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-full hover:bg-gray-50 transition-colors"
+                >
+                  Se connecter
+                </button>
               </div>
             </div>
 
@@ -110,21 +83,12 @@ export default function Home({ onLogin, onSignup, onChildSpace, onParentSpace }:
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Rejoignez les familles qui font confiance à Patou
             </h2>
-            {onSignup ? (
-              <button
-                onClick={onSignup}
-                className="inline-flex items-center justify-center px-8 py-3 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors"
-              >
-                Créer mon compte
-              </button>
-            ) : (
-              <Link
-                to="/parent/signup"
-                className="inline-flex items-center justify-center px-8 py-3 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors"
-              >
-                Créer mon compte
-              </Link>
-            )}
+            <button
+              onClick={onSignup || (() => window.location.href = '/parent/signup')}
+              className="inline-flex items-center justify-center px-8 py-3 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors"
+            >
+              Créer mon compte
+            </button>
           </div>
           
           <h3 className="text-xl font-semibold text-green-600 mb-8">
@@ -275,21 +239,12 @@ export default function Home({ onLogin, onSignup, onChildSpace, onParentSpace }:
             <p className="text-lg mb-8 opacity-90">
               Rejoignez les familles qui font confiance à Patou pour protéger et éveiller leurs enfants.
             </p>
-            {onSignup ? (
-              <button
-                onClick={onSignup}
-                className="inline-flex items-center justify-center px-8 py-4 bg-white text-green-600 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-lg"
-              >
-                Rejoindre la bêta gratuitement
-              </button>
-            ) : (
-              <Link
-                to="/parent/signup"
-                className="inline-flex items-center justify-center px-8 py-4 bg-white text-green-600 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-lg"
-              >
-                Rejoindre la bêta gratuitement
-              </Link>
-            )}
+            <button
+              onClick={onSignup || (() => window.location.href = '/parent/signup')}
+              className="inline-flex items-center justify-center px-8 py-4 bg-white text-green-600 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-lg"
+            >
+              Rejoindre la bêta gratuitement
+            </button>
           </div>
         </div>
       </section>

@@ -119,6 +119,8 @@ const PlayerSdk = React.forwardRef<any, Props>(({ accessToken, onTrackChange, tr
       player.addListener('ready', async ({ device_id }: { device_id: string }) => {
         setDeviceId(device_id)
         setIsReady(true)
+        setError(null)
+        
         // Transfer playback to this device so /play will target it
         try {
           await fetch('https://api.spotify.com/v1/me/player', {
@@ -126,26 +128,17 @@ const PlayerSdk = React.forwardRef<any, Props>(({ accessToken, onTrackChange, tr
             headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ device_ids: [device_id], play: false })
           })
-        } catch {}
-        // Transfer playback to this device so /play will target it
-        try {
-          await fetch('https://api.spotify.com/v1/me/player', {
-            method: 'PUT',
-            headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ device_ids: [device_id], play: false })
-          })
+          console.log('✅ Device activé:', device_id)
         } catch {}
         
+        // Auto-start avec une piste par défaut
         if (trackId) {
           await startPlayback([`spotify:track:${trackId}`])
+        } else if (initialUris?.length) {
+          await startPlayback(initialUris)
         } else {
-          await startPlayback(['spotify:track:4VqPOruhp5EdPBeR92t6lQ']) // une valeur par défaut
-        }
-        // Auto-start a context if none is loaded
-        if (initialUris?.length) {
-          startPlayback(initialUris)
-        } else if (trackId) {
-          startPlayback([`spotify:track:${trackId}`])
+          // Démarrer avec une piste Disney kid-friendly par défaut
+          await startPlayback(['spotify:track:3n3Ppam7vgaVa1iaRUc9Lp']) // "Hakuna Matata"
         }
       })
 
@@ -209,12 +202,30 @@ const PlayerSdk = React.forwardRef<any, Props>(({ accessToken, onTrackChange, tr
     if (!playerRef.current) return
     try {
       await playerRef.current.togglePlay()
+      setError(null)
     } catch (e: any) {
       setError(e?.message || 'Erreur play/pause')
     }
   }
-  const handlePrevious = async () => { try { await playerRef.current?.previousTrack() } catch (e:any){ setError(e?.message||'Erreur précédente') } }
-  const handleNext = async () => { try { await playerRef.current?.nextTrack() } catch (e:any){ setError(e?.message||'Erreur suivante') } }
+  
+  const handlePrevious = async () => { 
+    try { 
+      await playerRef.current?.previousTrack()
+      setError(null)
+    } catch (e:any){ 
+      setError(e?.message||'Erreur précédente') 
+    } 
+  }
+  
+  const handleNext = async () => { 
+    try { 
+      await playerRef.current?.nextTrack()
+      setError(null)
+    } catch (e:any){ 
+      setError(e?.message||'Erreur suivante') 
+    } 
+  }
+  
   const handleSeek = async (ms: number) => { try { await playerRef.current?.seek(ms) } catch (e:any){ setError(e?.message||'Erreur seek') } }
   const handleVolumeChange = async (v: number) => {
     setVolume(v)
@@ -224,16 +235,23 @@ const PlayerSdk = React.forwardRef<any, Props>(({ accessToken, onTrackChange, tr
   const startPlayback = async (uris?: string[]) => {
     if (!deviceId) { setError('Aucun device prêt'); return }
     try {
+      console.log('🎵 Démarrage lecture:', uris)
       const res = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          uris: uris && uris.length ? uris : ['spotify:track:4VqPOruhp5EdPBeR92t6lQ'] // titre de secours
+          uris: uris && uris.length ? uris : ['spotify:track:3n3Ppam7vgaVa1iaRUc9Lp'] // "Hakuna Matata" par défaut
         })
       })
-      if (!res.ok) throw new Error(`API ${res.status}`)
+      if (!res.ok) {
+        const errorText = await res.text()
+        console.error('❌ Erreur Spotify Play API:', res.status, errorText)
+        throw new Error(`Erreur lecture: ${res.status}`)
+      }
+      console.log('✅ Lecture démarrée')
       setError(null)
     } catch (e: any) {
+      console.error('❌ Erreur startPlayback:', e)
       setError(e?.message || 'Impossible de démarrer la lecture')
     }
   }

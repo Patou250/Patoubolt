@@ -336,17 +336,25 @@ export default function Child() {
                 
                 <div className="flex items-center gap-2">
                   <Button className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full">
+                    className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full"
+                    onClick={handlePrevious}
+                  >
+                    <SkipBack className="w-5 h-5" />
+                  </Button>
+                  <Button 
                     <SkipBack className="w-5 h-5" />
                   </Button>
                   <Button 
                     className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full"
-                    onClick={handleResume}
                     onClick={handlePrevious}
                     onClick={handlePlayPause}
                   >
                     {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
                   </Button>
-                  <Button className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full">
+                  <Button 
+                    className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full"
+                    onClick={handleNext}
+                  >
                     <SkipForward className="w-5 h-5" />
                   </Button>
                 </div>

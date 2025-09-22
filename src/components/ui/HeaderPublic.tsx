@@ -19,72 +19,36 @@ export default function HeaderPublic({ onLogin, onSignup, onChildSpace, onParent
 
           {/* Navigation desktop */}
           <nav className="hidden md:flex items-center gap-6">
-            {onParentSpace ? (
-              <button
-                onClick={onParentSpace}
-                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
-              >
-                Espace parent
-              </button>
-            ) : (
-              <Link
-                to="/parent/login"
-                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
-              >
-                Espace parent
-              </Link>
-            )}
+            <button
+              onClick={onParentSpace || (() => window.location.href = '/parent/login')}
+              className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+            >
+              Espace parent
+            </button>
             
-            {onChildSpace ? (
-              <button
-                onClick={onChildSpace}
-                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
-              >
-                Espace enfant
-              </button>
-            ) : (
-              <Link
-                to="/child/login"
-                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
-              >
-                Espace enfant
-              </Link>
-            )}
+            <button
+              onClick={onChildSpace || (() => window.location.href = '/child/login')}
+              className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+            >
+              Espace enfant
+            </button>
           </nav>
 
           {/* Boutons droite */}
           <div className="flex items-center gap-3">
-            {onLogin ? (
-              <button
-                onClick={onLogin}
-                className="hidden sm:inline-flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors"
-              >
-                Se connecter
-              </button>
-            ) : (
-              <Link
-                to="/parent/login"
-                className="hidden sm:inline-flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors"
-              >
-                Se connecter
-              </Link>
-            )}
+            <button
+              onClick={onLogin || (() => window.location.href = '/parent/login')}
+              className="hidden sm:inline-flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors"
+            >
+              Se connecter
+            </button>
             
-            {onSignup ? (
-              <button
-                onClick={onSignup}
-                className="inline-flex items-center px-4 py-2 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors"
-              >
-                Créer un compte
-              </button>
-            ) : (
-              <Link
-                to="/parent/signup"
-                className="inline-flex items-center px-4 py-2 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors"
-              >
-                Créer un compte
-              </Link>
-            )}
+            <button
+              onClick={onSignup || (() => window.location.href = '/parent/signup')}
+              className="inline-flex items-center px-4 py-2 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors"
+            >
+              Créer un compte
+            </button>
           </div>
         </div>
       </div>
