@@ -1,11 +1,40 @@
 :root {
-  /* Palette Patou officielle */
-  --color-primary: #287233;
-  --color-protect: #017ba6;
-  --color-share: #e2725b;
-  --color-awaken: #ffd447;
+  /* Brand Colors - Structure WeWeb */
+  --color-primary-base: #287233;
+  --color-primary-light: #4ade80;
+  --color-primary-dark: #166534;
+  
+  --color-protect-base: #017ba6;
+  --color-protect-light: #0ea5e9;
+  --color-protect-bg: #f0f9ff;
+  
+  --color-share-base: #e2725b;
+  --color-share-light: #fb7185;
+  --color-share-bg: #fef2f2;
+  
+  --color-awaken-base: #ffd447;
+  --color-awaken-light: #fbbf24;
+  --color-awaken-bg: #fffbeb;
+  
+  /* Text Colors */
+  --color-text-primary: #0b0f0d;
+  --color-text-secondary: #5b6660;
+  --color-text-light: #9ca3af;
+  
+  /* Background Colors */
+  --color-background-page: #F8FAF9;
+  --color-background-app: #111315;
+  --color-background-sidebar: #1A1F1C;
+  --color-background-surface: #ffffff;
+  --color-background-surface-dark: #1f2937;
 
-  /* Couleurs neutres */
+  /* Legacy - À supprimer progressivement */
+  --color-primary: var(--color-primary-base);
+  --color-protect: var(--color-protect-base);
+  --color-share: var(--color-share-base);
+  --color-awaken: var(--color-awaken-base);
+  
+  /* Couleurs neutres - À migrer */
   --color-white: #FFFFFF;
   --color-black: #000000;
   --color-gray-50: #F9FAFB;
