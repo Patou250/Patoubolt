@@ -5,8 +5,7 @@ export default function Header() {
     <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-gray-100">
       <div className="mx-auto max-w-6xl h-14 px-4 md:px-8 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <img src="/patou-logo.svg" alt="Patou" className="h-7" />
-          <span className="font-extrabold text-primary">Patou</span>
+          <img src="/patou-logo-full.png" alt="Patou" className="h-8" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-4 text-sm">

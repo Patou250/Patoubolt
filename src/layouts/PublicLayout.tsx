@@ -12,7 +12,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
         <div className="mx-auto max-w-6xl px-4 md:px-8 h-16 flex items-center justify-between">
           {/* Logo gauche */}
           <Link to="/" className="flex items-center">
-            <img src="/patou-logo.svg" alt="Patou" className="h-7" />
+            <img src="/patou-logo-full.png" alt="Patou" className="h-8" />
           </Link>
 
           {/* Boutons droite */}

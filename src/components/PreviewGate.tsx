@@ -43,11 +43,11 @@ export default function PreviewGate() {
         <div className="bento-card text-center">
           <div className="mb-8">
             <img 
-              src="/Patou emeraude sans fond.png" 
+              src="/patou-logo-full.png" 
               alt="Patou Logo" 
               className="h-16 w-auto mx-auto mb-4"
             />
-            <div className="text-3xl font-bold text-patou mb-2">Patou</div>
+            <div className="text-xl text-gray-600 mb-2">Musique sécurisée pour enfants</div>
             <div className="text-gray-500">Accès privé — version en préparation</div>
           </div>
           
