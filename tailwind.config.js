@@ -8,14 +8,14 @@ const config = {
     extend: {
       colors: {
         primary: "#287233",      // CTA global
-        protect: "#017ba6",      // Protéger
+        protect: "#017ba6",      // Protéger  
         share: "#e2725b",        // Partager
         awaken: "#ffd447",       // Éveiller
         bgPage: "#F8FAF9",       // Fond clair (pages publiques)
         bgApp: "#111315",        // Fond sombre (player/app)
         bgSidebar: "#1A1F1C",    // Sidebar
-        textMain: "#0b0f0d",
-        textMuted: "#5b6660"
+        textMain: "#0b0f0d",     // Texte principal
+        textMuted: "#5b6660"     // Texte secondaire
       },
       borderRadius: {
         lg: "16px",
