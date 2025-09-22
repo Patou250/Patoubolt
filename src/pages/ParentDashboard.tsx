@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { 
-  Music, Users, Settings, BarChart3, History, Shield, Clock, Calendar, List, Ban, Share2,
-  Plus, Edit2, LogOut, AlertCircle, Volume2, Play, Pause, SkipForward, SkipBack, X,
-  Headphones, UserPlus, Timer, TrendingUp, Activity
+  Music, Users, Settings, BarChart3, Shield, Calendar, Plus, LogOut,
+  Play, Pause, SkipForward, SkipBack, Volume2, Heart, Ban, X
 } from 'lucide-react'
 import { getParentSession, clearParentSession } from '../utils/auth'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
 import { supabase } from '../lib/supabase'
 import type { Child } from '../types/child'
-import styles from './ParentDashboard.module.css'
-import AppLayout from '../layouts/AppLayout'
 
 interface SpotifyPlayerState {
   isPlaying: boolean
@@ -37,10 +34,8 @@ interface ExcludedTrack {
 }
 
 export default function ParentDashboard() {
-  useEffect(() => { console.log('🧭 ParentDashboard mounted') }, [])
   const [children, setChildren] = useState<Child[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('overview')
   const [spotifyConnected, setSpotifyConnected] = useState(false)
   const [playerState, setPlayerState] = useState<SpotifyPlayerState>({
     isPlaying: false,
@@ -57,7 +52,6 @@ export default function ParentDashboard() {
   const [childIdentifier, setChildIdentifier] = useState('')
   const [playlists, setPlaylists] = useState<Playlist[]>([])
   const [excludedTracks, setExcludedTracks] = useState<ExcludedTrack[]>([])
-  const [currentTrackForAction, setCurrentTrackForAction] = useState<any>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -81,7 +75,6 @@ export default function ParentDashboard() {
     
     // Si on a des tokens Spotify, créer une session
     if (tokens) {
-      // Récupérer les infos utilisateur depuis Spotify
       fetch('https://api.spotify.com/v1/me', {
         headers: { 'Authorization': `Bearer ${tokens.access_token}` }
       })
@@ -96,7 +89,6 @@ export default function ParentDashboard() {
           timestamp: Date.now()
         }
         localStorage.setItem('patou_parent_session', JSON.stringify(parentSession))
-        // Pas besoin de recharger, continuer avec la session créée
         checkSpotifyConnection()
         loadChildren(parentSession) 
         initializeSpotifyPlayer()
@@ -177,18 +169,11 @@ export default function ParentDashboard() {
 
   const loadChildren = async (session: any) => {
     try {
-      console.log('🔍 Loading children for session:', session)
-      
-      // Get the current authenticated user
       const { data: { user }, error: userError } = await supabase.auth.getUser()
       if (userError || !user) {
-        console.error('❌ No authenticated user found:', userError)
         return
       }
       
-      console.log('👤 Authenticated user ID:', user.id)
-      
-      // First, get or create the profile for this parent
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('id')
@@ -196,9 +181,6 @@ export default function ParentDashboard() {
         .single()
 
       if (profileError) {
-        console.log('📝 Profile not found, creating one for user:', user.id)
-        
-        // Create profile if it doesn't exist (without the role field)
         const { data: newProfile, error: createError } = await supabase
           .from('profiles')
           .insert({
@@ -210,13 +192,9 @@ export default function ParentDashboard() {
           .single()
         
         if (createError) {
-          console.error('❌ Failed to create profile:', createError)
           return
         }
         
-        console.log('✅ Profile created with ID:', newProfile.id)
-        
-        // Now get children using the new profile UUID
         const { data, error } = await supabase
           .from('children')
           .select('*')
@@ -224,12 +202,8 @@ export default function ParentDashboard() {
           .order('created_at', { ascending: true })
 
         if (error) throw error
-        console.log('📋 Children loaded:', data?.length || 0)
         setChildren(data || [])
       } else {
-        console.log('✅ Profile found with ID:', profile.id)
-        
-        // Now get children using the existing profile UUID
         const { data, error } = await supabase
           .from('children')
           .select('*')
@@ -237,23 +211,20 @@ export default function ParentDashboard() {
           .order('created_at', { ascending: true })
 
         if (error) throw error
-        console.log('📋 Children loaded:', data?.length || 0)
         setChildren(data || [])
       }
     } catch (error) {
-      console.error('❌ Failed to load children:', error)
+      console.error('Failed to load children:', error)
     } finally {
       setIsLoading(false)
     }
   }
 
   const loadPlaylists = () => {
-    // Simuler le chargement des playlists parent depuis localStorage
     const playlistsRaw = localStorage.getItem('patou_parent_playlists')
     if (playlistsRaw) {
       setPlaylists(JSON.parse(playlistsRaw))
     } else {
-      // Playlists factices pour la démo
       const mockPlaylists: Playlist[] = [
         {
           id: '1',
@@ -268,22 +239,11 @@ export default function ParentDashboard() {
   }
 
   const loadExcludedTracks = () => {
-    // Simuler le chargement des exclusions depuis localStorage
     const excludedRaw = localStorage.getItem('patou_excluded_tracks')
     if (excludedRaw) {
       setExcludedTracks(JSON.parse(excludedRaw))
     } else {
-      // Exclusions factices pour la démo
-      const mockExcluded: ExcludedTrack[] = [
-        {
-          id: '1',
-          spotify_id: 'excluded1',
-          name: 'Chanson Exclue',
-          artist: 'Artiste Test',
-          excluded_at: new Date().toISOString(),
-          reason: 'Contenu inapproprié'
-        }
-      ]
+      const mockExcluded: ExcludedTrack[] = []
       setExcludedTracks(mockExcluded)
     }
   }
@@ -303,10 +263,6 @@ export default function ParentDashboard() {
     setPlaylists(updatedPlaylists)
     localStorage.setItem('patou_parent_playlists', JSON.stringify(updatedPlaylists))
 
-    // TODO: Sauvegarder en base de données (Supabase)
-    console.log('✅ Nouvelle playlist créée:', newPlaylist)
-
-    // Reset form
     setNewPlaylistName('')
     setNewPlaylistDescription('')
     setShowCreatePlaylistModal(false)
@@ -316,7 +272,6 @@ export default function ParentDashboard() {
     if (!childIdentifier.trim()) return
 
     try {
-      // Rechercher l'enfant par identifiant unique
       const { data: childData, error } = await supabase
         .from('children')
         .select('*')
@@ -328,22 +283,16 @@ export default function ParentDashboard() {
         return
       }
 
-      // Vérifier que l'enfant n'est pas déjà associé
       const isAlreadyAssociated = children.some(child => child.id === childData.id)
       if (isAlreadyAssociated) {
         alert('Cet enfant est déjà associé à votre compte')
         return
       }
 
-      // Ajouter l'enfant à la liste
       setChildren([...children, childData])
-      console.log('✅ Enfant associé:', childData.name)
-
-      // Reset form
       setChildIdentifier('')
       setShowAssociateChildModal(false)
     } catch (error) {
-      console.error('❌ Erreur association enfant:', error)
       alert('Erreur lors de l\'association de l\'enfant')
     }
   }
@@ -363,18 +312,12 @@ export default function ParentDashboard() {
     const updatedExcluded = [...excludedTracks, excludedTrack]
     setExcludedTracks(updatedExcluded)
     localStorage.setItem('patou_excluded_tracks', JSON.stringify(updatedExcluded))
-
-    console.log('❌ Titre exclu:', excludedTrack.name)
-    // TODO: Sync avec Supabase et retirer des playlists enfant
   }
 
   const handleReintegrateTrack = (excludedTrack: ExcludedTrack) => {
     const updatedExcluded = excludedTracks.filter(track => track.id !== excludedTrack.id)
     setExcludedTracks(updatedExcluded)
     localStorage.setItem('patou_excluded_tracks', JSON.stringify(updatedExcluded))
-
-    console.log('✅ Titre réintégré:', excludedTrack.name)
-    // TODO: Sync avec Supabase et remettre dans les playlists enfant
   }
 
   const handleSpotifyControl = async (action: 'play' | 'pause' | 'next' | 'previous') => {
@@ -455,623 +398,335 @@ export default function ParentDashboard() {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
 
-  const tabs = [
-    { id: 'overview', label: 'Vue d\'ensemble', icon: BarChart3 },
-    { id: 'children', label: 'Gestion Enfants', icon: Users },
-    { id: 'player', label: 'Lecteur', icon: Music },
-    { id: 'settings', label: 'Paramètres', icon: Settings }
-  ]
-
   if (isLoading) {
     return (
-      <div className={styles.loading}>
-        <div className={styles.spinner}></div>
-        <p>Chargement du tableau de bord...</p>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement du tableau de bord...</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <AppLayout userType="parent">
-      <div className="space-y-8">
-
-        {/* Header avec titre et actions */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-text-primary">Dashboard Parent</h1>
-            <p className="text-text-secondary mt-1">Gérez l'expérience musicale de vos enfants</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-              spotifyConnected 
-                ? 'bg-green-100 text-green-700' 
-                : 'bg-red-100 text-red-700'
-            }`}>
-              {spotifyConnected ? 'Spotify connecté' : 'Spotify déconnecté'}
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <img src="/patou-logo.svg" alt="Patou" className="h-8" />
+              <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline">Déconnexion</span>
+              </button>
             </div>
           </div>
         </div>
+      </header>
 
-        <div className="space-y-8">
-          {activeTab === 'overview' && (
-            <div>
-              {/* Fonctionnalités Parent */}
-              <div className="weweb-grid weweb-grid-3 mb-8">
-                <button
-                  onClick={() => navigate('/parent/rules')}
-                  className="patou-card-feature text-left group"
-                >
-                  <Shield className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
-                  <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Règles</h3>
-                  <p className="text-xs md:text-sm text-gray-600 leading-relaxed">Configurer les horaires et restrictions d'écoute</p>
-                </button>
-                
-                <button
-                  onClick={() => navigate('/parent/curation')}
-                  className="patou-card-feature text-left group"
-                >
-                  <Calendar className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
-                  <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Curation</h3>
-                  <p className="text-xs md:text-sm text-gray-600 leading-relaxed">Gérer les playlists de la semaine</p>
-                </button>
-                
-                <button
-                  onClick={() => navigate('/parent/insights')}
-                  className="patou-card-feature text-left group"
-                >
-                  <BarChart3 className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
-                  <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Insights</h3>
-                  <p className="text-xs md:text-sm text-gray-600 leading-relaxed">Analyser les habitudes d'écoute</p>
-                </button>
-                
-                <button
-                  onClick={() => navigate('/parent/history')}
-                  className="patou-card-feature text-left group"
-                >
-                  <History className="w-6 h-6 md:w-8 md:h-8 mb-3 text-protect group-hover:scale-110 transition-transform" />
-                  <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Historique</h3>
-                  <p className="text-xs md:text-sm text-gray-600 leading-relaxed">Consulter l'historique d'écoute complet</p>
-                </button>
-                
-                <button
-                  onClick={() => navigate('/parent/exclusions')}
-                  className="patou-card-feature text-left group"
-                >
-                  <Ban className="w-6 h-6 md:w-8 md:h-8 mb-3 text-red-500 group-hover:scale-110 transition-transform" />
-                  <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Exclusions</h3>
-                  <p className="text-xs md:text-sm text-gray-600 leading-relaxed">Gérer les contenus bloqués</p>
-                </button>
-                
-                <button
-                  onClick={() => navigate('/parent/shared-playlists')}
-                  className="patou-card-feature text-left group"
-                >
-                  <Share2 className="w-6 h-6 md:w-8 md:h-8 mb-3 text-share group-hover:scale-110 transition-transform" />
-                  <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Playlists communes</h3>
-                  <p className="text-xs md:text-sm text-gray-600 leading-relaxed">Créer des playlists partagées</p>
-                </button>
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Connexion Spotify */}
+        <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <Music className="w-6 h-6 text-green-600" />
               </div>
-              
-              {/* Gestion des enfants */}
-              <div className="mb-8">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900">Enfants configurés</h3>
-                  <button
-                    onClick={() => navigate('/parent/children')}
-                    className="weweb-btn-primary"
-                  >
-                    <Plus size={16} />
-                    Ajouter un enfant
-                  </button>
-                  <button
-                    onClick={() => setShowAssociateChildModal(true)}
-                    className="weweb-btn-secondary"
-                  >
-                    <Users size={16} />
-                    Associer un enfant
-                  </button>
-                  <button
-                    onClick={() => setShowCreatePlaylistModal(true)}
-                    className="weweb-btn-secondary"
-                  >
-                    <Plus size={16} />
-                    Créer une playlist
-                  </button>
-                </div>
-                
-              <div className="weweb-grid weweb-grid-3">
-                {children.map(child => (
-                  <div key={child.id} className="patou-card">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="text-2xl md:text-3xl">{child.emoji}</div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900 text-sm md:text-base">{child.name}</h3>
-                          <p className="text-xs md:text-sm text-gray-500">
-                        Créé le {new Date(child.created_at).toLocaleDateString()}
-                      </p>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => navigate(`/parent/rules/${child.id}`)}
-                          className="p-2 text-protect hover:bg-protect-50 rounded-lg transition-colors"
-                          title="Règles"
-                        >
-                          <Shield size={16} />
-                        </button>
-                        <button
-                          onClick={() => navigate('/parent/children')}
-                          className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
-                          title="Modifier"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                        <button
-                          onClick={() => navigate('/parent-settings')}
-                          className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
-                          title="Paramètres"
-                        >
-                          <Settings size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                
-                {children.length === 0 && (
-                  <div className="col-span-full text-center py-8 md:py-12">
-                    <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">Aucun enfant configuré</h3>
-                    <p className="text-sm md:text-base text-gray-600 mb-6">Commencez par créer le profil de votre premier enfant</p>
-                    <button
-                      onClick={() => navigate('/parent/children')}
-                       className="weweb-btn-primary"
-                    >
-                      <Plus size={16} />
-                      Créer un profil enfant
-                    </button>
-                  </div>
-                )}
-              </div>
-              </div>
-              
-              {/* Status Spotify */}
-              <div className="mt-8 patou-card">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Music className="w-6 h-6 text-primary" />
-                    <div>
-                      <h3 className="text-sm md:text-base font-semibold text-gray-900">Connexion Spotify</h3>
-                      <p className="text-xs md:text-sm text-gray-600">
-                        {spotifyConnected ? 'Connecté et prêt à l\'utilisation' : 'Connexion requise pour le lecteur'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium ${
-                    spotifyConnected 
-                      ? 'bg-green-100 text-green-700' 
-                      : 'bg-red-100 text-red-700'
-                  }`}>
-                    {spotifyConnected ? 'Connecté' : 'Déconnecté'}
-                  </div>
-                </div>
-                {!spotifyConnected && (
-                  <div className="mt-4">
-                    <button
-                      onClick={connectSpotify}
-                       className="weweb-btn-primary"
-                    >
-                      <Music size={16} />
-                      Connecter Spotify
-                    </button>
-                  </div>
-                )}
+              <div>
+                <h3 className="font-semibold text-gray-900">Connecter Spotify</h3>
+                <p className="text-sm text-gray-600">
+                  Accédez à votre bibliothèque musicale et créez des playlists personnalisées pour vos enfants
+                </p>
               </div>
             </div>
-          )}
-
-          {activeTab === 'children' && (
-            <div>
-              <div className={styles.tabHeader}>
-                <h2>Gestion des Enfants</h2>
-                <div className={styles.headerActions}>
-                  <button
-                    onClick={() => navigate('/parent/children')}
-                    className={styles.primaryButton}
-                  >
-                    <Plus size={16} />
-                    Ajouter un enfant
-                  </button>
-                </div>
+            {!spotifyConnected ? (
+              <button
+                onClick={connectSpotify}
+                className="px-6 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-primary-600 transition-colors"
+              >
+                Connecter
+              </button>
+            ) : (
+              <div className="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-medium">
+                Connecté
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                {children.map(child => (
-                  <div key={child.id} className="bg-white rounded-xl p-4 md:p-6 shadow-md border border-gray-100">
-                    <div className="flex items-center space-x-3 md:space-x-4 mb-4">
-                      <div className="text-3xl">{child.emoji}</div>
-                      <div>
-                        <h3 className="text-base md:text-lg font-semibold text-gray-900">{child.name}</h3>
-                        <p className="text-xs md:text-sm text-gray-600">
-                          Créé le {new Date(child.created_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2 md:space-y-3">
-                      <button
-                        onClick={() => navigate(`/parent/rules/${child.id}`)}
-                        className="w-full flex items-center space-x-2 px-3 md:px-4 py-2 bg-protect-50 text-protect-700 rounded-lg hover:bg-protect-100 transition-colors text-sm md:text-base"
-                      >
-                        <Shield size={16} />
-                        <span>Configurer les règles</span>
-                      </button>
-                      
-                      <button
-                        onClick={() => navigate('/parent/children')}
-                        className="w-full flex items-center space-x-2 px-3 md:px-4 py-2 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors text-sm md:text-base"
-                      >
-                        <Edit2 size={16} />
-                        <span>Modifier le profil</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                
-                {children.length === 0 && (
-                  <div className="col-span-full text-center py-8 md:py-12">
-                    <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">Aucun profil enfant</h3>
-                    <p className="text-sm md:text-base text-gray-600 mb-6">Créez le premier profil pour commencer</p>
-                    <button
-                      onClick={() => navigate('/parent/children')}
-                      className={styles.primaryButton}
-                    >
-                      <Plus size={16} />
-                      Créer un profil
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'player' && (
-            <div>
-              <div className={styles.tabHeader}>
-                <h2>Lecteur Spotify Parent</h2>
-                <div className={styles.headerActions}>
-                  <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
-                    spotifyConnected 
-                      ? 'bg-green-100 text-green-700' 
-                      : 'bg-red-100 text-red-700'
-                  }`}>
-                    <Headphones size={16} />
-                    {spotifyConnected ? 'Connecté' : 'Déconnecté'}
-                  </div>
-                </div>
-              </div>
-
-              {!spotifyConnected ? (
-                <div className="bg-white rounded-xl p-6 md:p-8 shadow-md text-center border border-gray-100">
-                  <Music className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">Spotify non connecté</h3>
-                  <p className="text-sm md:text-base text-gray-600 mb-6">
-                    Connectez votre compte Spotify Premium pour utiliser le lecteur
-                  </p>
-                  <button
-                    onClick={connectSpotify}
-                    className="px-6 py-3 bg-primary hover:bg-primary-600 text-white rounded-lg font-semibold transition-colors flex items-center gap-2 mx-auto"
-                  >
-                    <Music size={16} />
-                    Connecter Spotify
-                  </button>
-                </div>
-              ) : (
-                <div className="bg-gradient-to-br from-gray-900 to-black text-white rounded-2xl p-4 md:p-6">
-                  {playerState.currentTrack ? (
-                    <div className="flex items-center space-x-3 md:space-x-4 mb-6">
-                      <img
-                        src={playerState.currentTrack.album?.images[0]?.url || 'https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=300'}
-                        alt={playerState.currentTrack.album?.name}
-                        className="w-12 h-12 md:w-16 md:h-16 rounded-xl shadow-lg flex-shrink-0"
-                      />
-                      <div className="flex-1">
-                        <h3 className="text-sm md:text-lg font-semibold truncate">{playerState.currentTrack.name}</h3>
-                        <p className="text-gray-300 text-xs md:text-sm truncate">
-                          {playerState.currentTrack.artists?.map((a: any) => a.name).join(', ')}
-                        </p>
-                        <p className="text-gray-400 text-xs truncate">{playerState.currentTrack.album?.name}</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-center mb-4 md:mb-6">
-                      <Music className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-400">Aucune musique en cours</p>
-                      <p className="text-xs md:text-sm text-gray-500 mt-2">
-                        Ouvrez Spotify et transférez la lecture vers "Patou Parent Player"
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Barre de progression */}
-                  {playerState.currentTrack && (
-                    <div className="mb-4 md:mb-6">
-                      <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-400 mb-2">
-                        <span>{formatTime(playerState.position)}</span>
-                        <div className="flex-1 bg-gray-700 rounded-full h-1">
-                          <div
-                            className="bg-green-500 h-1 rounded-full transition-all duration-300"
-                            style={{ 
-                              width: `${playerState.duration > 0 ? (playerState.position / playerState.duration) * 100 : 0}%` 
-                            }}
-                          />
-                        </div>
-                        <span>{formatTime(playerState.duration)}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Contrôles */}
-                  <div className="flex items-center justify-center space-x-4 md:space-x-6">
-                    <button
-                      onClick={() => handleSpotifyControl('previous')}
-                      className="text-gray-400 hover:text-white transition-colors"
-                    >
-                      <SkipBack className="w-5 h-5 md:w-6 md:h-6" />
-                    </button>
-                    
-                    <button
-                      onClick={() => handleSpotifyControl(playerState.isPlaying ? 'pause' : 'play')}
-                      className="bg-primary hover:bg-primary-600 text-white rounded-full p-2 md:p-3 transition-colors"
-                    >
-                      {playerState.isPlaying ? <Pause className="w-5 h-5 md:w-6 md:h-6" /> : <Play className="w-5 h-5 md:w-6 md:h-6 ml-0.5" />}
-                    </button>
-                    
-                    <button
-                      onClick={() => handleSpotifyControl('next')}
-                      className="text-gray-400 hover:text-white transition-colors"
-                    >
-                      <SkipForward className="w-5 h-5 md:w-6 md:h-6" />
-                    </button>
-                  </div>
-                  
-                  {/* Actions sur la piste courante */}
-                  {playerState.currentTrack && (
-                    <div className="mt-4 flex items-center justify-center gap-3">
-                      <button
-                        onClick={() => handleExcludeTrack(playerState.currentTrack)}
-                        className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-medium transition-colors flex items-center gap-2"
-                        title="Exclure cette chanson"
-                      >
-                        <Ban size={16} />
-                        Exclure
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-          {activeTab === 'settings' && (
-            <div>
-              <div className={styles.tabHeader}>
-                <h2>Paramètres</h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
-                <div className="bg-white rounded-xl p-4 md:p-6 shadow-md border border-gray-100">
-                  <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Connexion Spotify</h3>
-                  <div className="flex items-center justify-between mb-4">
-                    <span>Statut de connexion</span>
-                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      spotifyConnected 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-red-100 text-red-700'
-                    }`}>
-                      {spotifyConnected ? 'Connecté' : 'Déconnecté'}
-                    </div>
-                  </div>
-                  {!spotifyConnected && (
-                    <div className="flex gap-3 flex-wrap">
-                      <button
-                        onClick={connectSpotify}
-                        className="px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
-                      >
-                        <Music size={16} />
-                        Connecter Spotify
-                      </button>
-                    </div>
-                  )}
-                  <p className="text-xs md:text-sm text-gray-500 mt-4 leading-relaxed">
-                    Un compte Spotify Premium est requis pour utiliser le lecteur.
-                  </p>
-                </div>
-
-                <div className="bg-white rounded-xl p-4 md:p-6 shadow-md border border-gray-100">
-                  <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Gestion des données</h3>
-                  <div className="flex gap-3 flex-wrap">
-                    <button
-                      onClick={() => navigate('/parent/history')}
-                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors flex items-center gap-2"
-                    >
-                      <History size={16} />
-                      Voir l'historique
-                    </button>
-                    <button
-                      onClick={() => navigate('/parent/insights')}
-                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors flex items-center gap-2"
-                    >
-                      <BarChart3 size={16} />
-                      Statistiques
-                    </button>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl p-4 md:p-6 shadow-md border border-gray-100">
-                  <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Configuration des enfants</h3>
-                  <div className="flex gap-3 flex-wrap">
-                    <button
-                      onClick={() => navigate('/parent/children')}
-                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors flex items-center gap-2"
-                    >
-                      <Users size={16} />
-                      Gérer les profils
-                    </button>
-                    <button
-                      onClick={() => navigate('/parent/curation')}
-                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors flex items-center gap-2"
-                    >
-                      <List size={16} />
-                      Gérer les playlists
-                    </button>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl p-4 md:p-6 shadow-md border border-gray-100">
-                  <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">Exclusions</h3>
-                  <div className="space-y-2 max-h-40 overflow-y-auto">
-                    {excludedTracks.length === 0 ? (
-                      <p className="text-sm text-gray-500">Aucune chanson exclue</p>
-                    ) : (
-                      excludedTracks.map(track => (
-                        <div key={track.id} className="flex items-center justify-between p-2 bg-red-50 rounded-lg">
-                          <div className="flex-1">
-                            <div className="font-medium text-sm text-gray-900">{track.name}</div>
-                            <div className="text-xs text-gray-600">{track.artist}</div>
-                          </div>
-                          <button
-                            onClick={() => handleReintegrateTrack(track)}
-                            className="px-2 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded text-xs font-medium transition-colors"
-                            title="Réintégrer cette chanson"
-                          >
-                            Réintégrer
-                          </button>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
-        {/* Modal Créer une playlist */}
-        {showCreatePlaylistModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-md">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Créer une playlist</h3>
-                <button
-                  onClick={() => setShowCreatePlaylistModal(false)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <X size={20} />
-                </button>
+        {/* Sections principales */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* Enfants */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                <Users className="w-5 h-5 text-gray-600" />
               </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nom de la playlist
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Ma nouvelle playlist"
-                    value={newPlaylistName}
-                    onChange={(e) => setNewPlaylistName(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
-                    autoFocus
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Description (optionnel)
-                  </label>
-                  <textarea
-                    placeholder="Description de la playlist..."
-                    value={newPlaylistDescription}
-                    onChange={(e) => setNewPlaylistDescription(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
-                    rows={3}
-                  />
-                </div>
-                
-                <div className="flex gap-3 pt-4">
-                  <button
-                    onClick={() => setShowCreatePlaylistModal(false)}
-                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    Annuler
-                  </button>
-                  <button
-                    onClick={handleCreatePlaylist}
-                    disabled={!newPlaylistName.trim()}
-                    className="flex-1 px-4 py-2 bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
-                  >
-                    Créer
-                  </button>
-                </div>
+              <h3 className="font-semibold text-gray-900">Enfants</h3>
+            </div>
+            <p className="text-sm text-gray-600 mb-4">
+              Gérez les profils de vos enfants et leurs préférences musicales
+            </p>
+            <button
+              onClick={() => navigate('/parent/children')}
+              className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+            >
+              Voir les profils
+            </button>
+          </div>
+
+          {/* Playlists enfants */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
+                <Music className="w-5 h-5 text-pink-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900">Playlists enfants</h3>
+            </div>
+            <p className="text-sm text-gray-600 mb-4">
+              Explorez et gérez les playlists adaptées à vos enfants
+            </p>
+            <button
+              onClick={() => navigate('/parent/curation')}
+              className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+            >
+              Voir les playlists
+            </button>
+          </div>
+
+          {/* Règles & Filtres */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <Shield className="w-5 h-5 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900">Règles & Filtres</h3>
+            </div>
+            <p className="text-sm text-gray-600 mb-4">
+              Configurez les filtres de contrôle et les règles d'écoute
+            </p>
+            <div className="mb-4">
+              <div className="text-xs text-gray-500 mb-1">Niveau de vigilance</div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="bg-blue-500 h-2 rounded-full" style={{ width: '80%' }}></div>
+              </div>
+              <div className="text-xs text-gray-500 mt-1">80%</div>
+            </div>
+            <button
+              onClick={() => navigate('/parent-settings')}
+              className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+            >
+              Configurer
+            </button>
+          </div>
+        </div>
+
+        {/* Actions rapides */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <button
+            onClick={() => setShowCreatePlaylistModal(true)}
+            className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 text-left hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <Plus className="w-6 h-6 text-primary" />
+              <h3 className="font-semibold text-gray-900">Créer une playlist</h3>
+            </div>
+            <p className="text-sm text-gray-600">
+              Créez une nouvelle playlist personnalisée pour vos enfants
+            </p>
+          </button>
+
+          <button
+            onClick={() => setShowAssociateChildModal(true)}
+            className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 text-left hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <Users className="w-6 h-6 text-primary" />
+              <h3 className="font-semibold text-gray-900">Associer un enfant</h3>
+            </div>
+            <p className="text-sm text-gray-600">
+              Associez un profil enfant existant à votre compte
+            </p>
+          </button>
+        </div>
+
+        {/* Lecteur Spotify (si connecté et piste en cours) */}
+        {spotifyConnected && playerState.currentTrack && (
+          <div className="mt-8 bg-gradient-to-br from-gray-900 to-black text-white rounded-2xl p-6">
+            <div className="flex items-center gap-4 mb-6">
+              <img
+                src={playerState.currentTrack.album?.images[0]?.url || 'https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=300'}
+                alt={playerState.currentTrack.album?.name}
+                className="w-16 h-16 rounded-xl shadow-lg"
+              />
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold">{playerState.currentTrack.name}</h3>
+                <p className="text-gray-300 text-sm">
+                  {playerState.currentTrack.artists?.map((a: any) => a.name).join(', ')}
+                </p>
               </div>
             </div>
-          </div>
-        )}
 
-        {/* Modal Associer un enfant */}
-        {showAssociateChildModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-md">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Associer un enfant</h3>
-                <button
-                  onClick={() => setShowAssociateChildModal(false)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <X size={20} />
-                </button>
-              </div>
+            {/* Contrôles */}
+            <div className="flex items-center justify-center gap-6 mb-6">
+              <button
+                onClick={() => handleSpotifyControl('previous')}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <SkipBack className="w-6 h-6" />
+              </button>
               
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Identifiant unique de l'enfant
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="ID-ENFANT-XXXX"
-                    value={childIdentifier}
-                    onChange={(e) => setChildIdentifier(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
-                    autoFocus
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Demandez l'identifiant à l'autre parent ou trouvez-le dans les paramètres de l'enfant
-                  </p>
-                </div>
-                
-                <div className="flex gap-3 pt-4">
-                  <button
-                    onClick={() => setShowAssociateChildModal(false)}
-                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    Annuler
-                  </button>
-                  <button
-                    onClick={handleAssociateChild}
-                    disabled={!childIdentifier.trim()}
-                    className="flex-1 px-4 py-2 bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
-                  >
-                    Associer
-                  </button>
-                </div>
-              </div>
+              <button
+                onClick={() => handleSpotifyControl(playerState.isPlaying ? 'pause' : 'play')}
+                className="bg-primary hover:bg-primary-600 text-white rounded-full p-3 transition-colors"
+              >
+                {playerState.isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-0.5" />}
+              </button>
+              
+              <button
+                onClick={() => handleSpotifyControl('next')}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <SkipForward className="w-6 h-6" />
+              </button>
+            </div>
+            
+            {/* Action d'exclusion */}
+            <div className="flex items-center justify-center">
+              <button
+                onClick={() => handleExcludeTrack(playerState.currentTrack)}
+                className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-medium transition-colors flex items-center gap-2"
+              >
+                <Ban className="w-4 h-4" />
+                Exclure cette chanson
+              </button>
             </div>
           </div>
         )}
       </div>
-    </AppLayout>
+
+      {/* Modal Créer une playlist */}
+      {showCreatePlaylistModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Créer une playlist</h3>
+              <button
+                onClick={() => setShowCreatePlaylistModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Nom de la playlist
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ma nouvelle playlist"
+                  value={newPlaylistName}
+                  onChange={(e) => setNewPlaylistName(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
+                  autoFocus
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description (optionnel)
+                </label>
+                <textarea
+                  placeholder="Description de la playlist..."
+                  value={newPlaylistDescription}
+                  onChange={(e) => setNewPlaylistDescription(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
+                  rows={3}
+                />
+              </div>
+              
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={() => setShowCreatePlaylistModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={handleCreatePlaylist}
+                  disabled={!newPlaylistName.trim()}
+                  className="flex-1 px-4 py-2 bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+                >
+                  Créer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Associer un enfant */}
+      {showAssociateChildModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Associer un enfant</h3>
+              <button
+                onClick={() => setShowAssociateChildModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Identifiant unique de l'enfant
+                </label>
+                <input
+                  type="text"
+                  placeholder="ID-ENFANT-XXXX"
+                  value={childIdentifier}
+                  onChange={(e) => setChildIdentifier(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:border-primary focus:ring-2 focus:ring-primary-200 outline-none"
+                  autoFocus
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Demandez l'identifiant à l'autre parent ou trouvez-le dans les paramètres de l'enfant
+                </p>
+              </div>
+              
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={() => setShowAssociateChildModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={handleAssociateChild}
+                  disabled={!childIdentifier.trim()}
+                  className="flex-1 px-4 py-2 bg-primary hover:bg-primary-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+                >
+                  Associer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
