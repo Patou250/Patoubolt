@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { AssetManager } from '../../utils/assets'
+import { AssetManager } from '../../utils/assets.tsx'
 
 interface AssetPreloaderProps {
   critical?: string[]
