@@ -137,6 +137,11 @@ export default function ChildSearch() {
     }
   }
 
+  const handleRequestSpotifyConnection = () => {
+    // Cette fonction sera ajoutée si nécessaire dans ChildSearch
+    console.log('Request Spotify connection from search page')
+  }
+
   const formatDuration = (ms: number) => {
     const minutes = Math.floor(ms / 60000)
     const seconds = Math.floor((ms % 60000) / 1000)
@@ -172,7 +177,7 @@ export default function ChildSearch() {
                 <p className="text-gray-600 mb-4">
                   Demande à tes parents de connecter Spotify pour rechercher de la musique
                 </p>
-                <Button className="bg-primary text-white">
+                <Button className="bg-primary text-white" onClick={handleRequestSpotifyConnection}>
                   Demander à papa/maman
                 </Button>
               </Card>
