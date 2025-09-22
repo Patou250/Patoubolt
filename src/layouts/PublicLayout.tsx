@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import HeaderPublic from '../components/ui/HeaderPublic'
+import Footer from '../components/ui/Footer'
 
 interface PublicLayoutProps {
   children: React.ReactNode

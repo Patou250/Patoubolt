@@ -258,7 +258,7 @@ export default function ParentDashboard() {
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src="/patou-logo.svg" alt="Patou" className="h-8" />
+              <img src="/patou-logo.svg" alt="Patou" className="h-8 w-auto" />
               <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
             </div>
             

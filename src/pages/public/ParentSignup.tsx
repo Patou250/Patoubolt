@@ -98,7 +98,7 @@ export default function ParentSignup({ onSubmit }: ParentSignupProps) {
       <div className="w-full max-w-md">
         {/* Header avec logo centré */}
         <div className="text-center mb-8">
-          <img src="/patou-logo.svg" alt="Patou Logo" className="h-12 mx-auto mb-8" />
+          <img src="/patou-logo.svg" alt="Patou Logo" className="h-12 w-auto mx-auto mb-8" />
         </div>
 
         {/* Onglets Se connecter / Créer un compte */}

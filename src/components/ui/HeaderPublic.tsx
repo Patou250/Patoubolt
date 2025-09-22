@@ -14,7 +14,7 @@ export default function HeaderPublic({ onLogin, onSignup, onChildSpace, onParent
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <img src="/patou-logo.svg" alt="Patou" className="h-8" />
+            <img src="/patou-logo.svg" alt="Patou" className="h-8 w-auto" />
           </Link>
 
           {/* Navigation desktop */}
