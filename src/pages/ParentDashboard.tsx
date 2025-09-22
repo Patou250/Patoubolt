@@ -1,20 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { 
-  Music, Users, Settings, BarChart3, Shield, Calendar, Plus, LogOut,
-  Play, Pause, SkipForward, SkipBack, Volume2, Heart, Ban, X
+  Music, Users, Settings, Shield, LogOut, Plus, X
 } from 'lucide-react'
 import { getParentSession, clearParentSession } from '../utils/auth'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
 import { supabase } from '../lib/supabase'
 import type { Child } from '../types/child'
-
-interface SpotifyPlayerState {
-  isPlaying: boolean
-  currentTrack: any
-  position: number
-  duration: number
-}
 
 interface Playlist {
   id: string
@@ -24,34 +16,16 @@ interface Playlist {
   created_at: string
 }
 
-interface ExcludedTrack {
-  id: string
-  spotify_id: string
-  name: string
-  artist: string
-  excluded_at: string
-  reason?: string
-}
-
 export default function ParentDashboard() {
   const [children, setChildren] = useState<Child[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [spotifyConnected, setSpotifyConnected] = useState(false)
-  const [playerState, setPlayerState] = useState<SpotifyPlayerState>({
-    isPlaying: false,
-    currentTrack: null,
-    position: 0,
-    duration: 0
-  })
-  const [accessToken, setAccessToken] = useState<string | null>(null)
-  const [deviceId, setDeviceId] = useState<string>('')
   const [showCreatePlaylistModal, setShowCreatePlaylistModal] = useState(false)
   const [showAssociateChildModal, setShowAssociateChildModal] = useState(false)
   const [newPlaylistName, setNewPlaylistName] = useState('')
   const [newPlaylistDescription, setNewPlaylistDescription] = useState('')
   const [childIdentifier, setChildIdentifier] = useState('')
   const [playlists, setPlaylists] = useState<Playlist[]>([])
-  const [excludedTracks, setExcludedTracks] = useState<ExcludedTrack[]>([])
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -91,7 +65,6 @@ export default function ParentDashboard() {
         localStorage.setItem('patou_parent_session', JSON.stringify(parentSession))
         checkSpotifyConnection()
         loadChildren(parentSession) 
-        initializeSpotifyPlayer()
       })
       .catch(() => {
         navigate('/')
@@ -109,62 +82,13 @@ export default function ParentDashboard() {
     if (session) {
       checkSpotifyConnection()
       loadChildren(session)
-      initializeSpotifyPlayer()
       loadPlaylists()
-      loadExcludedTracks()
     }
   }, [navigate])
 
   const checkSpotifyConnection = () => {
     const tokens = getSpotifyTokens()
     setSpotifyConnected(!!tokens)
-    if (tokens) {
-      setAccessToken(tokens.access_token)
-    }
-  }
-
-  const initializeSpotifyPlayer = () => {
-    if (!window.Spotify) {
-      const script = document.createElement('script')
-      script.src = 'https://sdk.scdn.co/spotify-player.js'
-      script.async = true
-      document.body.appendChild(script)
-      
-      window.onSpotifyWebPlaybackSDKReady = () => {
-        setupPlayer()
-      }
-    } else {
-      setupPlayer()
-    }
-  }
-
-  const setupPlayer = () => {
-    if (!accessToken) return
-
-    const player = new window.Spotify.Player({
-      name: 'Patou Parent Player',
-      getOAuthToken: (cb: (token: string) => void) => {
-        cb(accessToken)
-      },
-      volume: 0.5
-    })
-
-    player.addListener('ready', ({ device_id }: { device_id: string }) => {
-      setDeviceId(device_id)
-    })
-
-    player.addListener('player_state_changed', (state: any) => {
-      if (!state) return
-      
-      setPlayerState({
-        isPlaying: !state.paused,
-        currentTrack: state.track_window?.current_track,
-        position: state.position,
-        duration: state.duration
-      })
-    })
-
-    player.connect()
   }
 
   const loadChildren = async (session: any) => {
@@ -225,26 +149,8 @@ export default function ParentDashboard() {
     if (playlistsRaw) {
       setPlaylists(JSON.parse(playlistsRaw))
     } else {
-      const mockPlaylists: Playlist[] = [
-        {
-          id: '1',
-          name: 'Playlist Familiale',
-          description: 'Musiques pour toute la famille',
-          tracks: ['track1', 'track2'],
-          created_at: new Date().toISOString()
-        }
-      ]
+      const mockPlaylists: Playlist[] = []
       setPlaylists(mockPlaylists)
-    }
-  }
-
-  const loadExcludedTracks = () => {
-    const excludedRaw = localStorage.getItem('patou_excluded_tracks')
-    if (excludedRaw) {
-      setExcludedTracks(JSON.parse(excludedRaw))
-    } else {
-      const mockExcluded: ExcludedTrack[] = []
-      setExcludedTracks(mockExcluded)
     }
   }
 
@@ -297,64 +203,6 @@ export default function ParentDashboard() {
     }
   }
 
-  const handleExcludeTrack = (track: any) => {
-    if (!track) return
-
-    const excludedTrack: ExcludedTrack = {
-      id: Date.now().toString(),
-      spotify_id: track.id,
-      name: track.name,
-      artist: track.artists?.map((a: any) => a.name).join(', ') || 'Artiste inconnu',
-      excluded_at: new Date().toISOString(),
-      reason: 'Exclu par le parent'
-    }
-
-    const updatedExcluded = [...excludedTracks, excludedTrack]
-    setExcludedTracks(updatedExcluded)
-    localStorage.setItem('patou_excluded_tracks', JSON.stringify(updatedExcluded))
-  }
-
-  const handleReintegrateTrack = (excludedTrack: ExcludedTrack) => {
-    const updatedExcluded = excludedTracks.filter(track => track.id !== excludedTrack.id)
-    setExcludedTracks(updatedExcluded)
-    localStorage.setItem('patou_excluded_tracks', JSON.stringify(updatedExcluded))
-  }
-
-  const handleSpotifyControl = async (action: 'play' | 'pause' | 'next' | 'previous') => {
-    if (!accessToken) return
-
-    try {
-      let endpoint = ''
-      let method = 'PUT'
-
-      switch (action) {
-        case 'play':
-          endpoint = 'play'
-          break
-        case 'pause':
-          endpoint = 'pause'
-          break
-        case 'next':
-          endpoint = 'next'
-          method = 'POST'
-          break
-        case 'previous':
-          endpoint = 'previous'
-          method = 'POST'
-          break
-      }
-
-      await fetch(`https://api.spotify.com/v1/me/player/${endpoint}`, {
-        method,
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
-      })
-    } catch (error) {
-      console.error('Spotify control error:', error)
-    }
-  }
-
   const connectSpotify = () => {
     const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID
     const redirectUri = import.meta.env.VITE_REDIRECT_URI || `${window.location.origin}/parent/callback`
@@ -392,12 +240,6 @@ export default function ParentDashboard() {
     navigate('/login-parent')
   }
 
-  const formatTime = (ms: number) => {
-    const minutes = Math.floor(ms / 60000)
-    const seconds = Math.floor((ms % 60000) / 1000)
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`
-  }
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -411,7 +253,7 @@ export default function ParentDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Header - reproduction exacte WeWeb */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -434,7 +276,7 @@ export default function ParentDashboard() {
       </header>
 
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Connexion Spotify */}
+        {/* Connexion Spotify - reproduction exacte WeWeb */}
         <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -463,7 +305,7 @@ export default function ParentDashboard() {
           </div>
         </div>
 
-        {/* Sections principales */}
+        {/* 3 sections principales - reproduction exacte WeWeb */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Enfants */}
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
@@ -529,89 +371,6 @@ export default function ParentDashboard() {
             </button>
           </div>
         </div>
-
-        {/* Actions rapides */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <button
-            onClick={() => setShowCreatePlaylistModal(true)}
-            className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 text-left hover:shadow-md transition-shadow"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <Plus className="w-6 h-6 text-primary" />
-              <h3 className="font-semibold text-gray-900">Créer une playlist</h3>
-            </div>
-            <p className="text-sm text-gray-600">
-              Créez une nouvelle playlist personnalisée pour vos enfants
-            </p>
-          </button>
-
-          <button
-            onClick={() => setShowAssociateChildModal(true)}
-            className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 text-left hover:shadow-md transition-shadow"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <Users className="w-6 h-6 text-primary" />
-              <h3 className="font-semibold text-gray-900">Associer un enfant</h3>
-            </div>
-            <p className="text-sm text-gray-600">
-              Associez un profil enfant existant à votre compte
-            </p>
-          </button>
-        </div>
-
-        {/* Lecteur Spotify (si connecté et piste en cours) */}
-        {spotifyConnected && playerState.currentTrack && (
-          <div className="mt-8 bg-gradient-to-br from-gray-900 to-black text-white rounded-2xl p-6">
-            <div className="flex items-center gap-4 mb-6">
-              <img
-                src={playerState.currentTrack.album?.images[0]?.url || 'https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=300'}
-                alt={playerState.currentTrack.album?.name}
-                className="w-16 h-16 rounded-xl shadow-lg"
-              />
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold">{playerState.currentTrack.name}</h3>
-                <p className="text-gray-300 text-sm">
-                  {playerState.currentTrack.artists?.map((a: any) => a.name).join(', ')}
-                </p>
-              </div>
-            </div>
-
-            {/* Contrôles */}
-            <div className="flex items-center justify-center gap-6 mb-6">
-              <button
-                onClick={() => handleSpotifyControl('previous')}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <SkipBack className="w-6 h-6" />
-              </button>
-              
-              <button
-                onClick={() => handleSpotifyControl(playerState.isPlaying ? 'pause' : 'play')}
-                className="bg-primary hover:bg-primary-600 text-white rounded-full p-3 transition-colors"
-              >
-                {playerState.isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-0.5" />}
-              </button>
-              
-              <button
-                onClick={() => handleSpotifyControl('next')}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <SkipForward className="w-6 h-6" />
-              </button>
-            </div>
-            
-            {/* Action d'exclusion */}
-            <div className="flex items-center justify-center">
-              <button
-                onClick={() => handleExcludeTrack(playerState.currentTrack)}
-                className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-medium transition-colors flex items-center gap-2"
-              >
-                <Ban className="w-4 h-4" />
-                Exclure cette chanson
-              </button>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Modal Créer une playlist */}

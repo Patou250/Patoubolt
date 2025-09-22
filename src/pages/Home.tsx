@@ -1,84 +1,105 @@
 import { Link } from 'react-router-dom'
-import { ShieldCheck, Users, SunMedium, Shield, Heart, Music } from 'lucide-react'
-import PublicLayout from '../layouts/PublicLayout'
+import { Shield, Users, Music } from 'lucide-react'
 
 export default function Home() {
   return (
-    <PublicLayout>
-      {/* HERO SECTION */}
-      <section className="text-center py-16 md:py-24">
-        <div className="mb-8">
-          <img src="/patou-logo.svg" alt="Patou Logo" className="h-16 mx-auto mb-6" />
+    <div className="min-h-screen bg-gray-50">
+      {/* Header simple */}
+      <header className="bg-white border-b border-gray-200 py-4">
+        <div className="max-w-6xl mx-auto px-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <img src="/patou-logo.svg" alt="Patou Logo" className="h-8" />
+          </div>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/login-parent"
+              className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium"
+            >
+              Se connecter
+            </Link>
+            <Link
+              to="/signup-parent"
+              className="px-6 py-2 bg-primary text-white font-semibold rounded-full hover:bg-primary-600 transition-colors"
+            >
+              Créer un compte
+            </Link>
+          </div>
         </div>
-        
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            {/* Texte principal */}
-            <div className="text-left">
+      </header>
+
+      {/* Hero Section - reproduction exacte WeWeb */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Colonne gauche - Texte */}
+            <div>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
                 Musique en famille,<br />
                 en toute sécurité
               </h1>
+              
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
                 Offrez à vos enfants une expérience musicale adaptée à leur âge, 
                 sans contenus inappropriés.
               </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 mb-6">
+
+              {/* Boutons principaux */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Link
                   to="/signup-parent"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold rounded-full hover:bg-primary-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center justify-center px-8 py-3 bg-primary text-white font-semibold rounded-full hover:bg-primary-600 transition-colors"
                 >
                   Créer mon compte gratuit
                 </Link>
                 <Link
                   to="/login-enfant"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-blue-100 text-blue-700 font-semibold rounded-full hover:bg-blue-200 transition-all duration-300"
+                  className="inline-flex items-center justify-center px-8 py-3 bg-blue-100 text-blue-700 font-semibold rounded-full hover:bg-blue-200 transition-colors"
                 >
                   Espace enfant
                 </Link>
                 <Link
                   to="/login-parent"
-                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-full hover:bg-gray-50 transition-all duration-300"
+                  className="inline-flex items-center justify-center px-8 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-full hover:bg-gray-50 transition-colors"
                 >
                   Se connecter
                 </Link>
               </div>
-              
-              <div className="text-sm text-gray-500">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-                  <span>100% sécurisé</span>
+
+              {/* Badges sécurité */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-sm text-gray-600">100% sécurisé</span>
                 </div>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-                  <span>Contrôle parental + sans publicité</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-sm text-gray-600">Contrôle parental + sans publicité</span>
                 </div>
               </div>
             </div>
-            
-            {/* Image */}
+
+            {/* Colonne droite - Image */}
             <div className="flex justify-center">
               <img 
                 src="https://images.pexels.com/photos/3985062/pexels-photo-3985062.jpeg?auto=compress&cs=tinysrgb&w=600" 
                 alt="Famille écoutant de la musique ensemble"
-                className="rounded-2xl shadow-2xl max-w-sm w-full"
+                className="rounded-2xl shadow-xl max-w-md w-full"
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* SECTION CONFIANCE */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-12">
+      {/* Section confiance - reproduction exacte WeWeb */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <div className="bg-gray-50 rounded-2xl p-8 mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
               Rejoignez les familles qui font confiance à Patou
             </h2>
             <Link
               to="/signup-parent"
-              className="inline-flex items-center justify-center px-8 py-3 bg-primary text-white font-semibold rounded-full hover:bg-primary-600 transition-all duration-300"
+              className="inline-flex items-center justify-center px-8 py-3 bg-primary text-white font-semibold rounded-full hover:bg-primary-600 transition-colors"
             >
               Créer mon compte
             </Link>
@@ -100,8 +121,8 @@ export default function Home() {
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-gray-600" />
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-blue-600" />
               </div>
               <h4 className="font-semibold text-gray-900 mb-2">Moments partagés</h4>
               <p className="text-sm text-gray-600">
@@ -110,8 +131,8 @@ export default function Home() {
             </div>
             
             <div className="text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Music className="w-8 h-8 text-gray-600" />
+              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Music className="w-8 h-8 text-yellow-600" />
               </div>
               <h4 className="font-semibold text-gray-900 mb-2">Éveil musical</h4>
               <p className="text-sm text-gray-600">
@@ -122,15 +143,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* LES PILIERS DE PATOU */}
-      <section className="py-16">
-        <div className="max-w-6xl mx-auto">
+      {/* Les piliers de Patou - reproduction exacte WeWeb */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
             Les piliers de Patou
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Protection garantie */}
+            {/* Protection garantie - bleu */}
             <div className="bg-blue-50 rounded-2xl p-8 text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Shield className="w-8 h-8 text-blue-600" />
@@ -139,35 +160,35 @@ export default function Home() {
               <p className="text-gray-600 mb-6 leading-relaxed">
                 Un environnement sécurisé 100% adapté aux enfants. Filtrage automatique des contenus inappropriés.
               </p>
-              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
                 Sûr
               </div>
             </div>
             
-            {/* Partage en famille */}
+            {/* Partage en famille - rose */}
             <div className="bg-pink-50 rounded-2xl p-8 text-center">
               <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Heart className="w-8 h-8 text-pink-600" />
+                <Users className="w-8 h-8 text-pink-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">Partage en famille</h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 Créez des moments musicaux en famille. Partagez vos découvertes et souvenirs via liens.
               </p>
-              <div className="inline-flex items-center px-4 py-2 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">
+              <div className="inline-flex items-center px-4 py-2 bg-pink-100 text-pink-700 rounded-full text-sm font-semibold">
                 Social
               </div>
             </div>
             
-            {/* Éveil musical et créativité */}
+            {/* Éveil musical - jaune */}
             <div className="bg-yellow-50 rounded-2xl p-8 text-center">
               <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <SunMedium className="w-8 h-8 text-yellow-600" />
+                <Music className="w-8 h-8 text-yellow-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">Éveil musical et créativité</h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 Développez la curiosité musicale de vos enfants avec des contenus adaptés à leur âge.
               </p>
-              <div className="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">
+              <div className="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-700 rounded-full text-sm font-semibold">
                 Créatif
               </div>
             </div>
@@ -175,19 +196,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* EXPÉRIENCE MUSICALE COMPLÈTE */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
+      {/* Expérience musicale complète */}
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
             Une expérience musicale complète
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Contrôle parental simple */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
               <img 
                 src="https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&w=400" 
-                alt="Contrôle parental"
+                alt="Contrôle parental simple"
                 className="w-full h-48 object-cover rounded-xl mb-4"
               />
               <h3 className="text-lg font-bold text-gray-900 mb-2">Contrôle parental simple</h3>
@@ -196,8 +216,7 @@ export default function Home() {
               </p>
             </div>
             
-            {/* Playlists adaptées */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
               <img 
                 src="https://images.pexels.com/photos/4348401/pexels-photo-4348401.jpeg?auto=compress&cs=tinysrgb&w=400" 
                 alt="Playlists adaptées"
@@ -209,11 +228,10 @@ export default function Home() {
               </p>
             </div>
             
-            {/* Interface enfant ludique */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg">
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
               <img 
                 src="https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&w=400" 
-                alt="Interface enfant"
+                alt="Interface enfant ludique"
                 className="w-full h-48 object-cover rounded-xl mb-4"
               />
               <h3 className="text-lg font-bold text-gray-900 mb-2">Interface enfant ludique</h3>
@@ -225,9 +243,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA FINAL */}
-      <section className="py-16">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* CTA final */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="bg-gradient-to-r from-primary to-protect text-white rounded-2xl p-8 md:p-12 shadow-xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-4">
               Prêt à offrir une expérience musicale sécurisée ?
@@ -237,13 +255,22 @@ export default function Home() {
             </p>
             <Link
               to="/signup-parent"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary font-bold rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg"
+              className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary font-bold rounded-full hover:bg-gray-100 transition-colors shadow-lg"
             >
               Rejoindre la bêta gratuitement
             </Link>
           </div>
         </div>
       </section>
-    </PublicLayout>
+
+      {/* Footer simple */}
+      <footer className="bg-white border-t border-gray-200 py-8">
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <p className="text-sm text-gray-500">
+            © 2025 Patou — Protéger • Partager • Éveiller
+          </p>
+        </div>
+      </footer>
+    </div>
   )
 }

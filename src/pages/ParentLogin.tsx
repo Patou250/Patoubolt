@@ -32,23 +32,25 @@ export default function ParentLogin() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Header avec logo */}
+        {/* Header avec logo centré */}
         <div className="text-center mb-8">
-          <img src="/patou-logo.svg" alt="Patou" className="h-12 mx-auto mb-6" />
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <Link 
-              to="/login-parent"
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full font-medium"
-            >
-              Se connecter
-            </Link>
-            <Link 
-              to="/signup-parent"
-              className="px-4 py-2 bg-primary text-white rounded-full font-medium"
-            >
-              Créer un compte
-            </Link>
-          </div>
+          <img src="/patou-logo.svg" alt="Patou Logo" className="h-12 mx-auto mb-8" />
+        </div>
+
+        {/* Onglets Se connecter / Créer un compte */}
+        <div className="flex bg-gray-100 rounded-full p-1 mb-8">
+          <Link 
+            to="/login-parent"
+            className="flex-1 text-center py-2 px-4 bg-white text-gray-900 rounded-full font-medium shadow-sm"
+          >
+            Se connecter
+          </Link>
+          <Link 
+            to="/signup-parent"
+            className="flex-1 text-center py-2 px-4 text-gray-600 font-medium"
+          >
+            Créer un compte
+          </Link>
         </div>
 
         {/* Formulaire de connexion */}
