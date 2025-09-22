@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import ChildLayout from './layouts/ChildLayout'
 import DesignSystemProvider from './components/ui/DesignSystemProvider'
@@ -30,8 +29,7 @@ import PatouAdmin from './pages/PatouAdmin'
 import KonstaTest from './pages/_dev/KonstaTest'
 
 export default function App() {
-  const { mustGate } = usePreviewGate()
-  const location = useLocation()
+  const { mustGate, location } = usePreviewGate()
 
   // Apply page-specific styles on route change
   useEffect(() => {

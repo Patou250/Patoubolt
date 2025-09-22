@@ -7,7 +7,7 @@ export function usePreviewGate() {
   
   // ✅ Ne JAMAIS bloquer l'espace parent ni le player
   if (path.startsWith('/parent') || path.startsWith('/player')) {
-    return { mustGate: false };
+    return { mustGate: false, location };
   }
   
   const enabled = import.meta.env.VITE_PREVIEW_ENABLED === 'true';
@@ -35,5 +35,5 @@ export function usePreviewGate() {
     }
   }, [enabled, pass]);
 
-  return { mustGate };
+  return { mustGate, location };
 }
