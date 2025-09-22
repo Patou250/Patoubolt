@@ -1,13 +1,21 @@
 import { Link } from 'react-router-dom'
 import { ShieldCheck, Users, SunMedium } from 'lucide-react'
 import PublicLayout from '../layouts/PublicLayout'
+import { GridPatterns } from '../components/ui/ResponsiveGrid'
+import LazyImage from '../components/ui/LazyImage'
 
 export default function Home() {
   return (
     <PublicLayout>
       {/* HERO */}
       <section className="text-center">
-        <img src="/patou-logo.svg" alt="Patou" className="mx-auto h-20 md:h-24" />
+        <LazyImage 
+          src="/patou-logo.svg" 
+          alt="Patou" 
+          className="mx-auto h-20 md:h-24"
+          loading="eager"
+          size="small"
+        />
         <h1 className="mt-6 text-3xl md:text-5xl font-extrabold text-gray-900">
           Musique sécurisée pour toute la famille
         </h1>
@@ -33,7 +41,7 @@ export default function Home() {
 
       {/* FEATURES */}
       <section className="mt-12 md:mt-16">
-        <div className="weweb-grid weweb-grid-3">
+        <GridPatterns.Features>
           <div className="patou-card-feature patou-animate-slide-up">
             <Feature color="protect" Icon={ShieldCheck} title="Protéger"
               text="Filtres d'âge, outils parent, contenus vérifiés — sérénité totale." />
@@ -46,7 +54,7 @@ export default function Home() {
             <Feature color="awaken" Icon={SunMedium} title="Éveiller"
               text="Découvertes adaptées, curiosité musicale, énergie positive." />
           </div>
-        </div>
+        </GridPatterns.Features>
       </section>
 
       {/* CTA */}
