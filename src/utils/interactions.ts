@@ -150,7 +150,13 @@ export const generateHoverStyles = (
 
 // Layout Guidelines Function
 export function getLayoutGuidelines(layoutType = 'public', breakpoint = 'desktop') {
-  // Will be replaced with: formulas['bd43d893-9b5f-481a-96b4-537343442a45']()
+  const layoutSystem = patouDesignSystem.getLayoutSystem();
+  
+  if (layoutSystem?.layouts?.[layoutType]) {
+    return layoutSystem.layouts[layoutType];
+  }
+  
+  // Fallback to mock layout system
   const layoutSystem = {
     layouts: {
       public: {
@@ -199,7 +205,7 @@ export function getLayoutGuidelines(layoutType = 'public', breakpoint = 'desktop
     }
   }
   
-  return layoutSystem.layouts[layoutType] || layoutSystem.layouts.public
+  return mockLayoutSystem.layouts[layoutType] || mockLayoutSystem.layouts.public
 }
 
 // Convert layout guidelines to CSS variables
@@ -227,8 +233,8 @@ export const generateLayoutStyles = (layoutType = 'public', breakpoint = 'deskto
 
 // Animation Guidelines Function
 export function getAnimationGuidelines(animationType = 'fadeIn', delay = '0ms') {
-  const uiGuidelines = formulas['8001aa8b-fd4a-4522-a6bf-67cbb73f5525']();
-  const animation = uiGuidelines.animations.patterns[animationType];
+  const uiGuidelines = patouDesignSystem.getUIGuidelines();
+  const animation = uiGuidelines?.animations?.patterns?.[animationType];
   
   if (!animation) return {};
   
