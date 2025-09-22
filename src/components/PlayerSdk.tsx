@@ -35,7 +35,7 @@ declare global {
   }
 }
 
-export default function PlayerSdk({ accessToken, onTrackChange, trackId, initialUris }: Props) {
+const PlayerSdk = React.forwardRef<any, Props>(({ accessToken, onTrackChange, trackId, initialUris }, ref) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null)
   const [position, setPosition] = useState(0)
@@ -45,6 +45,46 @@ export default function PlayerSdk({ accessToken, onTrackChange, trackId, initial
   const [deviceId, setDeviceId] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
   const playerRef = useRef<any>(null)
+
+  // Expose player methods to parent component
+  React.useImperativeHandle(ref, () => ({
+    resume: async () => {
+      if (playerRef.current) {
+        try {
+          await playerRef.current.resume()
+        } catch (e: any) {
+          setError(e?.message || 'Erreur resume')
+        }
+      }
+    },
+    togglePlay: async () => {
+      if (playerRef.current) {
+        try {
+          await playerRef.current.togglePlay()
+        } catch (e: any) {
+          setError(e?.message || 'Erreur play/pause')
+        }
+      }
+    },
+    previousTrack: async () => {
+      if (playerRef.current) {
+        try {
+          await playerRef.current.previousTrack()
+        } catch (e: any) {
+          setError(e?.message || 'Erreur précédente')
+        }
+      }
+    },
+    nextTrack: async () => {
+      if (playerRef.current) {
+        try {
+          await playerRef.current.nextTrack()
+        } catch (e: any) {
+          setError(e?.message || 'Erreur suivante')
+        }
+      }
+    }
+  }), [])
 
   // -------- Utils
   const formatTime = (ms: number) => {
@@ -295,4 +335,3 @@ export default function PlayerSdk({ accessToken, onTrackChange, trackId, initial
       )}
     </div>
   )
-}

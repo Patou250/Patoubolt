@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { App, Page, Navbar, Block, Card, Button, List, ListItem, Badge } from 'konsta/react'
+import { Link, useNavigate } from 'react-router-dom'
+import { App, Page, Navbar, Block, Card, Button, List, ListItem, Badge, Actions, ActionsGroup, ActionsButton } from 'konsta/react'
 import { Music, Heart, Play, Pause, SkipBack, SkipForward } from 'lucide-react'
 import PlayerSdk from '../components/PlayerSdk'
 import { getSpotifyTokens } from '../utils/spotify-tokens'
@@ -40,6 +40,9 @@ export default function Child() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [weeklyPlaylists, setWeeklyPlaylists] = useState<Playlist[]>([])
   const [history, setHistory] = useState<Track[]>([])
+  const [showSpotifyAlert, setShowSpotifyAlert] = useState(false)
+  const [playerSdkRef, setPlayerSdkRef] = useState<any>(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Si on accède via /direct/child, créer une session factice
@@ -150,12 +153,75 @@ export default function Child() {
     console.log('Track changed:', trackId)
   }
 
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying)
+  const handleResume = async () => {
+    if (!accessToken) {
+      setShowSpotifyAlert(true)
+      return
+    }
+    
+    if (playerSdkRef) {
+      try {
+        await playerSdkRef.resume()
+        setIsPlaying(true)
+      } catch (error) {
+        console.error('Erreur resume:', error)
+      }
+    }
+  }
+
+  const handlePlayPause = async () => {
+    if (!accessToken) {
+      setShowSpotifyAlert(true)
+      return
+    }
+    
+    if (playerSdkRef) {
+      try {
+        await playerSdkRef.togglePlay()
+        setIsPlaying(!isPlaying)
+      } catch (error) {
+        console.error('Erreur play/pause:', error)
+      }
+    }
+  }
+
+  const handlePrevious = async () => {
+    if (!accessToken) {
+      setShowSpotifyAlert(true)
+      return
+    }
+    
+    if (playerSdkRef) {
+      try {
+        await playerSdkRef.previousTrack()
+      } catch (error) {
+        console.error('Erreur previous:', error)
+      }
+    }
+  }
+
+  const handleNext = async () => {
+    if (!accessToken) {
+      setShowSpotifyAlert(true)
+      return
+    }
+    
+    if (playerSdkRef) {
+      try {
+        await playerSdkRef.nextTrack()
+      } catch (error) {
+        console.error('Erreur next:', error)
+      }
+    }
   }
 
   const handleAddToFavorites = () => {
-    if (currentTrack) {
+    if (!currentTrack) {
+      console.log('Aucune piste courante à ajouter aux favoris')
+      return
+    }
+    
+    try {
       const favsRaw = localStorage.getItem('patou_favorites')
       const favs = favsRaw ? JSON.parse(favsRaw) : {}
       
@@ -168,7 +234,16 @@ export default function Child() {
       }
       
       localStorage.setItem('patou_favorites', JSON.stringify(favs))
+      console.log('✅ Ajouté aux favoris:', currentTrack.name)
+      
+      // TODO: Sync avec Supabase
+    } catch (error) {
+      console.error('❌ Erreur ajout favoris:', error)
     }
+  }
+
+  const handleSpotifyRequest = () => {
+    setShowSpotifyAlert(true)
   }
 
   const handlePlayPlaylist = (playlistId: string) => {
@@ -234,17 +309,19 @@ export default function Child() {
                 <PlayerSdk 
                   accessToken={accessToken} 
                   onTrackChange={handleTrackChange}
+                  onPlayerReady={setPlayerSdkRef}
                 />
               ) : (
                 <div className="text-center py-8">
                   <Music className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">Lecteur indisponible</h3>
                   <p className="text-gray-600 mb-4">Connexion Spotify requise</p>
-                  <Link to="/parent/login">
-                    <Button className="bg-primary text-white">
-                      Demander à papa/maman
-                    </Button>
-                  </Link>
+                  <Button 
+                    className="bg-primary text-white"
+                    onClick={handleSpotifyRequest}
+                  >
+                    Demander à papa/maman
+                  </Button>
                 </div>
               )}
               
@@ -263,6 +340,8 @@ export default function Child() {
                   </Button>
                   <Button 
                     className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full"
+                    onClick={handleResume}
+                    onClick={handlePrevious}
                     onClick={handlePlayPause}
                   >
                     {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
@@ -342,15 +421,22 @@ export default function Child() {
                 <p className="text-gray-600 mb-4">
                   Commence à écouter de la musique pour voir ton historique ici
                 </p>
-                <Link to="/child/search">
-                  <Button className="bg-awaken text-gray-900">
-                    Découvrir de la musique
-                  </Button>
-                </Link>
+                <Button 
+                  className="bg-awaken text-gray-900"
+                  onClick={() => navigate('/child/search')}
+                >
+                  Découvrir de la musique
+                </Button>
               </Card>
             )}
           </Block>
         </div>
+
+        {/* Modal d'alerte Spotify */}
+        <Actions opened={showSpotifyAlert} onBackdropClick={() => setShowSpotifyAlert(false)}>
+          <ActionsGroup>
+            <div className="p-6 text-center">
+              <div className="text-4xl mb-4">🎵</div>
       </Page>
     </App>
   )
