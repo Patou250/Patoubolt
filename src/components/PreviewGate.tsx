@@ -43,7 +43,7 @@ export default function PreviewGate() {
         <div className="bento-card text-center">
           <div className="mb-8">
             <img 
-              src="/patou-logo-full.png" 
+              src="/patou-logo.svg" 
               alt="Patou Logo" 
               className="h-16 w-auto mx-auto mb-4"
             />

@@ -6,7 +6,7 @@ export default function Home() {
     <div className="py-10 md:py-16">
       {/* HERO */}
       <section className="text-center">
-        <img src="/patou-logo-full.png" alt="Patou" className="mx-auto h-20 md:h-24" />
+        <img src="/patou-logo.svg" alt="Patou" className="mx-auto h-20 md:h-24" />
         <h1 className="mt-6 text-3xl md:text-5xl font-extrabold text-gray-900">
           Musique sécurisée pour toute la famille
         </h1>
