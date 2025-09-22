@@ -85,7 +85,7 @@ export default function ParentDashboard() {
     // Vérifier s'il y a une session parent
     const session = getParentSession()
     if (!session && !tokens) {
-      navigate('/parent/login')
+      navigate('/login-parent')
       return
     }
 
@@ -289,7 +289,7 @@ export default function ParentDashboard() {
 
   const handleSignOut = () => {
     clearParentSession()
-    navigate('/parent/login')
+    navigate('/login-parent')
   }
 
   const formatTime = (ms: number) => {

@@ -33,13 +33,13 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
           {/* Navigation desktop */}
           <nav className="hidden md:flex items-center gap-6">
             <Link
-              to="/parent/login"
+              to="/dashboard-parent"
               className="text-text-secondary hover:text-text-primary transition-colors duration-300"
             >
               Espace parent
             </Link>
             <Link
-              to="/child/login"
+              to="/login-enfant"
               className="text-text-secondary hover:text-text-primary transition-colors duration-300"
             >
               Espace enfant
@@ -49,13 +49,13 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
           {/* Boutons droite */}
           <div className="flex items-center gap-3">
             <Link
-              to="/parent/login"
+              to="/login-parent"
               className="weweb-btn-secondary hidden sm:inline-flex"
             >
               Se connecter
             </Link>
             <Link
-              to="/parent/signup"
+              to="/signup-parent"
               className="weweb-btn-primary"
             >
               Créer un compte

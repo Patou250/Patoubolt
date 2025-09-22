@@ -26,13 +26,13 @@ export default function Home() {
 
         <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
           <Link
-            to="/parent/signup"
+            to="/signup-parent"
             className="weweb-btn-primary"
           >
             Créer un compte gratuit
           </Link>
           <Link
-            to="/child"
+            to="/login-enfant"
             className="weweb-btn-secondary"
           >
             Espace enfant
@@ -68,9 +68,9 @@ export default function Home() {
             </div>
             <div className="flex gap-3">
               <Link to="/parent/signup" className="rounded-lg bg-white px-5 py-3 font-semibold text-primary hover:bg-white/90 transition-all duration-300">
-                Créer mon compte
+                Rejoindre la bêta gratuitement
               </Link>
-              <Link to="/parent/login" className="rounded-lg bg-white/10 px-5 py-3 font-semibold text-white hover:bg-white/20 transition-all duration-300">
+              <Link to="/login-parent" className="rounded-lg bg-white/10 px-5 py-3 font-semibold text-white hover:bg-white/20 transition-all duration-300">
                 J'ai déjà un compte
               </Link>
             </div>

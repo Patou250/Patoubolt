@@ -54,6 +54,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           {/* Parent */}
+          <Route path="/login-parent" element={<ParentLogin />} />
+          <Route path="/signup-parent" element={<ParentSignup />} />
+          <Route path="/dashboard-parent" element={<ParentDashboard />} />
+          {/* Legacy routes - redirect to new routes */}
           <Route path="/parent/login" element={<ParentLogin />} />
           <Route path="/parent/signup" element={<ParentSignup />} />
           <Route path="/parent/dashboard" element={<ParentDashboard />} />
@@ -71,6 +75,8 @@ export default function App() {
           <Route path="/_dev/konsta" element={<KonstaTest />} />
           
           {/* Child login - outside layout */}
+          <Route path="/login-enfant" element={<ChildLogin />} />
+          {/* Legacy route */}
           <Route path="/child/login" element={<ChildLogin />} />
           
           {/* Child routes - all under ChildLayout */}

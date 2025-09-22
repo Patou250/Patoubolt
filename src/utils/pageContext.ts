@@ -31,14 +31,17 @@ class PageContextManager {
   // Determine page context from current path
   determinePageContext(currentPath: string): PageContext {
     // Public pages
-    const isPublicPage = currentPath.includes('/parent/login') || 
+    const isPublicPage = currentPath.includes('/login-parent') || 
+                        currentPath.includes('/signup-parent') || 
+                        currentPath.includes('/parent/login') || 
                         currentPath.includes('/parent/signup') || 
                         currentPath === '/' ||
                         currentPath.includes('/privacy') ||
                         currentPath.includes('/terms')
 
     // App pages (parent)
-    const isAppPage = currentPath.includes('/parent/dashboard') || 
+    const isAppPage = currentPath.includes('/dashboard-parent') || 
+                     currentPath.includes('/parent/dashboard') || 
                      currentPath.includes('/parent/children') ||
                      currentPath.includes('/parent/playlists') ||
                      currentPath.includes('/parent/rules') ||
@@ -47,7 +50,8 @@ class PageContextManager {
 
     // Child pages
     const isChildPage = currentPath.includes('/child') && 
-                       !currentPath.includes('/child/login')
+                       !currentPath.includes('/child/login') &&
+                       !currentPath.includes('/login-enfant')
 
     if (isPublicPage) {
       return {

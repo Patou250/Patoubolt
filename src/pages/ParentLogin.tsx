@@ -19,7 +19,7 @@ export default function ParentLogin() {
     
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) { setErr(error.message); setLoading(false); return }
-    nav('/parent/dashboard')
+    nav('/dashboard-parent')
   }
 
   return (
@@ -79,7 +79,7 @@ export default function ParentLogin() {
               <div className="mt-8 text-center">
                 <p className="text-gray-600">
                   Pas encore de compte ?{' '}
-                  <Link to="/parent/signup" className="text-primary font-semibold hover:text-primary-700 transition-colors">
+                  <Link to="/signup-parent" className="text-primary font-semibold hover:text-primary-700 transition-colors">
                     Créer un compte
                   </Link>
                 </p>

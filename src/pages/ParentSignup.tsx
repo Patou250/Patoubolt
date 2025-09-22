@@ -214,7 +214,7 @@ export default function ParentSignup() {
               <div className="mt-8 text-center">
                 <p className="text-gray-600">
                   Déjà un compte ?{' '}
-                  <Link to="/parent/login" className="text-primary font-semibold hover:text-primary-700 transition-colors">
+                  <Link to="/login-parent" className="text-primary font-semibold hover:text-primary-700 transition-colors">
                     Se connecter
                   </Link>
                 </p>
