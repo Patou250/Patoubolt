@@ -1,26 +1,26 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { ArrowLeft, Plus, Trash2 } from 'lucide-react'
-import { Link } from 'react-router-dom'
 
-type Child = { 
+interface Child {
   id: string
   name: string
-  pin_hash: string
-  parent_id: string
   emoji: string
+  parent_id: string
   created_at: string
-  updated_at: string
 }
 
 export default function ParentChildren() {
+  const [children, setChildren] = useState<Child[]>([])
   const [userId, setUserId] = useState<string>('')
-  const [list, setList] = useState<Child[]>([])
-  const [name, setName] = useState('')
-  const [emoji, setEmoji] = useState('👶')
-  const [pin, setPin] = useState('')
-  const [msg, setMsg] = useState<string | null>(null)
+  const [formData, setFormData] = useState({
+    name: '',
+    emoji: '👶',
+    pin: ''
+  })
+  const [message, setMessage] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadData()
@@ -28,123 +28,115 @@ export default function ParentChildren() {
 
   const loadData = async () => {
     try {
-      console.log('👶 Loading children data...')
       const { data: { user } } = await supabase.auth.getUser()
-      const uid = user?.id || ''
-      setUserId(uid)
       
-      if (!uid) {
-        console.log('❌ No authenticated user')
-        return
+      if (!user) {
+        const sessionRaw = localStorage.getItem('patou_parent_session')
+        if (!sessionRaw) {
+          navigate('/parent/login')
+          return
+        }
+        const session = JSON.parse(sessionRaw)
+        setUserId(session.parent.id)
+        await loadChildren(session.parent.id)
+      } else {
+        setUserId(user.id)
+        await loadChildren(user.id)
       }
+    } catch (error) {
+      console.error('❌ Error loading data:', error)
+      navigate('/parent/login')
+    }
+  }
 
-      console.log('🔍 Loading children for user ID:', uid)
+  const loadChildren = async (parentId: string) => {
+    try {
+      console.log('👶 Loading children for:', parentId)
       
-      // Try to load children using the existing schema
-      const { data: rows, error } = await supabase
+      const { data, error } = await supabase
         .from('children')
         .select('*')
-        .eq('parent_id', uid)
+        .eq('parent_id', parentId)
         .order('created_at', { ascending: true })
 
       if (error) {
         console.error('❌ Error loading children:', error)
-        setMsg(`Erreur de chargement: ${error.message}`)
         return
       }
 
-      console.log('✅ Children loaded:', rows?.length || 0)
-      setList(rows || [])
+      console.log('✅ Children loaded:', data?.length || 0)
+      setChildren(data || [])
     } catch (error) {
-      console.error('❌ Unexpected error:', error)
-      setMsg('Erreur inattendue lors du chargement')
+      console.error('❌ Failed to load children:', error)
     }
   }
 
-  const add = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setMsg(null)
+    console.log('📝 Creating child:', formData.name)
+    
+    setMessage(null)
     setLoading(true)
 
     try {
-      if (!userId || !name.trim() || !pin.trim()) {
-        setMsg('Veuillez remplir tous les champs.')
+      if (!userId || !formData.name.trim() || !formData.pin.trim()) {
+        setMessage('Veuillez remplir tous les champs.')
         return
       }
 
-      if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-        setMsg('Le PIN doit contenir exactement 4 chiffres.')
+      if (formData.pin.length !== 4 || !/^\d{4}$/.test(formData.pin)) {
+        setMessage('Le PIN doit contenir exactement 4 chiffres.')
         return
       }
 
-      // Vérifier si un enfant avec ce nom existe déjà pour ce parent
-      const { data: existingChild, error: checkError } = await supabase
+      // Check if child with this name already exists
+      const { data: existingChild } = await supabase
         .from('children')
         .select('id')
         .eq('parent_id', userId)
-        .eq('name', name.trim())
+        .eq('name', formData.name.trim())
         .maybeSingle()
 
-      if (checkError) {
-        console.error('❌ Error checking existing child:', checkError)
-        setMsg(`Erreur lors de la vérification: ${checkError.message}`)
-        return
-      }
-
       if (existingChild) {
-        setMsg('Un enfant avec ce nom existe déjà.')
+        setMessage('Un enfant avec ce nom existe déjà.')
         return
       }
 
-      console.log('🔄 Creating child:', { name, emoji, userId })
+      const pinHash = btoa(formData.pin)
 
-      // Simple hash for PIN (in production, use proper hashing)
-      const pinHash = btoa(pin)
-
-      console.log('📝 Inserting child into database...')
       const { data, error } = await supabase
         .from('children')
         .insert({
           parent_id: userId,
-          name: name.trim(),
-          emoji: emoji,
+          name: formData.name.trim(),
+          emoji: formData.emoji,
           pin_hash: pinHash
         })
         .select()
 
       if (error) {
         console.error('❌ Error creating child:', error)
-        
-        // Gestion spécifique des erreurs courantes
-        if (error.code === '23505') {
-          setMsg('Un enfant avec ce nom ou ce PIN existe déjà.')
-        } else if (error.message.includes('duplicate')) {
-          setMsg('Un enfant avec ces informations existe déjà.')
-        } else {
-          setMsg(`Erreur lors de la création: ${error.message}`)
-        }
+        setMessage(`Erreur: ${error.message}`)
         return
       }
 
       console.log('✅ Child created:', data)
-      setMsg('✅ Enfant ajouté avec succès!')
+      setMessage('✅ Enfant ajouté avec succès!')
       
       // Reset form
-      setName('')
-      setEmoji('👶')
-      setPin('')
+      setFormData({ name: '', emoji: '👶', pin: '' })
       
-      // Reload list
-      await loadData()
+      // Reload children
+      await loadChildren(userId)
     } catch (error) {
       console.error('❌ Unexpected error:', error)
-      setMsg('Erreur inattendue lors de la création')
+      setMessage('Erreur inattendue')
     } finally {
       setLoading(false)
     }
   }
 
-  const deleteChild = async (id: string) => {
+  const handleDeleteChild = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cet enfant ?')) return
 
     try {
@@ -155,71 +147,82 @@ export default function ParentChildren() {
         .eq('id', id)
 
       if (error) {
-        console.error('❌ Error deleting child:', error)
-        setMsg(`Erreur lors de la suppression: ${error.message}`)
+        console.error('❌ Error deleting:', error)
+        setMessage(`Erreur: ${error.message}`)
         return
       }
 
-      console.log('✅ Child deleted successfully')
-      setList(list.filter(x => x.id !== id))
-      setMsg('Enfant supprimé')
+      console.log('✅ Child deleted')
+      setChildren(children.filter(c => c.id !== id))
+      setMessage('Enfant supprimé')
     } catch (error) {
-      console.error('❌ Unexpected error:', error)
-      setMsg('Erreur lors de la suppression')
+      console.error('❌ Delete error:', error)
+      setMessage('Erreur lors de la suppression')
     }
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-4">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <Link 
-            to="/dashboard-parent" 
-            className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow"
-          >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-800">👨‍👩‍👧‍👦 Gérer les enfants</h1>
-        </div>
+  const handleBack = () => {
+    console.log('🔙 Back to dashboard')
+    navigate('/parent/dashboard')
+  }
 
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-lg border-b border-gray-200/50">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={handleBack}
+              className="flex items-center justify-center w-10 h-10 bg-white/80 rounded-full shadow-md hover:shadow-lg transition-all hover:scale-105"
+            >
+              ←
+            </button>
+            <img src="/patou-logo.svg" alt="Patou" className="h-8" />
+            <span className="text-xl font-bold text-gray-800">Gérer les enfants</span>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Message */}
-        {msg && (
-          <div className={`mb-6 p-4 rounded-lg ${
-            msg.includes('✅') 
+        {message && (
+          <div className={`mb-6 p-4 rounded-xl ${
+            message.includes('✅') 
               ? 'bg-green-50 border border-green-200 text-green-700' 
               : 'bg-yellow-50 border border-yellow-200 text-yellow-700'
           }`}>
-            {msg}
+            {message}
           </div>
         )}
 
         {/* Add Child Form */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Ajouter un enfant</h2>
+        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 mb-8 border border-white/20">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">Ajouter un enfant</h2>
           
-          <form onSubmit={add} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Prénom / Pseudo
               </label>
               <input 
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all" 
-                placeholder="Ex: Emma, Lucas..." 
-                value={name} 
-                onChange={e => setName(e.target.value)}
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                placeholder="Ex: Emma, Lucas..."
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all bg-white/80"
                 disabled={loading}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Avatar
               </label>
               <select 
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all" 
-                value={emoji} 
-                onChange={e => setEmoji(e.target.value)}
+                value={formData.emoji}
+                onChange={(e) => setFormData({...formData, emoji: e.target.value})}
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all bg-white/80"
                 disabled={loading}
               >
                 <option value="👶">👶 Bébé</option>
@@ -230,24 +233,20 @@ export default function ParentChildren() {
                 <option value="🦁">🦁 Lion</option>
                 <option value="🐸">🐸 Grenouille</option>
                 <option value="🦄">🦄 Licorne</option>
-                <option value="🐨">🐨 Koala</option>
-                <option value="🐼">🐼 Panda</option>
-                <option value="🦊">🦊 Renard</option>
-                <option value="🐱">🐱 Chat</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Code PIN (4 chiffres)
               </label>
               <input 
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all" 
-                placeholder="1234" 
-                value={pin} 
-                onChange={e => setPin(e.target.value)}
+                type="password"
+                value={formData.pin}
+                onChange={(e) => setFormData({...formData, pin: e.target.value})}
+                placeholder="1234"
                 maxLength={4}
-                pattern="\d{4}"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all bg-white/80"
                 disabled={loading}
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -258,60 +257,48 @@ export default function ParentChildren() {
             <button 
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white rounded-lg font-semibold transition-colors"
+              className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-400 text-white font-bold py-3 rounded-xl transition-colors"
             >
-              {loading ? (
-                <>
-                  <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
-                  Création...
-                </>
-              ) : (
-                <>
-                  <Plus className="w-4 h-4" />
-                  Ajouter l'enfant
-                </>
-              )}
+              {loading ? 'Création...' : '+ Ajouter l\'enfant'}
             </button>
           </form>
         </div>
 
         {/* Children List */}
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20 overflow-hidden">
           <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-800">
-              Enfants configurés ({list.length})
+            <h2 className="text-lg font-bold text-gray-900">
+              Enfants configurés ({children.length})
             </h2>
           </div>
 
-          {list.length === 0 ? (
+          {children.length === 0 ? (
             <div className="p-12 text-center">
               <div className="text-6xl mb-4">👨‍👩‍👧‍👦</div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Aucun enfant configuré</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">Aucun enfant configuré</h3>
               <p className="text-gray-600">
-                Ajoutez le profil de votre premier enfant pour commencer
+                Utilisez le formulaire ci-dessus pour ajouter votre premier enfant
               </p>
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
-              {list.map(child => (
+              {children.map(child => (
                 <div key={child.id} className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center gap-4">
                     <div className="text-3xl">{child.emoji}</div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{child.name}</h3>
-                      <p className="text-sm text-gray-500">
+                      <h3 className="font-bold text-gray-900">{child.name}</h3>
+                      <p className="text-sm text-gray-600">
                         Créé le {new Date(child.created_at).toLocaleDateString('fr-FR')}
                       </p>
                     </div>
                   </div>
                   
                   <button
-                    onClick={() => deleteChild(child.id)}
-                    className="flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    title="Supprimer cet enfant"
+                    onClick={() => handleDeleteChild(child.id)}
+                    className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                   >
-                    <Trash2 className="w-4 h-4" />
-                    <span className="text-sm">Supprimer</span>
+                    🗑️ Supprimer
                   </button>
                 </div>
               ))}

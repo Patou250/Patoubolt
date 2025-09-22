@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { App, Page, Navbar, Block, List, ListItem, Toolbar, Button } from 'konsta/react'
-import { Heart, Play, Search, Shuffle } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { getSpotifyTokens } from '../utils/spotify-tokens'
 
 interface FavoriteTrack {
   trackId: string
@@ -14,6 +13,7 @@ interface FavoriteTrack {
 export default function ChildFavorites() {
   const [favorites, setFavorites] = useState<FavoriteTrack[]>([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadFavorites()
@@ -21,21 +21,19 @@ export default function ChildFavorites() {
 
   const loadFavorites = () => {
     try {
-      console.log('❤️ Loading favorites from localStorage...')
+      console.log('❤️ Loading favorites...')
       const favsRaw = localStorage.getItem('patou_favorites')
       if (favsRaw) {
         const favsData = JSON.parse(favsRaw)
         const favsList = Object.values(favsData) as FavoriteTrack[]
-        // Trier par date d'ajout (plus récent en premier)
         favsList.sort((a, b) => b.ts - a.ts)
-        console.log('✅ Favorites loaded:', favsList.length)
         setFavorites(favsList)
+        console.log('✅ Favorites loaded:', favsList.length)
       } else {
-        console.log('📝 No favorites found, using mock data')
-        // Favoris factices pour la démo
+        console.log('📝 No favorites, using mock data')
         const mockFavorites: FavoriteTrack[] = [
           {
-            trackId: '1',
+            trackId: '3n3Ppam7vgaVa1iaRUc9Lp',
             name: 'Hakuna Matata',
             artist: 'Le Roi Lion',
             cover: 'https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&cs=tinysrgb&w=100',
@@ -47,154 +45,187 @@ export default function ChildFavorites() {
             artist: 'La Reine des Neiges',
             cover: 'https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=100',
             ts: Date.now() - 2000000
-          },
-          {
-            trackId: '3',
-            name: 'Under the Sea',
-            artist: 'La Petite Sirène',
-            cover: 'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=100',
-            ts: Date.now() - 3000000
           }
         ]
         setFavorites(mockFavorites)
       }
     } catch (error) {
-      console.error('Erreur chargement favoris:', error)
-      setFavorites([])
+      console.error('❌ Error loading favorites:', error)
     } finally {
       setLoading(false)
     }
   }
 
-  const handlePlayTrack = (trackId: string) => {
-    console.log('▶️ Playing track from favorites:', trackId)
-    // Ici on pourrait envoyer la piste au PlayerSdk
-    // Par exemple via un context ou un service global
+  const handlePlayTrack = async (trackId: string) => {
+    console.log('▶️ Playing from favorites:', trackId)
+    
+    const tokens = getSpotifyTokens()
+    if (!tokens) {
+      alert('Demande à tes parents de connecter Spotify !')
+      return
+    }
+
+    try {
+      const response = await fetch(`https://api.spotify.com/v1/me/player/play`, {
+        method: 'PUT',
+        headers: { 
+          Authorization: `Bearer ${tokens.access_token}`, 
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ 
+          uris: [`spotify:track:${trackId}`] 
+        })
+      })
+
+      if (response.ok) {
+        alert('🎵 Lecture démarrée !')
+      } else {
+        alert('Ouvre Spotify d\'abord !')
+      }
+    } catch (error) {
+      console.error('❌ Play error:', error)
+      alert('Erreur de lecture')
+    }
   }
 
-  const handleToggleFavorite = (trackId: string) => {
+  const handleRemoveFavorite = (trackId: string) => {
+    console.log('➖ Removing from favorites:', trackId)
+    
     try {
-      console.log('❤️ Toggling favorite for track:', trackId)
       const favsRaw = localStorage.getItem('patou_favorites')
       const favs = favsRaw ? JSON.parse(favsRaw) : {}
-      
-      if (favs[trackId]) {
-        // Retirer des favoris
-        console.log('➖ Removing from favorites')
-        delete favs[trackId]
-      } else {
-        // Ajouter aux favoris (ne devrait pas arriver ici mais au cas où)
-        console.log('➕ Adding to favorites')
-        const track = favorites.find(f => f.trackId === trackId)
-        if (track) {
-          favs[trackId] = track
-        }
-      }
-      
+      delete favs[trackId]
       localStorage.setItem('patou_favorites', JSON.stringify(favs))
-      console.log('✅ Favorites updated')
-      loadFavorites() // Recharger la liste
+      loadFavorites()
+      console.log('✅ Removed from favorites')
     } catch (error) {
-      console.error('Erreur toggle favori:', error)
+      console.error('❌ Error removing favorite:', error)
     }
   }
 
-  const handleShufflePlay = () => {
-    if (favorites.length > 0) {
-      // Mélanger et jouer tous les favoris
-      const shuffled = [...favorites].sort(() => Math.random() - 0.5)
-      console.log('🔀 Shuffle play favorites:', shuffled.length, 'tracks')
-      // Ici on pourrait envoyer la playlist mélangée au PlayerSdk
-    }
+  const handleBack = () => {
+    console.log('🔙 Back to child home')
+    navigate('/child')
   }
 
   if (loading) {
     return (
-      <App theme="ios">
-        <Page>
-          <Navbar title="Favoris" />
-          <Block className="text-center py-8">
-            <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-gray-600">Chargement des favoris...</p>
-          </Block>
-        </Page>
-      </App>
+      <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-12 h-12 border-4 border-pink-400 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement des favoris...</p>
+        </div>
+      </div>
     )
   }
 
   return (
-    <App theme="ios">
-      <Page>
-        <Navbar title="Favoris" />
-        
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-lg border-b border-gray-200/50">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={handleBack}
+              className="flex items-center justify-center w-10 h-10 bg-white/80 rounded-full shadow-md hover:shadow-lg transition-all hover:scale-105"
+            >
+              ←
+            </button>
+            <img src="/patou-logo.svg" alt="Patou" className="h-8" />
+            <span className="text-xl font-bold text-gray-800">Mes Favoris</span>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-4xl mx-auto px-4 py-8 pb-20">
         {favorites.length === 0 ? (
-          // Empty state
-          <Block className="text-center py-12">
+          <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-12 border border-white/20 text-center">
             <div className="text-6xl mb-6">💖</div>
             <h3 className="text-xl font-bold text-gray-700 mb-3">Aucun favori</h3>
-            <p className="text-gray-600 mb-6 px-4">
-              Découvre de nouvelles chansons et ajoute-les à tes favoris en tapant sur ♥
+            <p className="text-gray-600 mb-6">
+              Découvre de nouvelles chansons et ajoute-les à tes favoris
             </p>
-            <Link to="/child/search">
-              <Button className="bg-primary text-white">
-                <Search className="w-4 h-4 mr-2" />
-                Rechercher de la musique
-              </Button>
-            </Link>
-          </Block>
+            <button
+              onClick={() => navigate('/child/search')}
+              className="px-6 py-3 bg-blue-500 text-white font-bold rounded-xl hover:bg-blue-600 transition-colors"
+            >
+              🔍 Rechercher de la musique
+            </button>
+          </div>
         ) : (
-          <>
-            {/* Liste des favoris */}
-            <List mediaList>
+          <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-white/20">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">
+              ❤️ Tes chansons préférées ({favorites.length})
+            </h2>
+            
+            <div className="space-y-3">
               {favorites.map((track) => (
-                <ListItem
+                <div
                   key={track.trackId}
-                  title={track.name}
-                  text={track.artist}
-                  media={
-                    <img 
-                      src={track.cover} 
-                      alt={track.name}
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-                  }
-                  after={
-                    <div className="flex items-center gap-2">
-                      <Button 
-                        className="bg-share text-white min-h-[48px] min-w-[48px] rounded-full"
-                        onClick={() => handleToggleFavorite(track.trackId)}
-                        title="Retirer des favoris"
-                      >
-                        <Heart className="w-4 h-4 fill-current" />
-                      </Button>
-                      <Button 
-                        className="bg-primary text-white min-h-[48px] min-w-[48px] rounded-full"
-                        onClick={() => handlePlayTrack(track.trackId)}
-                        title="Écouter"
-                      >
-                        <Play className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  }
-                />
-              ))}
-            </List>
-
-            {/* Toolbar avec lecture aléatoire */}
-            <Toolbar bottom className="bg-white border-t border-gray-200">
-              <div className="flex items-center justify-center w-full py-2">
-                <Button 
-                  className="bg-awaken text-gray-900 px-6"
-                  onClick={handleShufflePlay}
+                  className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
                 >
-                  <Shuffle className="w-4 h-4 mr-2" />
-                  Lecture aléatoire ({favorites.length} titres)
-                </Button>
-              </div>
-            </Toolbar>
-          </>
+                  <img 
+                    src={track.cover} 
+                    alt={track.name}
+                    className="w-14 h-14 rounded-lg object-cover"
+                  />
+                  
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-gray-900 truncate">{track.name}</h4>
+                    <p className="text-sm text-gray-600 truncate">{track.artist}</p>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleRemoveFavorite(track.trackId)}
+                      className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                      title="Retirer des favoris"
+                    >
+                      🗑️
+                    </button>
+                    <button
+                      onClick={() => handlePlayTrack(track.trackId)}
+                      className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                      title="Écouter"
+                    >
+                      ▶️
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
-      </Page>
-    </App>
+      </div>
+
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-gray-200/50 p-4">
+        <div className="max-w-md mx-auto flex justify-around">
+          <button
+            onClick={() => navigate('/child')}
+            className="flex flex-col items-center py-2 px-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <span className="text-xl mb-1">🎵</span>
+            <span className="text-xs font-medium">Player</span>
+          </button>
+          
+          <button
+            onClick={() => navigate('/child/search')}
+            className="flex flex-col items-center py-2 px-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <span className="text-xl mb-1">🔍</span>
+            <span className="text-xs font-medium">Recherche</span>
+          </button>
+          
+          <button
+            onClick={() => navigate('/child/favorites')}
+            className="flex flex-col items-center py-2 px-4 text-pink-600 bg-pink-100 rounded-lg"
+          >
+            <span className="text-xl mb-1">❤️</span>
+            <span className="text-xs font-medium">Favoris</span>
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }
