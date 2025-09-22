@@ -157,7 +157,7 @@ export function getLayoutGuidelines(layoutType = 'public', breakpoint = 'desktop
   }
   
   // Fallback to mock layout system
-  const layoutSystem = {
+  const mockLayoutSystem = {
     layouts: {
       public: {
         header: {
