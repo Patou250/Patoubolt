@@ -1,14 +1,28 @@
 import { Link } from 'react-router-dom'
+import { getLayoutGuidelines } from '../utils/interactions'
 
 interface PublicLayoutProps {
   children: React.ReactNode
 }
 
 export default function PublicLayout({ children }: PublicLayoutProps) {
+  const layoutGuidelines = getLayoutGuidelines('public', 'desktop')
+  
   return (
     <div className="min-h-screen bg-background-page text-text-primary">
       {/* Header WeWeb Pattern - Fixed */}
-      <header className="weweb-header-public">
+      <header 
+        className="weweb-header-public"
+        style={{
+          height: layoutGuidelines.header?.height,
+          padding: layoutGuidelines.header?.padding,
+          position: layoutGuidelines.header?.position as any,
+          backgroundColor: layoutGuidelines.header?.backgroundColor,
+          borderBottom: layoutGuidelines.header?.borderBottom,
+          boxShadow: layoutGuidelines.header?.boxShadow,
+          backdropFilter: layoutGuidelines.header?.backdropFilter
+        }}
+      >
         <div className="weweb-container">
           {/* Logo gauche */}
           <Link to="/" className="flex items-center">
@@ -50,14 +64,26 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
       </header>
 
       {/* Main content avec margin-top pour header fixe */}
-      <main className="weweb-content-public">
+      <main 
+        className="weweb-content-public"
+        style={{
+          marginTop: layoutGuidelines.header?.height,
+          padding: `${layoutGuidelines.content?.padding?.split(' ')[0] || '48px'} 0`
+        }}
+      >
         <div className="weweb-container">
           {children}
         </div>
       </main>
 
       {/* Footer WeWeb Pattern */}
-      <footer className="weweb-footer-public">
+      <footer 
+        className="weweb-footer-public"
+        style={{
+          padding: layoutGuidelines.footer?.padding,
+          borderTop: layoutGuidelines.footer?.borderTop
+        }}
+      >
         <div className="weweb-container">
           <div className="text-center">
             <p className="text-sm text-text-secondary">

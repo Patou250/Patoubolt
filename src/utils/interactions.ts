@@ -146,6 +146,83 @@ export const generateHoverStyles = (
   return ''
 }
 
+// Layout Guidelines Function
+export function getLayoutGuidelines(layoutType = 'public', breakpoint = 'desktop') {
+  // Will be replaced with: formulas['bd43d893-9b5f-481a-96b4-537343442a45']()
+  const layoutSystem = {
+    layouts: {
+      public: {
+        header: {
+          height: '80px',
+          padding: '0 24px',
+          position: 'fixed',
+          backgroundColor: 'var(--color-background-page)',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
+          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)',
+          backdropFilter: 'blur(10px)'
+        },
+        content: {
+          maxWidth: '1200px',
+          padding: '0 24px',
+          marginTop: '80px'
+        },
+        footer: {
+          padding: '48px 0',
+          borderTop: '1px solid rgba(0, 0, 0, 0.05)'
+        }
+      },
+      app: {
+        sidebar: {
+          width: '280px',
+          padding: '24px',
+          position: 'fixed',
+          backgroundColor: 'var(--color-background-sidebar)',
+          boxShadow: '4px 0 20px rgba(0, 0, 0, 0.1)'
+        },
+        content: {
+          maxWidth: 'none',
+          padding: '32px',
+          marginLeft: '280px',
+          backgroundColor: 'var(--color-background-page)'
+        },
+        mobileNav: {
+          height: '80px',
+          padding: '16px',
+          position: 'fixed',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderTop: '1px solid rgba(0, 0, 0, 0.05)',
+          borderRadius: '20px 20px 0 0'
+        }
+      }
+    }
+  }
+  
+  return layoutSystem.layouts[layoutType] || layoutSystem.layouts.public
+}
+
+// Convert layout guidelines to CSS variables
+export const generateLayoutStyles = (layoutType = 'public', breakpoint = 'desktop') => {
+  const layout = getLayoutGuidelines(layoutType, breakpoint)
+  
+  const cssVariables: Record<string, string> = {}
+  
+  // Convert nested object to CSS custom properties
+  const flattenObject = (obj: any, prefix = '--layout') => {
+    Object.entries(obj).forEach(([key, value]) => {
+      const cssKey = `${prefix}-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`
+      
+      if (typeof value === 'object' && value !== null) {
+        flattenObject(value, cssKey)
+      } else {
+        cssVariables[cssKey] = String(value)
+      }
+    })
+  }
+  
+  flattenObject(layout)
+  return cssVariables
+}
+
 // Animation Guidelines Function
 export function getAnimationGuidelines(animationType = 'fadeIn', delay = '0ms') {
   const uiGuidelines = formulas['8001aa8b-fd4a-4522-a6bf-67cbb73f5525']();

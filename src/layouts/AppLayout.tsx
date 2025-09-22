@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { Home, Users, Settings, BarChart3, Shield, Calendar, Music, Heart, Search } from 'lucide-react'
+import { getLayoutGuidelines } from '../utils/interactions'
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -8,6 +9,7 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children, userType = 'parent' }: AppLayoutProps) {
   const location = useLocation()
+  const layoutGuidelines = getLayoutGuidelines('app', 'desktop')
 
   const parentNavItems = [
     { id: 'dashboard', path: '/parent/dashboard', label: 'Dashboard', icon: Home },
@@ -36,7 +38,16 @@ export default function AppLayout({ children, userType = 'parent' }: AppLayoutPr
   return (
     <div className="weweb-app-layout">
       {/* Sidebar Desktop WeWeb Pattern */}
-      <aside className="weweb-sidebar-app">
+      <aside 
+        className="weweb-sidebar-app"
+        style={{
+          width: layoutGuidelines.sidebar?.width,
+          padding: layoutGuidelines.sidebar?.padding,
+          position: layoutGuidelines.sidebar?.position as any,
+          backgroundColor: layoutGuidelines.sidebar?.backgroundColor,
+          boxShadow: layoutGuidelines.sidebar?.boxShadow
+        }}
+      >
         <div className="p-6">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 mb-8">
@@ -70,12 +81,29 @@ export default function AppLayout({ children, userType = 'parent' }: AppLayoutPr
       </aside>
 
       {/* Main Content WeWeb Pattern */}
-      <main className="weweb-content-app">
+      <main 
+        className="weweb-content-app"
+        style={{
+          marginLeft: layoutGuidelines.sidebar?.width,
+          padding: layoutGuidelines.content?.padding,
+          backgroundColor: layoutGuidelines.content?.backgroundColor
+        }}
+      >
         {children}
       </main>
 
       {/* Mobile Navigation WeWeb Pattern */}
-      <nav className="weweb-mobile-nav-app md:hidden">
+      <nav 
+        className="weweb-mobile-nav-app md:hidden"
+        style={{
+          height: layoutGuidelines.mobileNav?.height,
+          padding: layoutGuidelines.mobileNav?.padding,
+          position: layoutGuidelines.mobileNav?.position as any,
+          backgroundColor: layoutGuidelines.mobileNav?.backgroundColor,
+          borderTop: layoutGuidelines.mobileNav?.borderTop,
+          borderRadius: layoutGuidelines.mobileNav?.borderRadius
+        }}
+      >
         <div className="flex items-center justify-around h-full">
           {navItems.slice(0, 4).map((item) => {
             const Icon = item.icon
